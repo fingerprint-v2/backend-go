@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres-fp
+    image: postgres:15.3-alpine
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    volumes:
+      - fp2_vol:/var/lib/postgresql/data
+      - ./docker/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
+    networks:
+      - fp2_net
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-fp2
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PG_ADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
+    volumes:
+      - pgadmin-fp2-data:/var/lib/pgadmin
+    networks:
+      - fp2_net
+
+volumes:
+  fp2_vol:
+    external: true
+  pgadmin-fp2-data:
+    external: true
+
+networks:
+  fp2_net:
+    driver: bridge
+    external: true

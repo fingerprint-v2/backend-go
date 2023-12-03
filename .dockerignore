@@ -1,0 +1,8 @@
+.air.toml
+.git
+.env
+.env.template
+.gitignore
+bin
+Dockerfile
+README.md

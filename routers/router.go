@@ -1,8 +1,6 @@
 package routers
 
 import (
-	"os"
-
 	"github.com/fingerprint/handlers"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,8 +10,10 @@ func SetupRoutes(
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 ) {
-	router.Get("/hello-world", func(c *fiber.Ctx) error {
-		return c.JSON(os.Getenv("ENV_STAGE"))
+	router.Get("*", func(c *fiber.Ctx) error {
+		return c.JSON(map[string]interface{}{
+			"message": "Hello World!",
+		})
 	})
 	v1 := router.Group("/v1")
 	SetupOrganizationRouter(v1, organizationHandler)

@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
+	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -17,12 +18,14 @@ type OrganizationHandler interface {
 }
 
 type organizationHandlerImpl struct {
-	organizationRepo repositories.OrganizationRepository
+	organizationRepo    repositories.OrganizationRepository
+	organizationService services.OrganizationService
 }
 
-func NewOrganizationHandler(organizationRepo repositories.OrganizationRepository) OrganizationHandler {
+func NewOrganizationHandler(organizationService services.OrganizationService, organizationRepo repositories.OrganizationRepository) OrganizationHandler {
 	return &organizationHandlerImpl{
-		organizationRepo: organizationRepo,
+		organizationService: organizationService,
+		organizationRepo:    organizationRepo,
 	}
 }
 
@@ -32,29 +35,42 @@ func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.Organization]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[models.Organization]{
 		Message: "Get organization sucessfully",
-		Data:    organization,
+		Data:    *organization,
 	})
 }
 
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
-	return nil
-}
-
-func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
+	ctx := c.Context()
 	organization := &models.Organization{}
 	if err := c.BodyParser(organization); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	organizations, err := h.organizationService.SearchOrganization(ctx, organization)
+	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	ent, err := h.organizationRepo.Create(organization)
-	if err != nil {
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[[]models.Organization]{
+		Message: "Search organization sucessfully",
+		Data:    organizations,
+	})
+}
+
+func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
+	organization := &models.Organization{
+		ID: uuid.New(),
+	}
+	if err := c.BodyParser(organization); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	if err := h.organizationRepo.Create(organization); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
 		Message: "Create organization sucessfully",
-		Data:    ent.ID,
+		Data:    organization.ID,
 	})
 }
 
@@ -62,15 +78,14 @@ func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
 	organizationId := c.Params("organization_id")
 	organization := &models.Organization{}
 	if err := c.BodyParser(organization); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	if err := h.organizationRepo.Update(organizationId, organization); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	ent, err := h.organizationRepo.Update(organizationId, organization)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
 		Message: "Update organization sucessfully",
-		Data:    ent.ID,
+		Data:    nil,
 	})
 }
 
@@ -80,7 +95,7 @@ func (h *organizationHandlerImpl) DeleteOrganization(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
-		Message: "Update organization sucessfully",
+		Message: "Delete organization sucessfully",
 		Data:    nil,
 	})
 }

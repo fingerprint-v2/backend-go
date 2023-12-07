@@ -7,9 +7,9 @@ import (
 
 func SetupOrganizationRouter(router fiber.Router, handler handlers.OrganizationHandler) {
 	organization := router.Group("organizations")
-	organization.Get("/", handler.GetOrganization)
+	organization.Get("/:organization_id", handler.GetOrganization)
 	organization.Post("/search", handler.SearchOrganization)
 	organization.Post("/", handler.CreateOrganization)
-	organization.Put("/", handler.UpdateOrganization)
-	organization.Delete("/", handler.DeleteOrganization)
+	organization.Put("/:organization_id", handler.UpdateOrganization)
+	organization.Delete("/:organization_id", handler.DeleteOrganization)
 }

@@ -10,7 +10,7 @@ func SetupRoutes(
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 ) {
-	router.Get("*", func(c *fiber.Ctx) error {
+	router.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(map[string]interface{}{
 			"message": "Hello World!",
 		})

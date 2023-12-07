@@ -7,12 +7,13 @@ import (
 	database "github.com/fingerprint/db"
 	"github.com/fingerprint/handlers"
 	"github.com/fingerprint/repositories"
+	"github.com/fingerprint/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/wire"
 )
 
 func InitializeApp() (*fiber.App, func(), error) {
-	wire.Build(AppSet, HandlerSet, RepositorySet)
+	wire.Build(AppSet, HandlerSet, ServiceSet, RepositorySet)
 
 	return &fiber.App{}, func() {}, nil
 }
@@ -27,7 +28,7 @@ var HandlerSet = wire.NewSet(
 	handlers.NewUserHandler,
 )
 
-// var ServiceSet = wire.NewSet()
+var ServiceSet = wire.NewSet(services.NewOrganizationService)
 
 var RepositorySet = wire.NewSet(
 	repositories.NewOrganizationRepository,

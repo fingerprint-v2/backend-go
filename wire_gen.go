@@ -10,6 +10,7 @@ import (
 	"github.com/fingerprint/db"
 	"github.com/fingerprint/handlers"
 	"github.com/fingerprint/repositories"
+	"github.com/fingerprint/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/wire"
 )
@@ -19,7 +20,8 @@ import (
 func InitializeApp() (*fiber.App, func(), error) {
 	gormDB := db.NewPostgresDatabase()
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
-	organizationHandler := handlers.NewOrganizationHandler(organizationRepository)
+	organizationService := services.NewOrganizationService(organizationRepository)
+	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
 	userRepository := repositories.NewUserRepository(gormDB)
 	userHandler := handlers.NewUserHandler(userRepository)
 	app, err := NewApp(organizationHandler, userHandler)
@@ -37,5 +39,7 @@ var AppSet = wire.NewSet(
 )
 
 var HandlerSet = wire.NewSet(handlers.NewOrganizationHandler, handlers.NewUserHandler)
+
+var ServiceSet = wire.NewSet(services.NewOrganizationService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository)

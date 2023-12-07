@@ -35,7 +35,6 @@ func NewApp(organizationHandler handlers.OrganizationHandler, userHandler handle
 	return app, nil
 }
 
-//go:generate swag init
 func main() {
 
 	configs.InitialEnv(".env")

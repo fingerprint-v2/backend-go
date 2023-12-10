@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	repository[models.User]
+	GetByUsername(string) (*models.User, error)
 }
 
 type userRepositoryImpl struct {
@@ -19,4 +20,12 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 		db:             db,
 		repositoryImpl: newRepository[models.User](db),
 	}
+}
+
+func (r *userRepositoryImpl) GetByUsername(username string) (*models.User, error) {
+	user := &models.User{}
+	if err := r.db.First(user, "username = ?", username).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }

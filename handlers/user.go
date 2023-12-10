@@ -54,6 +54,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		Data:    user.ID,
 	})
 }
+
 func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 	userId := c.Params("user_id")
 	user := &models.User{}

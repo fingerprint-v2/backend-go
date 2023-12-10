@@ -12,6 +12,7 @@ import (
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
@@ -23,6 +24,9 @@ func NewApp(organizationHandler handlers.OrganizationHandler, userHandler handle
 	app.Use(
 		logger.New(),
 		cors.New(cors.Config{AllowOrigins: "*"}),
+		encryptcookie.New(encryptcookie.Config{
+			Key: configs.GetEncryptKey(),
+		}),
 	)
 
 	// Set up routes

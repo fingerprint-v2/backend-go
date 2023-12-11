@@ -24,11 +24,15 @@ var AppSet = wire.NewSet(
 )
 
 var HandlerSet = wire.NewSet(
+	handlers.NewAuthHandler,
 	handlers.NewOrganizationHandler,
 	handlers.NewUserHandler,
 )
 
-var ServiceSet = wire.NewSet(services.NewOrganizationService)
+var ServiceSet = wire.NewSet(
+	services.NewUserService,
+	services.NewOrganizationService,
+)
 
 var RepositorySet = wire.NewSet(
 	repositories.NewOrganizationRepository,

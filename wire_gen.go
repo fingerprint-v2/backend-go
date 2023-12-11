@@ -19,12 +19,14 @@ import (
 
 func InitializeApp() (*fiber.App, func(), error) {
 	gormDB := db.NewPostgresDatabase()
+	userRepository := repositories.NewUserRepository(gormDB)
+	userService := services.NewUserService(userRepository)
+	authHandler := handlers.NewAuthHandler(userService)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
-	userRepository := repositories.NewUserRepository(gormDB)
 	userHandler := handlers.NewUserHandler(userRepository)
-	app, err := NewApp(organizationHandler, userHandler)
+	app, err := NewApp(authHandler, organizationHandler, userHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -38,8 +40,8 @@ var AppSet = wire.NewSet(
 	NewApp, db.NewPostgresDatabase,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewOrganizationHandler, handlers.NewUserHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)
 
-var ServiceSet = wire.NewSet(services.NewOrganizationService)
+var ServiceSet = wire.NewSet(services.NewUserService, services.NewOrganizationService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository)

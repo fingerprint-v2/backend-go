@@ -7,6 +7,7 @@ import (
 
 func SetupRoutes(
 	router fiber.Router,
+	authHandler handlers.AuthHandler,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 ) {
@@ -18,4 +19,5 @@ func SetupRoutes(
 	v1 := router.Group("/v1")
 	SetupOrganizationRouter(v1, organizationHandler)
 	SetupUserRouter(v1, userHandler)
+	SetUpAuthRouter(v1, authHandler)
 }

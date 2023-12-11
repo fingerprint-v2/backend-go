@@ -12,11 +12,10 @@ import (
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func NewApp(organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(authHandler handlers.AuthHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HanndleError,
 	})
@@ -24,14 +23,12 @@ func NewApp(organizationHandler handlers.OrganizationHandler, userHandler handle
 	app.Use(
 		logger.New(),
 		cors.New(cors.Config{AllowOrigins: "*"}),
-		encryptcookie.New(encryptcookie.Config{
-			Key: configs.GetEncryptKey(),
-		}),
 	)
 
 	// Set up routes
 	routers.SetupRoutes(
 		app.Group("/api"),
+		authHandler,
 		organizationHandler,
 		userHandler,
 	)

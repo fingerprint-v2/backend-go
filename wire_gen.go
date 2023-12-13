@@ -10,6 +10,7 @@ import (
 	"github.com/fingerprint/configs"
 	"github.com/fingerprint/db"
 	"github.com/fingerprint/handlers"
+	"github.com/fingerprint/middlewares"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/gofiber/fiber/v2"
@@ -26,12 +27,14 @@ func InitializeApp() (*fiber.App, func(), error) {
 	gormDB := db.NewPostgresDatabase()
 	userRepository := repositories.NewUserRepository(gormDB)
 	userService := services.NewUserService(userRepository)
+	authService := services.NewAuthService(userService)
+	authMiddleware := middleware.NewAuthMiddleware(authService)
 	authHandler := handlers.NewAuthHandler(userService)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
 	userHandler := handlers.NewUserHandler(userRepository)
-	app, err := NewApp(authHandler, organizationHandler, userHandler)
+	app, err := NewApp(authMiddleware, authHandler, organizationHandler, userHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -42,11 +45,11 @@ func InitializeApp() (*fiber.App, func(), error) {
 // wire.go:
 
 var AppSet = wire.NewSet(
-	NewApp, configs.NewMinioClient, db.NewPostgresDatabase,
+	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware,
 )
 
 var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)
 
-var ServiceSet = wire.NewSet(services.NewUserService, services.NewOrganizationService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewUserService, services.NewOrganizationService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository)

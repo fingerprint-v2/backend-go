@@ -177,6 +177,13 @@ definitions:
       message:
         type: string
     type: object
+  utils.ResponseSuccess-models_User:
+    properties:
+      data:
+        $ref: '#/definitions/models.User'
+      message:
+        type: string
+    type: object
   utils.ResponseSuccess-string:
     properties:
       data:
@@ -210,6 +217,16 @@ definitions:
         type: string
     required:
     - organization_id
+    - password
+    - username
+    type: object
+  validates.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
     - password
     - username
     type: object
@@ -257,6 +274,13 @@ paths:
       - application/json
       description: login
       operationId: login
+      parameters:
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.LoginReq'
       produces:
       - application/json
       responses:
@@ -517,6 +541,33 @@ paths:
           schema:
             $ref: '#/definitions/utils.ResponseError'
       summary: Update user
+      tags:
+      - User
+  /api/v1/users/me:
+    post:
+      consumes:
+      - application/json
+      description: get Me
+      operationId: get-me
+      parameters:
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.CreateUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-models_User'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Get Me
       tags:
       - User
 swagger: "2.0"

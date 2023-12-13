@@ -7,6 +7,7 @@ import (
 	"github.com/fingerprint/configs"
 	database "github.com/fingerprint/db"
 	"github.com/fingerprint/handlers"
+	middleware "github.com/fingerprint/middlewares"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/gofiber/fiber/v2"
@@ -23,6 +24,7 @@ var AppSet = wire.NewSet(
 	NewApp,
 	configs.NewMinioClient,
 	database.NewPostgresDatabase,
+	middleware.NewAuthMiddleware,
 )
 
 var HandlerSet = wire.NewSet(
@@ -32,6 +34,7 @@ var HandlerSet = wire.NewSet(
 )
 
 var ServiceSet = wire.NewSet(
+	services.NewAuthService,
 	services.NewUserService,
 	services.NewOrganizationService,
 )

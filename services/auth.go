@@ -7,8 +7,8 @@ import (
 
 	"github.com/fingerprint/configs"
 	"github.com/fingerprint/models"
+	"github.com/fingerprint/utils"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 )
 
 type AuthService interface {
@@ -52,6 +52,7 @@ func isTokenExpired(token string) (bool, error) {
 
 	return false, errors.New("invalid Token")
 }
+
 func (s *authServiceImpl) ValidateToken(token string) (*models.User, error) {
 	t, err := parseToken(token)
 	if err != nil {
@@ -71,11 +72,10 @@ func (s *authServiceImpl) ValidateToken(token string) (*models.User, error) {
 		return nil, errors.New("cannot extract jwt payload")
 	}
 
-	userPayload := claims["user"].(map[string]interface{})
-	user := &models.User{}
-	user.ID = userPayload["id"].(uuid.UUID)
-	user.Username = userPayload["username"].(string)
-	user.Role = userPayload["role"].(string)
-	user.OrganizationID = userPayload["organization"].(string)
-	return user, nil
+	userPayload, ok := claims["user"].(map[string]interface{})
+	if !ok {
+		return nil, errors.New("user data is not in the expected format")
+	}
+
+	return utils.ConvertPayloadToUser(userPayload)
 }

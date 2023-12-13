@@ -9,6 +9,7 @@ import (
 	"github.com/fingerprint/configs"
 	_ "github.com/fingerprint/docs"
 	"github.com/fingerprint/handlers"
+	middleware "github.com/fingerprint/middlewares"
 	"github.com/fingerprint/routers"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
@@ -17,16 +18,16 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-func NewApp(authHandler handlers.AuthHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
 
 	app.Use(
 		logger.New(),
+		middleware.Auth(),
 		cors.New(cors.Config{AllowOrigins: "*"}),
 	)
-
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// Set up routes

@@ -37,6 +37,17 @@ const docTemplate = `{
                 ],
                 "summary": "Login",
                 "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/validates.LoginReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -329,6 +340,47 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/utils.ResponseSuccess-string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/me": {
+            "post": {
+                "description": "get Me",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get Me",
+                "operationId": "get-me",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/validates.CreateUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseSuccess-models_User"
                         }
                     },
                     "500": {
@@ -697,6 +749,17 @@ const docTemplate = `{
                 }
             }
         },
+        "utils.ResponseSuccess-models_User": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "utils.ResponseSuccess-string": {
             "type": "object",
             "properties": {
@@ -745,6 +808,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "validates.LoginReq": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
                     "type": "string"
                 },
                 "username": {

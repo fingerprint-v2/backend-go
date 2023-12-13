@@ -30,6 +30,7 @@ services:
     command: server --console-address ":9001" /data
     networks:
       - fp2_net
+    restart: always
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin-fp

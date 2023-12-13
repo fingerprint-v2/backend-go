@@ -10,9 +10,10 @@ import (
 )
 
 type UserHandler interface {
-	CreateUser(ctx *fiber.Ctx) error
-	UpdateUser(ctx *fiber.Ctx) error
-	DeleteUser(ctx *fiber.Ctx) error
+	GetMe(*fiber.Ctx) error
+	CreateUser(*fiber.Ctx) error
+	UpdateUser(*fiber.Ctx) error
+	DeleteUser(*fiber.Ctx) error
 }
 
 type userHandlerImpl struct {
@@ -32,6 +33,27 @@ func hashPassword(user *models.User) error {
 	}
 	user.Password = string(bytes)
 	return nil
+}
+
+// @Tags User
+// @Summary Get Me
+// @Description get Me
+// @ID get-me
+// @Accept json
+// @Produce json
+// @Param body body validates.CreateUserReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[models.User]
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/users/me [post]
+func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
+	user, ok := c.Locals("payload").(*models.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "Invalid User")
+	}
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[models.User]{
+		Message: "Get me sucessfully",
+		Data:    *user,
+	})
 }
 
 // @Tags User

@@ -37,6 +37,7 @@ func checkPassword(password, hash string) error {
 // @ID login
 // @Accept json
 // @Produce json
+// @Param body body validates.LoginReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[string]
 // @Failure 400 {object} utils.ResponseError
 // @Failure 401 {object} utils.ResponseError

@@ -225,7 +225,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user's id",
+                        "description": "organization's id",
                         "name": "organization_id",
                         "in": "path",
                         "required": true

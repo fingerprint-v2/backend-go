@@ -36,7 +36,6 @@ func NewApp(authHandler handlers.AuthHandler, organizationHandler handlers.Organ
 		organizationHandler,
 		userHandler,
 	)
-
 	return app, nil
 }
 

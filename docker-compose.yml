@@ -16,10 +16,23 @@ services:
     networks:
       - fp2_net
     restart: always
-
+  minio:
+    image: minio/minio
+    container_name: minio
+    volumes:
+      - ./db/minio:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - MINIO_ROOT_USER= ${MINIO_USER}
+      - MINIO_ROOT_PASSWORD= ${MINIO_PASSWORD}
+    command: server --console-address ":9001" /data
+    networks:
+      - fp2_net
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin-fp2
+    container_name: pgadmin-fp
     restart: always
     ports:
       - "8888:80"
@@ -27,17 +40,22 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${PG_ADMIN_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
     volumes:
-      - pgadmin-fp2-data:/var/lib/pgadmin
+      - pgadmin_fp2_data:/var/lib/pgadmin
+    env_file:
+      - ./.env
     networks:
       - fp2_net
 
 volumes:
   fp2_vol:
-    external: true
-  pgadmin-fp2-data:
-    external: true
+    external: false
+  minio_data:
+    driver: local
+    external: false
+  pgadmin_fp2_data:
+    external: false
 
 networks:
   fp2_net:
     driver: bridge
-    external: true
+    external: false

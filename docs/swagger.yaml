@@ -375,7 +375,7 @@ paths:
       description: update Organization
       operationId: update-organization
       parameters:
-      - description: user's id
+      - description: organization's id
         in: path
         name: organization_id
         required: true

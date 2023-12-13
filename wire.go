@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/fingerprint/configs"
 	database "github.com/fingerprint/db"
 	"github.com/fingerprint/handlers"
 	"github.com/fingerprint/repositories"
@@ -20,6 +21,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 
 var AppSet = wire.NewSet(
 	NewApp,
+	configs.NewMinioClient,
 	database.NewPostgresDatabase,
 )
 

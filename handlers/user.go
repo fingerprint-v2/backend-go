@@ -34,6 +34,16 @@ func hashPassword(user *models.User) error {
 	return nil
 }
 
+// @Tags User
+// @Summary Create User
+// @Description create User
+// @ID create-user
+// @Accept json
+// @Produce json
+// @Param body body validates.CreateUserReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/users [post]
 func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	user := &models.User{
 		ID: uuid.New(),
@@ -55,6 +65,17 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags User
+// @Summary Update user
+// @Description update user
+// @ID update-user
+// @Accept json
+// @Produce json
+// @Param  user_id path string  true  "user's id"
+// @Param body body validates.UpdateUserReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/users/{user_id} [put]
 func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 	userId := c.Params("user_id")
 	user := &models.User{}
@@ -74,6 +95,17 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+// @Tags User
+// @Summary Delete User
+// @Description delete User
+// @ID delete-user
+// @Accept json
+// @Produce json
+// @Param  user_id path string  true  "user's id"
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/users/{user_id} [delete]
 func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 	userId := c.Params("user_id")
 	if err := h.userRepo.Delete(userId); err != nil {

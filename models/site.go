@@ -17,5 +17,5 @@ type Site struct {
 	Points         []Point        `json:"points"`
 	CreatedAt      time.Time      `json:"created_at" gorm:"<-:create"`
 	UpdatedAt      time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt      gorm.DeletedAt `json:"deleted_at"`
+	DeletedAt      gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }

@@ -22,6 +22,22 @@ func ValidateCreateOrganizationReq(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+type UpdateOrganizationReq struct {
+	Name string `json:"name" validate:"required"`
+}
+
+func ValidateUpdateOrganizationReq(c *fiber.Ctx) error {
+	var req UpdateOrganizationReq
+	if err := c.BodyParser(&req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	if err := validator.New().Struct(req); err != nil {
+
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	return c.Next()
+}
+
 type SearchOrganizationReq struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`

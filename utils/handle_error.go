@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func HanndleError(c *fiber.Ctx, err error) error {
+func HandleError(c *fiber.Ctx, err error) error {
 	code := fiber.StatusInternalServerError
 	messageError := fiber.ErrInternalServerError.Message
 	var e *fiber.Error

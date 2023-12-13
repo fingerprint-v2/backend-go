@@ -18,5 +18,5 @@ type Point struct {
 	FloorID    string         `json:"floor_id" gorm:"type:uuid;not null"`
 	CreatedAt  time.Time      `json:"created_at" gorm:"<-:create"`
 	UpdatedAt  time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt  gorm.DeletedAt `json:"deleted_at" `
+	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }

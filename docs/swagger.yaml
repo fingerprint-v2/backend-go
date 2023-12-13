@@ -1,0 +1,522 @@
+basePath: /
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Building:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floors:
+        items:
+          $ref: '#/definitions/models.Floor'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Floor:
+    properties:
+      building:
+        $ref: '#/definitions/models.Building'
+      building_id:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      name:
+        type: string
+      number:
+        type: integer
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Organization:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      name:
+        type: string
+      sites:
+        items:
+          $ref: '#/definitions/models.Site'
+        type: array
+      updated_at:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    type: object
+  models.Point:
+    properties:
+      building:
+        $ref: '#/definitions/models.Building'
+      building_id:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floor:
+        $ref: '#/definitions/models.Floor'
+      floor_id:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Site:
+    properties:
+      buildings:
+        items:
+          $ref: '#/definitions/models.Building'
+        type: array
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floors:
+        items:
+          $ref: '#/definitions/models.Floor'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  utils.ResponseError:
+    properties:
+      error:
+        type: string
+    type: object
+  utils.ResponseSuccess-array_models_Organization:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Organization'
+        type: array
+      message:
+        type: string
+    type: object
+  utils.ResponseSuccess-models_Organization:
+    properties:
+      data:
+        $ref: '#/definitions/models.Organization'
+      message:
+        type: string
+    type: object
+  utils.ResponseSuccess-string:
+    properties:
+      data:
+        type: string
+      message:
+        type: string
+    type: object
+  utils.ResponseSuccess-uuid_UUID:
+    properties:
+      data:
+        type: string
+      message:
+        type: string
+    type: object
+  validates.CreateOrganizationReq:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  validates.CreateUserReq:
+    properties:
+      organization_id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    required:
+    - organization_id
+    - password
+    - username
+    type: object
+  validates.SearchOrganizationReq:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  validates.UpdateOrganizationReq:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  validates.UpdateUserReq:
+    properties:
+      organization_id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fingerprint API
+  version: "1.0"
+paths:
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Login
+      tags:
+      - Auth
+  /api/v1/organizations:
+    post:
+      consumes:
+      - application/json
+      description: create Organization
+      operationId: create-organization
+      parameters:
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.CreateOrganizationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-uuid_UUID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Create Organization
+      tags:
+      - Organization
+  /api/v1/organizations/{organization_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete Organization
+      operationId: delete-organization
+      parameters:
+      - description: organization's id
+        in: path
+        name: organization_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Delete Organization
+      tags:
+      - Organization
+    get:
+      consumes:
+      - application/json
+      description: get Organization
+      operationId: get-organization
+      parameters:
+      - description: organization's id
+        in: path
+        name: organization_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-models_Organization'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Get Organization
+      tags:
+      - Organization
+    put:
+      consumes:
+      - application/json
+      description: update Organization
+      operationId: update-organization
+      parameters:
+      - description: user's id
+        in: path
+        name: organization_id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.UpdateOrganizationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Update Organization
+      tags:
+      - Organization
+  /api/v1/organizations/search:
+    post:
+      consumes:
+      - application/json
+      description: search Organization
+      operationId: search-organization
+      parameters:
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.SearchOrganizationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-array_models_Organization'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Search Organization
+      tags:
+      - Organization
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: create User
+      operationId: create-user
+      parameters:
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.CreateUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Create User
+      tags:
+      - User
+  /api/v1/users/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete User
+      operationId: delete-user
+      parameters:
+      - description: user's id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Delete User
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: update user
+      operationId: update-user
+      parameters:
+      - description: user's id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/validates.UpdateUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Update user
+      tags:
+      - User
+swagger: "2.0"

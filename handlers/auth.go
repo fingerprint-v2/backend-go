@@ -31,6 +31,18 @@ func checkPassword(password, hash string) error {
 	return err
 }
 
+// @Tags Auth
+// @Summary Login
+// @Description login
+// @ID login
+// @Accept json
+// @Produce json
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 400 {object} utils.ResponseError
+// @Failure 401 {object} utils.ResponseError
+// @Failure 404 {object} utils.ResponseError
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/login [post]
 func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 
 	req := &validates.LoginReq{}

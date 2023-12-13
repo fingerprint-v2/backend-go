@@ -15,6 +15,10 @@ import (
 	"github.com/google/wire"
 )
 
+import (
+	_ "github.com/fingerprint/docs"
+)
+
 // Injectors from wire.go:
 
 func InitializeApp() (*fiber.App, func(), error) {

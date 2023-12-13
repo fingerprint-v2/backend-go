@@ -29,6 +29,17 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 	}
 }
 
+// @Tags Organization
+// @Summary Get Organization
+// @Description get Organization
+// @ID get-organization
+// @Accept json
+// @Produce json
+// @Param  organization_id path string  true  "organization's id"
+// @Success 200 {object} utils.ResponseSuccess[models.Organization]
+// @Failure 400 {object} utils.ResponseError
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/organizations/{organization_id} [get]
 func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 	organizationId := c.Params("organization_id")
 	organization, err := h.organizationRepo.Get(organizationId)
@@ -41,6 +52,17 @@ func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Organization
+// @Summary Search Organization
+// @Description search Organization
+// @ID search-organization
+// @Accept json
+// @Produce json
+// @Param body body validates.SearchOrganizationReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[[]models.Organization]
+// @Failure 400 {object} utils.ResponseError
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/organizations/search [post]
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	ctx := c.Context()
 	organization := &models.Organization{}
@@ -58,6 +80,17 @@ func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Organization
+// @Summary Create Organization
+// @Description create Organization
+// @ID create-organization
+// @Accept json
+// @Produce json
+// @Param body body validates.CreateOrganizationReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[uuid.UUID]
+// @Failure 400 {object} utils.ResponseError
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/organizations [post]
 func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 	organization := &models.Organization{
 		ID: uuid.New(),
@@ -74,6 +107,18 @@ func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Organization
+// @Summary Update Organization
+// @Description update Organization
+// @ID update-organization
+// @Accept json
+// @Produce json
+// @Param  organization_id path string  true  "organization's id"
+// @Param body body validates.UpdateOrganizationReq true "Request Body"
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 400 {object} utils.ResponseError
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/organizations/{organization_id} [put]
 func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
 	organizationId := c.Params("organization_id")
 	organization := &models.Organization{}
@@ -89,6 +134,16 @@ func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Organization
+// @Summary Delete Organization
+// @Description delete Organization
+// @ID delete-organization
+// @Accept json
+// @Produce json
+// @Param  organization_id path string  true  "organization's id"
+// @Success 200 {object} utils.ResponseSuccess[string]
+// @Failure 500 {object} utils.ResponseError
+// @Router /api/v1/organizations/{organization_id} [delete]
 func (h *organizationHandlerImpl) DeleteOrganization(c *fiber.Ctx) error {
 	organizationId := c.Params("organization_id")
 	if err := h.organizationRepo.Delete(organizationId); err != nil {

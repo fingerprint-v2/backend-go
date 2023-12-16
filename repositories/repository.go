@@ -1,15 +1,17 @@
 package repositories
 
 import (
+	"context"
+
 	"gorm.io/gorm"
 )
 
 type repository[M any] interface {
-	Get(id string) (*M, error)
-	Create(ent *M) error
-	Update(id string, ent *M) error
-	Upsert(ent *M) error
-	Delete(id string) error
+	Get(ctx context.Context, id string) (*M, error)
+	Create(ctx context.Context, ent *M) error
+	Update(ctx context.Context, id string, ent *M) error
+	Upsert(ctx context.Context, ent *M) error
+	Delete(ctx context.Context, id string) error
 }
 
 type repositoryImpl[M any] struct {
@@ -21,7 +23,7 @@ func newRepository[M any](db *gorm.DB) *repositoryImpl[M] {
 		db: db,
 	}
 }
-func (r *repositoryImpl[M]) Get(id string) (*M, error) {
+func (r *repositoryImpl[M]) Get(ctx context.Context, id string) (*M, error) {
 	ent := new(M)
 	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -29,27 +31,27 @@ func (r *repositoryImpl[M]) Get(id string) (*M, error) {
 	return ent, nil
 }
 
-func (r *repositoryImpl[M]) Create(ent *M) error {
+func (r *repositoryImpl[M]) Create(ctx context.Context, ent *M) error {
 
 	if err := r.db.Create(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (r *repositoryImpl[M]) Update(id string, ent *M) error {
+func (r *repositoryImpl[M]) Update(ctx context.Context, id string, ent *M) error {
 	if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (r *repositoryImpl[M]) Upsert(ent *M) error {
+func (r *repositoryImpl[M]) Upsert(ctx context.Context, ent *M) error {
 	if err := r.db.Save(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *repositoryImpl[M]) Delete(id string) error {
+func (r *repositoryImpl[M]) Delete(ctx context.Context, id string) error {
 	ent := new(M)
 	if err := r.db.Delete(ent, "id = ?", id).Error; err != nil {
 		return err

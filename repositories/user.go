@@ -1,13 +1,15 @@
 package repositories
 
 import (
+	"context"
+
 	"github.com/fingerprint/models"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
 	repository[models.User]
-	GetByUsername(string) (*models.User, error)
+	GetByUsername(context.Context, string) (*models.User, error)
 }
 
 type userRepositoryImpl struct {
@@ -22,7 +24,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (r *userRepositoryImpl) GetByUsername(username string) (*models.User, error) {
+func (r *userRepositoryImpl) GetByUsername(ctx context.Context, username string) (*models.User, error) {
 	user := &models.User{}
 	if err := r.db.First(user, "username = ?", username).Error; err != nil {
 		return nil, err

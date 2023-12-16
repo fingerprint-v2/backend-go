@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"log"
 	"os"
 	"strconv"
 
@@ -23,7 +22,7 @@ func GetMinioConfig() *MinioConfig {
 	}
 
 	return &MinioConfig{
-		Endpoint:        os.Getenv("MINIO_HOST") + os.Getenv("MINIO_PORT"),
+		Endpoint:        os.Getenv("MINIO_HOST") + ":" + os.Getenv("MINIO_PORT"),
 		AccessKeyID:     os.Getenv("MINIO_USER"),
 		SecretAccessKey: os.Getenv("MINIO_PASSWORD"),
 		UseSSL:          useSSL,
@@ -42,8 +41,6 @@ func NewMinioClient() *minio.Client {
 	if err != nil {
 		return nil
 	}
-
-	log.Printf("%#v\n", minioClient) // minioClient is now setup
 
 	return minioClient
 }

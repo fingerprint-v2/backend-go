@@ -33,8 +33,27 @@ func GetAccessTokenSignature() []byte {
 func GetRefreshTokenSignature() []byte {
 	refreshTokenSignature, ok := os.LookupEnv("JWT_REFRESH_SIGNATURE")
 	if !ok || refreshTokenSignature == "" {
+		log.Println("JWT_REFRESH_SIGNATURE not set")
 		return nil
 	}
 
 	return []byte(refreshTokenSignature)
+}
+
+func GetUploadPath() *string {
+	uploadPath, ok := os.LookupEnv("MINIO_UPLOAD_PATH")
+	if !ok || uploadPath == "" {
+		log.Println("MINIO_UPLOAD_PATH not set")
+		return nil
+	}
+	return &uploadPath
+}
+
+func GetDownloadPath() *string {
+	uploadPath, ok := os.LookupEnv("MINIO_DOWNLOAD_PATH")
+	if !ok || uploadPath == "" {
+		log.Println("MINIO_DOWNLOAD_PATH not set")
+		return nil
+	}
+	return &uploadPath
 }

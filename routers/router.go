@@ -8,6 +8,7 @@ import (
 func SetupRoutes(
 	router fiber.Router,
 	authHandler handlers.AuthHandler,
+	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 ) {
@@ -17,7 +18,8 @@ func SetupRoutes(
 		})
 	})
 	v1 := router.Group("/v1")
+	SetUpAuthRouter(v1, authHandler)
+	SetUpMinioRouter(v1, minioHandler)
 	SetupOrganizationRouter(v1, organizationHandler)
 	SetupUserRouter(v1, userHandler)
-	SetUpAuthRouter(v1, authHandler)
 }

@@ -30,11 +30,15 @@ func InitializeApp() (*fiber.App, func(), error) {
 	authService := services.NewAuthService(userService)
 	authMiddleware := middleware.NewAuthMiddleware(authService)
 	authHandler := handlers.NewAuthHandler(userService)
+	client := configs.NewMinioClient()
+	minioRepository := repositories.NewMinioRepository(client)
+	minioService := services.NewMinioService(minioRepository)
+	minioHandler := handlers.NewMinioHandler(minioService)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
 	userHandler := handlers.NewUserHandler(userRepository)
-	app, err := NewApp(authMiddleware, authHandler, organizationHandler, userHandler)
+	app, err := NewApp(authMiddleware, authHandler, minioHandler, organizationHandler, userHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -48,8 +52,8 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewUserService, services.NewOrganizationService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewOrganizationService, services.NewUserService)
 
-var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository)

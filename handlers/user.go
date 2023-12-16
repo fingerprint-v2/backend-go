@@ -67,6 +67,7 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users [post]
 func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
+	ctx := c.Context()
 	user := &models.User{
 		ID: uuid.New(),
 	}
@@ -78,7 +79,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := h.userRepo.Create(user); err != nil {
+	if err := h.userRepo.Create(ctx, user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
@@ -99,6 +100,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [put]
 func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
+	ctx := c.Context()
 	userId := c.Params("user_id")
 	user := &models.User{}
 	if err := c.BodyParser(user); err != nil {
@@ -109,7 +111,7 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := h.userRepo.Update(userId, user); err != nil {
+	if err := h.userRepo.Update(ctx, userId, user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
@@ -129,8 +131,9 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [delete]
 func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
+	ctx := c.Context()
 	userId := c.Params("user_id")
-	if err := h.userRepo.Delete(userId); err != nil {
+	if err := h.userRepo.Delete(ctx, userId); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{

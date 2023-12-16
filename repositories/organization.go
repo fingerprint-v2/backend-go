@@ -1,13 +1,15 @@
 package repositories
 
 import (
+	"context"
+
 	"github.com/fingerprint/models"
 	"gorm.io/gorm"
 )
 
 type OrganizationRepository interface {
 	repository[models.Organization]
-	SearchOrganization(*models.Organization) ([]models.Organization, error)
+	SearchOrganization(context.Context, *models.Organization) ([]models.Organization, error)
 }
 
 type organizationRepositoryImpl struct {
@@ -22,7 +24,7 @@ func NewOrganizationRepository(db *gorm.DB) OrganizationRepository {
 	}
 }
 
-func (r organizationRepositoryImpl) SearchOrganization(org *models.Organization) ([]models.Organization, error) {
+func (r organizationRepositoryImpl) SearchOrganization(ctx context.Context, org *models.Organization) ([]models.Organization, error) {
 	orgs := []models.Organization{}
 	if err := r.db.Where("LOWER(name) LIKE LOWER(?)", org.Name+"%").Find(&orgs).Error; err != nil {
 		return nil, err

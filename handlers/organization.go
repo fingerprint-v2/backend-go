@@ -41,8 +41,9 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [get]
 func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
+	ctx := c.Context()
 	organizationId := c.Params("organization_id")
-	organization, err := h.organizationRepo.Get(organizationId)
+	organization, err := h.organizationRepo.Get(ctx, organizationId)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -92,13 +93,14 @@ func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations [post]
 func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
+	ctx := c.Context()
 	organization := &models.Organization{
 		ID: uuid.New(),
 	}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	if err := h.organizationRepo.Create(organization); err != nil {
+	if err := h.organizationRepo.Create(ctx, organization); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
@@ -120,12 +122,13 @@ func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [put]
 func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
+	ctx := c.Context()
 	organizationId := c.Params("organization_id")
 	organization := &models.Organization{}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	if err := h.organizationRepo.Update(organizationId, organization); err != nil {
+	if err := h.organizationRepo.Update(ctx, organizationId, organization); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
@@ -145,8 +148,9 @@ func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [delete]
 func (h *organizationHandlerImpl) DeleteOrganization(c *fiber.Ctx) error {
+	ctx := c.Context()
 	organizationId := c.Params("organization_id")
-	if err := h.organizationRepo.Delete(organizationId); err != nil {
+	if err := h.organizationRepo.Delete(ctx, organizationId); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{

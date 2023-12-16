@@ -8,6 +8,42 @@ definitions:
         description: Valid is true if Time is not NULL
         type: boolean
     type: object
+  minio.UploadInfo:
+    properties:
+      bucket:
+        type: string
+      checksumCRC32:
+        description: |-
+          Verified checksum values, if any.
+          Values are base64 (standard) encoded.
+          For multipart objects this is a checksum of the checksum of each part.
+        type: string
+      checksumCRC32C:
+        type: string
+      checksumSHA1:
+        type: string
+      checksumSHA256:
+        type: string
+      etag:
+        type: string
+      expiration:
+        description: |-
+          Lifecycle expiry-date and ruleID associated with the expiry
+          not to be confused with `Expires` HTTP header.
+        type: string
+      expirationRuleID:
+        type: string
+      key:
+        type: string
+      lastModified:
+        type: string
+      location:
+        type: string
+      size:
+        type: integer
+      versionID:
+        type: string
+    type: object
   models.Building:
     properties:
       created_at:
@@ -170,6 +206,13 @@ definitions:
       message:
         type: string
     type: object
+  utils.ResponseSuccess-minio_UploadInfo:
+    properties:
+      data:
+        $ref: '#/definitions/minio.UploadInfo'
+      message:
+        type: string
+    type: object
   utils.ResponseSuccess-models_Organization:
     properties:
       data:
@@ -307,6 +350,93 @@ paths:
       summary: Login
       tags:
       - Auth
+  /api/v1/minio/bucket/{bucket_name}:
+    post:
+      consumes:
+      - application/json
+      description: create Bucket
+      operationId: create-bucket
+      parameters:
+      - description: bucket name
+        in: path
+        name: bucket_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-minio_UploadInfo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Create Bucket
+      tags:
+      - Minio
+  /api/v1/minio/bucket/{bucket_name}/model/{model_name}:
+    get:
+      consumes:
+      - application/json
+      description: Download object
+      operationId: download-object
+      parameters:
+      - description: bucket name
+        in: path
+        name: bucket_name
+        required: true
+        type: string
+      - description: model name
+        in: path
+        name: model_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-string'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Download Object
+      tags:
+      - Minio
+    post:
+      consumes:
+      - application/json
+      description: upload object
+      operationId: upload-object
+      parameters:
+      - description: bucket name
+        in: path
+        name: bucket_name
+        required: true
+        type: string
+      - description: model name
+        in: path
+        name: model_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseSuccess-minio_UploadInfo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseError'
+      summary: Upload Object
+      tags:
+      - Minio
   /api/v1/organizations:
     post:
       consumes:

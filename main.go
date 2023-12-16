@@ -18,7 +18,7 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
@@ -34,6 +34,7 @@ func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHand
 	routers.SetupRoutes(
 		app.Group("/api"),
 		authHandler,
+		minioHandler,
 		organizationHandler,
 		userHandler,
 	)

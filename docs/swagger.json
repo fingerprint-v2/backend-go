@@ -76,6 +76,135 @@
                 }
             }
         },
+        "/api/v1/minio/bucket/{bucket_name}": {
+            "post": {
+                "description": "create Bucket",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Minio"
+                ],
+                "summary": "Create Bucket",
+                "operationId": "create-bucket",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bucket name",
+                        "name": "bucket_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseSuccess-minio_UploadInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/minio/bucket/{bucket_name}/model/{model_name}": {
+            "get": {
+                "description": "Download object",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Minio"
+                ],
+                "summary": "Download Object",
+                "operationId": "download-object",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bucket name",
+                        "name": "bucket_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "model name",
+                        "name": "model_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseSuccess-string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "upload object",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Minio"
+                ],
+                "summary": "Upload Object",
+                "operationId": "upload-object",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bucket name",
+                        "name": "bucket_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "model name",
+                        "name": "model_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseSuccess-minio_UploadInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/organizations": {
             "post": {
                 "description": "create Organization",
@@ -485,6 +614,52 @@
                 }
             }
         },
+        "minio.UploadInfo": {
+            "type": "object",
+            "properties": {
+                "bucket": {
+                    "type": "string"
+                },
+                "checksumCRC32": {
+                    "description": "Verified checksum values, if any.\nValues are base64 (standard) encoded.\nFor multipart objects this is a checksum of the checksum of each part.",
+                    "type": "string"
+                },
+                "checksumCRC32C": {
+                    "type": "string"
+                },
+                "checksumSHA1": {
+                    "type": "string"
+                },
+                "checksumSHA256": {
+                    "type": "string"
+                },
+                "etag": {
+                    "type": "string"
+                },
+                "expiration": {
+                    "description": "Lifecycle expiry-date and ruleID associated with the expiry\nnot to be confused with `Expires` HTTP header.",
+                    "type": "string"
+                },
+                "expirationRuleID": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "lastModified": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "versionID": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Building": {
             "type": "object",
             "properties": {
@@ -726,6 +901,17 @@
                     "items": {
                         "$ref": "#/definitions/models.Organization"
                     }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.ResponseSuccess-minio_UploadInfo": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/minio.UploadInfo"
                 },
                 "message": {
                     "type": "string"

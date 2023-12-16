@@ -23,7 +23,7 @@ func NewUserService(userRepo repositories.UserRepository) UserService {
 
 func (s *userServiceImpl) GetByUsername(ctx context.Context, username string) (*models.User, error) {
 
-	user, err := s.userRepo.GetByUsername(username)
+	user, err := s.userRepo.GetByUsername(ctx, username)
 	if err != nil {
 		return nil, err
 	}

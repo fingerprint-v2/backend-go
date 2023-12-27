@@ -57,7 +57,7 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 
 	t, err := h.authService.GenerateToken(user)
 	if err != nil {
-		fiber.NewError(fiber.StatusUnauthorized, err.Error())
+		return fiber.NewError(fiber.StatusUnauthorized, err.Error())
 	}
 
 	c.Cookie(&fiber.Cookie{

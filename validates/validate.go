@@ -19,11 +19,11 @@ func ValidateRequest[T any](v *Validator) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ent := new(T)
 		if err := c.BodyParser(ent); err != nil {
-			return c.Status(fiber.StatusBadRequest).Send([]byte(err.Error()))
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		if err := v.validator.Struct(ent); err != nil {
-			return c.Status(fiber.StatusBadRequest).Send([]byte(err.Error()))
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return c.Next()
 	}

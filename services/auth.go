@@ -6,13 +6,18 @@ import (
 	"time"
 
 	"github.com/fingerprint/configs"
+	"github.com/fingerprint/constants"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/utils"
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService interface {
 	ValidateToken(string) (*models.User, error)
+	GenerateToken(*models.User) (*string, error)
+	CheckPassword(string, string) error
 }
 
 type authServiceImpl struct {
@@ -78,4 +83,26 @@ func (s *authServiceImpl) ValidateToken(token string) (*models.User, error) {
 	}
 
 	return utils.ConvertPayloadToUser(userPayload)
+}
+
+func (s *authServiceImpl) CheckPassword(password string, hash string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err
+}
+
+func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
+
+	claims := jwt.MapClaims{
+		"user": user,
+		"exp":  constants.JWTExpiration,
+	}
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString(configs.GetAccessTokenSignature())
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	return &t, nil
 }

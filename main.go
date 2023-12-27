@@ -12,13 +12,14 @@ import (
 	middleware "github.com/fingerprint/middlewares"
 	"github.com/fingerprint/routers"
 	"github.com/fingerprint/utils"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 )
 
-func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(middleware *middleware.AuthMiddleware, validator *validates.Validator, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
@@ -33,6 +34,7 @@ func NewApp(middleware *middleware.AuthMiddleware, authHandler handlers.AuthHand
 	// Set up routes
 	routers.SetupRoutes(
 		app.Group("/api"),
+		validator,
 		authHandler,
 		minioHandler,
 		organizationHandler,

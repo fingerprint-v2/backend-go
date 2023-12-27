@@ -2,14 +2,19 @@ package routers
 
 import (
 	"github.com/fingerprint/handlers"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupOrganizationRouter(router fiber.Router, handler handlers.OrganizationHandler) {
+func SetupOrganizationRouter(router fiber.Router, v *validates.Validator, handler handlers.OrganizationHandler) {
+	vCreateOrganizationReq := validates.ValidateRequest[validates.CreateOrganizationReq](v)
+	vUpdateOrganizationReq := validates.ValidateRequest[validates.UpdateOrganizationReq](v)
+	vSearchOrganizationReq := validates.ValidateRequest[validates.SearchOrganizationReq](v)
+
 	organization := router.Group("organizations")
 	organization.Get("/:organization_id", handler.GetOrganization)
-	organization.Post("/search", handler.SearchOrganization)
-	organization.Post("/", handler.CreateOrganization)
-	organization.Put("/:organization_id", handler.UpdateOrganization)
+	organization.Post("/search", vSearchOrganizationReq, handler.SearchOrganization)
+	organization.Post("/", vCreateOrganizationReq, handler.CreateOrganization)
+	organization.Put("/:organization_id", vUpdateOrganizationReq, handler.UpdateOrganization)
 	organization.Delete("/:organization_id", handler.DeleteOrganization)
 }

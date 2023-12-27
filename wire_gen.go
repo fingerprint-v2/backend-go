@@ -13,6 +13,7 @@ import (
 	"github.com/fingerprint/middlewares"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/wire"
 )
@@ -29,7 +30,8 @@ func InitializeApp() (*fiber.App, func(), error) {
 	userService := services.NewUserService(userRepository)
 	authService := services.NewAuthService(userService)
 	authMiddleware := middleware.NewAuthMiddleware(authService)
-	authHandler := handlers.NewAuthHandler(userService)
+	validator := validates.NewValidator()
+	authHandler := handlers.NewAuthHandler(authService, userService)
 	client := configs.NewMinioClient()
 	minioRepository := repositories.NewMinioRepository(client)
 	minioService := services.NewMinioService(minioRepository)
@@ -38,7 +40,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
 	userHandler := handlers.NewUserHandler(userRepository)
-	app, err := NewApp(authMiddleware, authHandler, minioHandler, organizationHandler, userHandler)
+	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -49,7 +51,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 // wire.go:
 
 var AppSet = wire.NewSet(
-	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware,
+	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, validates.NewValidator,
 )
 
 var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)

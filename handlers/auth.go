@@ -3,13 +3,11 @@ package handlers
 import (
 	"time"
 
-	"github.com/fingerprint/configs"
+	"github.com/fingerprint/constants"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
-	jwt "github.com/golang-jwt/jwt/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler interface {
@@ -17,18 +15,15 @@ type AuthHandler interface {
 }
 
 type authHandlerImpl struct {
+	authService services.AuthService
 	userService services.UserService
 }
 
-func NewAuthHandler(userService services.UserService) AuthHandler {
+func NewAuthHandler(authService services.AuthService, userService services.UserService) AuthHandler {
 	return &authHandlerImpl{
+		authService: authService,
 		userService: userService,
 	}
-}
-
-func checkPassword(password, hash string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err
 }
 
 // @Tags Auth
@@ -56,31 +51,19 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := checkPassword(req.Password, user.Password); err != nil {
+	if err := h.authService.CheckPassword(req.Password, user.Password); err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, err.Error())
 	}
 
-	day := time.Hour * 24
-	// Calculate JWT expiration time
-	jwtExpiration := time.Now().Add(day * 1).Unix()
-
-	// Create the JWT claims, which includes the user ID and expiry time
-	claims := jwt.MapClaims{
-		"user": user,
-		"exp":  jwtExpiration,
-	}
-	// Create token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	// Generate encoded token and send it as response.
-	t, err := token.SignedString(configs.GetAccessTokenSignature())
+	t, err := h.authService.GenerateToken(user)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		fiber.NewError(fiber.StatusUnauthorized, err.Error())
 	}
 
 	c.Cookie(&fiber.Cookie{
 		Name:     "access_token",
-		Value:    t,
-		MaxAge:   int(jwtExpiration - time.Now().Unix()), // Set MaxAge to match JWT expiration time
+		Value:    *t,
+		MaxAge:   int(int64(constants.JWTExpiration) - time.Now().Unix()),
 		HTTPOnly: true,
 		Secure:   true,
 	})

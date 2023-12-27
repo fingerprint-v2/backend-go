@@ -2,11 +2,13 @@ package routers
 
 import (
 	"github.com/fingerprint/handlers"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(
 	router fiber.Router,
+	validator *validates.Validator,
 	authHandler handlers.AuthHandler,
 	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,
@@ -18,8 +20,8 @@ func SetupRoutes(
 		})
 	})
 	v1 := router.Group("/v1")
-	SetUpAuthRouter(v1, authHandler)
-	SetUpMinioRouter(v1, minioHandler)
-	SetupOrganizationRouter(v1, organizationHandler)
-	SetupUserRouter(v1, userHandler)
+	SetUpAuthRouter(v1, validator, authHandler)
+	SetUpMinioRouter(v1, validator, minioHandler)
+	SetupOrganizationRouter(v1, validator, organizationHandler)
+	SetupUserRouter(v1, validator, userHandler)
 }

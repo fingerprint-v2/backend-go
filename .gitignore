@@ -8,7 +8,6 @@ tmp
 *.dll
 *.so
 *.dylib
-
 # Test binary, built with `go test -c`
 *.test
 
@@ -20,3 +19,8 @@ tmp
 
 # Go workspace file
 go.work
+
+#Ignore all .meta file
+*.meta
+#But not source file with postfix. which is everything but a folder
+!*.*.meta

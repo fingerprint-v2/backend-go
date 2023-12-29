@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupOrganizationRouter(router fiber.Router, v *validates.Validator, handler handlers.OrganizationHandler) {
+func SetupOrganizationRouter(router fiber.Router, v validates.Validator, handler handlers.OrganizationHandler) {
 	vCreateOrganizationReq := validates.ValidateRequest[validates.CreateOrganizationReq](v)
 	vUpdateOrganizationReq := validates.ValidateRequest[validates.UpdateOrganizationReq](v)
 	vSearchOrganizationReq := validates.ValidateRequest[validates.SearchOrganizationReq](v)

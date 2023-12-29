@@ -18,6 +18,7 @@ type AuthService interface {
 	ValidateToken(string) (*models.User, error)
 	GenerateToken(*models.User) (*string, error)
 	CheckPassword(string, string) error
+	HashPassword(user *models.User) error
 }
 
 type authServiceImpl struct {
@@ -105,4 +106,13 @@ func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 	}
 
 	return &t, nil
+}
+
+func (s *authServiceImpl) HashPassword(user *models.User) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	if err != nil {
+		return err
+	}
+	user.Password = string(bytes)
+	return nil
 }

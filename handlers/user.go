@@ -3,10 +3,10 @@ package handlers
 import (
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
+	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler interface {
@@ -17,22 +17,15 @@ type UserHandler interface {
 }
 
 type userHandlerImpl struct {
-	userRepo repositories.UserRepository
+	authService services.AuthService
+	userRepo    repositories.UserRepository
 }
 
-func NewUserHandler(userRepo repositories.UserRepository) UserHandler {
+func NewUserHandler(authService services.AuthService, userRepo repositories.UserRepository) UserHandler {
 	return &userHandlerImpl{
-		userRepo: userRepo,
+		authService: authService,
+		userRepo:    userRepo,
 	}
-}
-
-func hashPassword(user *models.User) error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
-	if err != nil {
-		return err
-	}
-	user.Password = string(bytes)
-	return nil
 }
 
 // @Tags User
@@ -75,7 +68,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := hashPassword(user); err != nil {
+	if err := h.authService.HashPassword(user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
@@ -107,7 +100,7 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := hashPassword(user); err != nil {
+	if err := h.authService.HashPassword(user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 

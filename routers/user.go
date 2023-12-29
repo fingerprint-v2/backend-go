@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupUserRouter(router fiber.Router, v *validates.Validator, handler handlers.UserHandler) {
+func SetupUserRouter(router fiber.Router, v validates.Validator, handler handlers.UserHandler) {
 	vCreateUserReq := validates.ValidateRequest[validates.CreateUserReq](v)
 	vUpdateUserReq := validates.ValidateRequest[validates.UpdateUserReq](v)
 

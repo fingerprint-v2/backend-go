@@ -1,6 +1,8 @@
 package configs
 
-import "os"
+import (
+	"os"
+)
 
 type PostgresConfig struct {
 	Host     string
@@ -12,7 +14,6 @@ type PostgresConfig struct {
 }
 
 func GetPostgresConfig() *PostgresConfig {
-	
 	return &PostgresConfig{
 		Host:     os.Getenv("POSTGRES_HOST"),
 		Port:     os.Getenv("POSTGRES_PORT"),

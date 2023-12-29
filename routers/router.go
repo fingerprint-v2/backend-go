@@ -8,7 +8,7 @@ import (
 
 func SetupRoutes(
 	router fiber.Router,
-	validator *validates.Validator,
+	validator validates.Validator,
 	authHandler handlers.AuthHandler,
 	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,

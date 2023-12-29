@@ -19,7 +19,7 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-func NewApp(middleware *middleware.AuthMiddleware, validator *validates.Validator, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(middleware *middleware.AuthMiddleware, validator validates.Validator, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
@@ -57,7 +57,6 @@ func NewApp(middleware *middleware.AuthMiddleware, validator *validates.Validato
 //go:generate swag init --parseDependency --parseInternal
 func main() {
 
-	configs.InitialEnv(".env")
 
 	app, cleanup, err := InitializeApp()
 	if err != nil {

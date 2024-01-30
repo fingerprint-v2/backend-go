@@ -39,7 +39,7 @@ func NewUserHandler(authService services.AuthService, userRepo repositories.User
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/me [post]
 func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
-	user, ok := c.Locals("payload").(*models.User)
+	user, ok := c.Locals("user").(*models.User)
 	if !ok {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid User")
 	}

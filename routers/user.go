@@ -12,7 +12,7 @@ func SetupUserRouter(router fiber.Router, v validates.Validator, handler handler
 
 	user := router.Group("users")
 	user.Get("/me", handler.GetMe)
-	user.Post("/", vCreateUserReq, handler.CreateUser)
-	user.Put("/:user_id", vUpdateUserReq, handler.UpdateUser)
+	user.Put("/", vCreateUserReq, handler.CreateUser)
+	user.Patch("/:user_id", vUpdateUserReq, handler.UpdateUser)
 	user.Delete("/:user_id", handler.DeleteUser)
 }

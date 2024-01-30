@@ -14,5 +14,6 @@ func HandleError(c *fiber.Ctx, err error) error {
 	}
 	return c.Status(code).JSON(fiber.Map{
 		"error": err.Error(),
+		"code":  code,
 	})
 }

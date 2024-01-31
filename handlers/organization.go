@@ -5,6 +5,7 @@ import (
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -66,16 +67,17 @@ func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 // @Router /api/v1/organizations/search [post]
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	ctx := c.Context()
-	organization := &models.Organization{}
+	// organization := &models.Organization{}
+	organization := &validates.SearchOrganizationReq{}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	organizations, err := h.organizationService.SearchOrganization(ctx, organization)
+	organizations, err := h.organizationRepo.Search(ctx, organization)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[[]models.Organization]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.Organization]{
 		Message: "Search organization sucessfully",
 		Data:    organizations,
 	})
@@ -103,9 +105,9 @@ func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 	if err := h.organizationRepo.Create(ctx, organization); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.Organization]{
 		Message: "Create organization sucessfully",
-		Data:    organization.ID,
+		Data:    organization,
 	})
 }
 

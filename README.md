@@ -1,5 +1,10 @@
 # backend-go
 
+# Running
+
+- `air`
+- `air -c .air.nobuild.toml` (Faster reload)
+
 # Issues
 
 - When running `go generate` command, I got error `cmd/go: missing sum after updating a different package`.

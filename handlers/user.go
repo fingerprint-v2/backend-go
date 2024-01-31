@@ -75,9 +75,9 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	if err := h.userRepo.Create(ctx, user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[uuid.UUID]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.User]{
 		Message: "Create user sucessfully",
-		Data:    user.ID,
+		Data:    user,
 	})
 }
 

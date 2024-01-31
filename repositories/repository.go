@@ -2,28 +2,32 @@ package repositories
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 
 	"gorm.io/gorm"
 )
 
-type repository[M any] interface {
+// M is the model struct, V is the validation struct
+type repository[M any, V any] interface {
 	Get(ctx context.Context, id string) (*M, error)
 	Create(ctx context.Context, ent *M) error
 	Update(ctx context.Context, id string, ent *M) error
 	Upsert(ctx context.Context, ent *M) error
 	Delete(ctx context.Context, id string) error
+	Search(ctx context.Context, ent *V) (*[]M, error)
 }
 
-type repositoryImpl[M any] struct {
+type repositoryImpl[M any, V any] struct {
 	db *gorm.DB
 }
 
-func newRepository[M any](db *gorm.DB) *repositoryImpl[M] {
-	return &repositoryImpl[M]{
+func newRepository[M any, V any](db *gorm.DB) *repositoryImpl[M, V] {
+	return &repositoryImpl[M, V]{
 		db: db,
 	}
 }
-func (r *repositoryImpl[M]) Get(ctx context.Context, id string) (*M, error) {
+func (r *repositoryImpl[M, V]) Get(ctx context.Context, id string) (*M, error) {
 	ent := new(M)
 	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -31,30 +35,52 @@ func (r *repositoryImpl[M]) Get(ctx context.Context, id string) (*M, error) {
 	return ent, nil
 }
 
-func (r *repositoryImpl[M]) Create(ctx context.Context, ent *M) error {
+func (r *repositoryImpl[M, V]) Create(ctx context.Context, ent *M) error {
 
 	if err := r.db.Create(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (r *repositoryImpl[M]) Update(ctx context.Context, id string, ent *M) error {
+func (r *repositoryImpl[M, V]) Update(ctx context.Context, id string, ent *M) error {
 	if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (r *repositoryImpl[M]) Upsert(ctx context.Context, ent *M) error {
+func (r *repositoryImpl[M, V]) Upsert(ctx context.Context, ent *M) error {
 	if err := r.db.Save(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *repositoryImpl[M]) Delete(ctx context.Context, id string) error {
+func (r *repositoryImpl[M, V]) Delete(ctx context.Context, id string) error {
 	ent := new(M)
 	if err := r.db.Delete(ent, "id = ?", id).Error; err != nil {
 		return err
 	}
 	return nil
+}
+
+func (r *repositoryImpl[M, V]) Search(ctx context.Context, ent *V) (*[]M, error) {
+
+	ents := &[]M{}
+
+	// I follow this example: https://stackoverflow.com/a/42849112
+	entJson, err := json.Marshal(ent)
+	if err != nil {
+		return nil, err
+	}
+	var entMap map[string]interface{}
+	json.Unmarshal(entJson, &entMap)
+	if entMap == nil {
+		return nil, errors.New("invalid json")
+	}
+
+	if err := r.db.Find(ents, entMap).Error; err != nil {
+		return nil, err
+	}
+
+	return ents, nil
 }

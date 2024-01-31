@@ -1,14 +1,11 @@
 package services
 
 import (
-	"context"
-
-	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 )
 
 type UserService interface {
-	GetByUsername(ctx context.Context, username string) (*models.User, error)
+	// GetByUsername(ctx context.Context, username string) (*models.User, error)
 }
 
 type userServiceImpl struct {
@@ -21,11 +18,11 @@ func NewUserService(userRepo repositories.UserRepository) UserService {
 	}
 }
 
-func (s *userServiceImpl) GetByUsername(ctx context.Context, username string) (*models.User, error) {
+// func (s *userServiceImpl) GetByUsername(ctx context.Context, username string) (*models.User, error) {
 
-	user, err := s.userRepo.GetByUsername(ctx, username)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
-}
+// 	user, err := s.userRepo.GetByUsername(ctx, username)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return user, nil
+// }

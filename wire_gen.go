@@ -31,7 +31,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	authService := services.NewAuthService(userService)
 	authMiddleware := middleware.NewAuthMiddleware(authService)
 	validator := validates.NewValidator()
-	authHandler := handlers.NewAuthHandler(authService, userService)
+	authHandler := handlers.NewAuthHandler(authService, userRepository)
 	client := configs.NewMinioClient()
 	minioRepository := repositories.NewMinioRepository(client)
 	minioService := services.NewMinioService(minioRepository)

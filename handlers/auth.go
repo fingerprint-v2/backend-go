@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/fingerprint/constants"
+	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/fingerprint/validates"
@@ -16,13 +17,13 @@ type AuthHandler interface {
 
 type authHandlerImpl struct {
 	authService services.AuthService
-	userService services.UserService
+	userRepo    repositories.UserRepository
 }
 
-func NewAuthHandler(authService services.AuthService, userService services.UserService) AuthHandler {
+func NewAuthHandler(authService services.AuthService, userRepo repositories.UserRepository) AuthHandler {
 	return &authHandlerImpl{
 		authService: authService,
-		userService: userService,
+		userRepo:    userRepo,
 	}
 }
 
@@ -46,10 +47,15 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	user, err := h.userService.GetByUsername(c.Context(), req.Username)
+	users, err := h.userRepo.Search(c.Context(), &validates.SearchUserReq{Username: req.Username})
 	if err != nil {
-		return fiber.NewError(fiber.StatusNotFound, err.Error())
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
+	if len(*users) != 1 {
+		return fiber.NewError(fiber.StatusNotFound, "User not found")
+	}
+	// Extract user pointer
+	user := &(*users)[0]
 
 	if err := h.authService.CheckPassword(req.Password, user.Password); err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, err.Error())

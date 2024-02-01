@@ -67,6 +67,7 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 
 		if i == 1 {
 			user.Role = "SUPER_ADMIN"
+			user.Username = "admin1"
 		}
 
 		wg.Add(1)

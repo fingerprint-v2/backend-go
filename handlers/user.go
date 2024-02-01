@@ -43,6 +43,13 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 	if !ok {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid User")
 	}
+
+	user, err := h.userRepo.Get(c.Context(), user.ID.String())
+	user.Organization = nil
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[models.User]{
 		Message: "Get me sucessfully",
 		Data:    *user,

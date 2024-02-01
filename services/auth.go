@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/utils"
+	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -93,8 +95,18 @@ func (s *authServiceImpl) CheckPassword(password string, hash string) error {
 
 func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 
+	userCookie := &validates.CookiePayloadUser{}
+	userJson, err := json.Marshal(user)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+	err = json.Unmarshal(userJson, userCookie)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
 	claims := jwt.MapClaims{
-		"user": user,
+		"user": userCookie,
 		"exp":  constants.JWTExpiration,
 	}
 	// Create token

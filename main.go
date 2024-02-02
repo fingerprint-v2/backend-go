@@ -19,14 +19,20 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-func NewApp(middleware *middleware.AuthMiddleware, validator dto.Validator, authHandler handlers.AuthHandler, minioHandler handlers.MinioHandler, organizationHandler handlers.OrganizationHandler, userHandler handlers.UserHandler) (*fiber.App, error) {
+func NewApp(
+	middleware *middleware.AuthMiddleware,
+	validator dto.Validator,
+	authHandler handlers.AuthHandler,
+	minioHandler handlers.MinioHandler,
+	organizationHandler handlers.OrganizationHandler,
+	userHandler handlers.UserHandler) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
 
 	app.Use(
 		logger.New(),
-		middleware.Auth(),
+		middleware.ValidateJWT(),
 		cors.New(cors.Config{AllowOrigins: "*"}),
 	)
 	app.Get("/swagger/*", swagger.HandlerDefault)
@@ -39,6 +45,7 @@ func NewApp(middleware *middleware.AuthMiddleware, validator dto.Validator, auth
 		minioHandler,
 		organizationHandler,
 		userHandler,
+		middleware,
 	)
 	return app, nil
 }

@@ -3,16 +3,17 @@ package routers
 import (
 	"github.com/fingerprint/dto"
 	"github.com/fingerprint/handlers"
+	middleware "github.com/fingerprint/middlewares"
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupUserRouter(router fiber.Router, v dto.Validator, handler handlers.UserHandler) {
+func SetupUserRouter(router fiber.Router, v dto.Validator, handler handlers.UserHandler, middleware *middleware.AuthMiddleware) {
 	vCreateUserReq := dto.ValidateRequest[dto.CreateUserReq](v)
 	vUpdateUserReq := dto.ValidateRequest[dto.UpdateUserReq](v)
 
 	user := router.Group("users")
 	user.Get("/me", handler.GetMe)
-	user.Put("/", vCreateUserReq, handler.CreateUser)
-	user.Patch("/:user_id", vUpdateUserReq, handler.UpdateUser)
-	user.Delete("/:user_id", handler.DeleteUser)
+	user.Put("/", middleware.AdminGuard(), vCreateUserReq, handler.CreateUser)
+	user.Patch("/:user_id", middleware.AdminGuard(), vUpdateUserReq, handler.UpdateUser)
+	user.Delete("/:user_id", middleware.AdminGuard(), handler.DeleteUser)
 }

@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/brianvoe/gofakeit/v6"
+	"github.com/fingerprint/constants"
 	"github.com/fingerprint/db"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
@@ -57,17 +58,27 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 	var wg sync.WaitGroup
 	hashedUsers := make(chan models.User, 100)
 
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 5; i++ {
 		user := models.User{
 			Username:       s.faker.Username(),
 			Password:       "1234",
-			Role:           "USER",
+			Role:           constants.USER.String(),
 			OrganizationID: orgs[0].ID.String(),
 		}
 
 		if i == 1 {
-			user.Role = "SUPER_ADMIN"
+			user.Role = constants.SUPERADMIN.String()
+			user.Username = "superadmin1"
+		}
+
+		if i == 2 {
+			user.Role = constants.ADMIN.String()
 			user.Username = "admin1"
+		}
+
+		if i == 3 {
+			user.Role = constants.USER.String()
+			user.Username = "user1"
 		}
 
 		wg.Add(1)

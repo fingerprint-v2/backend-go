@@ -1,4 +1,10 @@
-# backend-go
+# Setting up
+
+- `docker volume create fp2_vol_db`
+- `docker volume create fp2_vol_minio`
+- `docker volume create fp2_vol_pgadmin`
+- `docker network create fp2_net`
+- `docker-compose --env-file ./.env up -d`
 
 # Running
 

@@ -45,7 +45,7 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 	}
 
 	user, err := h.userRepo.Get(c.Context(), user.ID.String())
-	user.Organization = nil
+
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

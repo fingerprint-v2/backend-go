@@ -1,13 +1,16 @@
 # Build output
 tmp
+
 # Config file
 .env
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -20,7 +23,10 @@ tmp
 # Go workspace file
 go.work
 
-#Ignore all .meta file
+# Ignore all .meta file
 *.meta
-#But not source file with postfix. which is everything but a folder
+
+# But not source file with postfix. which is everything but a folder
 !*.*.meta
+
+minio

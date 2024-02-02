@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -60,7 +60,7 @@ func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 // @ID search-organization
 // @Accept json
 // @Produce json
-// @Param body body validates.SearchOrganizationReq true "Request Body"
+// @Param body body dto.SearchOrganizationReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[[]models.Organization]
 // @Failure 400 {object} utils.ResponseError
 // @Failure 500 {object} utils.ResponseError
@@ -68,7 +68,7 @@ func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	ctx := c.Context()
 	// organization := &models.Organization{}
-	organization := &validates.SearchOrganizationReq{}
+	organization := &dto.SearchOrganizationReq{}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -89,7 +89,7 @@ func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 // @ID create-organization
 // @Accept json
 // @Produce json
-// @Param body body validates.CreateOrganizationReq true "Request Body"
+// @Param body body dto.CreateOrganizationReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[uuid.UUID]
 // @Failure 400 {object} utils.ResponseError
 // @Failure 500 {object} utils.ResponseError
@@ -118,7 +118,7 @@ func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param  organization_id path string  true  "organization's id"
-// @Param body body validates.UpdateOrganizationReq true "Request Body"
+// @Param body body dto.UpdateOrganizationReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[string]
 // @Failure 400 {object} utils.ResponseError
 // @Failure 500 {object} utils.ResponseError

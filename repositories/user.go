@@ -1,25 +1,25 @@
 package repositories
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
-	"github.com/fingerprint/validates"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	repository[models.User, validates.SearchUserReq]
+	repository[models.User, dto.SearchUserReq]
 	// GetByUsername(context.Context, string) (*models.User, error)
 }
 
 type userRepositoryImpl struct {
 	db *gorm.DB
-	*repositoryImpl[models.User, validates.SearchUserReq]
+	*repositoryImpl[models.User, dto.SearchUserReq]
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepositoryImpl{
 		db:             db,
-		repositoryImpl: newRepository[models.User, validates.SearchUserReq](db),
+		repositoryImpl: newRepository[models.User, dto.SearchUserReq](db),
 	}
 }
 

@@ -34,7 +34,7 @@ func NewUserHandler(authService services.AuthService, userRepo repositories.User
 // @ID get-me
 // @Accept json
 // @Produce json
-// @Param body body validates.CreateUserReq true "Request Body"
+// @Param body body dto.CreateUserReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[models.User]
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/me [post]
@@ -62,7 +62,7 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 // @ID create-user
 // @Accept json
 // @Produce json
-// @Param body body validates.CreateUserReq true "Request Body"
+// @Param body body dto.CreateUserReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[string]
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users [post]
@@ -95,7 +95,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param  user_id path string  true  "user's id"
-// @Param body body validates.UpdateUserReq true "Request Body"
+// @Param body body dto.UpdateUserReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[string]
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [put]

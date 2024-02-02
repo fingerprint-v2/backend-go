@@ -1,14 +1,14 @@
 package routers
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/handlers"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupUserRouter(router fiber.Router, v validates.Validator, handler handlers.UserHandler) {
-	vCreateUserReq := validates.ValidateRequest[validates.CreateUserReq](v)
-	vUpdateUserReq := validates.ValidateRequest[validates.UpdateUserReq](v)
+func SetupUserRouter(router fiber.Router, v dto.Validator, handler handlers.UserHandler) {
+	vCreateUserReq := dto.ValidateRequest[dto.CreateUserReq](v)
+	vUpdateUserReq := dto.ValidateRequest[dto.UpdateUserReq](v)
 
 	user := router.Group("users")
 	user.Get("/me", handler.GetMe)

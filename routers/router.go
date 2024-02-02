@@ -1,14 +1,14 @@
 package routers
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/handlers"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(
 	router fiber.Router,
-	validator validates.Validator,
+	validator dto.Validator,
 	authHandler handlers.AuthHandler,
 	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,

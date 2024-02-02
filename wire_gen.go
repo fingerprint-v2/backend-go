@@ -9,11 +9,11 @@ package main
 import (
 	"github.com/fingerprint/configs"
 	"github.com/fingerprint/db"
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/handlers"
 	"github.com/fingerprint/middlewares"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/wire"
 )
@@ -30,7 +30,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	userService := services.NewUserService(userRepository)
 	authService := services.NewAuthService(userService)
 	authMiddleware := middleware.NewAuthMiddleware(authService)
-	validator := validates.NewValidator()
+	validator := dto.NewValidator()
 	authHandler := handlers.NewAuthHandler(authService, userRepository)
 	client := configs.NewMinioClient()
 	minioRepository := repositories.NewMinioRepository(client)
@@ -51,7 +51,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 // wire.go:
 
 var AppSet = wire.NewSet(
-	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, validates.NewValidator,
+	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
 var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler)

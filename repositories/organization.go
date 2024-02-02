@@ -1,25 +1,25 @@
 package repositories
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
-	"github.com/fingerprint/validates"
 	"gorm.io/gorm"
 )
 
 type OrganizationRepository interface {
-	repository[models.Organization, validates.SearchOrganizationReq]
+	repository[models.Organization, dto.SearchOrganizationReq]
 	// SearchOrganization(context.Context, *validates.SearchOrganizationReq) ([]models.Organization, error)
 }
 
 type organizationRepositoryImpl struct {
 	db *gorm.DB
-	*repositoryImpl[models.Organization, validates.SearchOrganizationReq]
+	*repositoryImpl[models.Organization, dto.SearchOrganizationReq]
 }
 
 func NewOrganizationRepository(db *gorm.DB) OrganizationRepository {
 	return &organizationRepositoryImpl{
 		db:             db,
-		repositoryImpl: newRepository[models.Organization, validates.SearchOrganizationReq](db),
+		repositoryImpl: newRepository[models.Organization, dto.SearchOrganizationReq](db),
 	}
 }
 

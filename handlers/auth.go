@@ -4,10 +4,10 @@ import (
 	"time"
 
 	"github.com/fingerprint/constants"
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -33,7 +33,7 @@ func NewAuthHandler(authService services.AuthService, userRepo repositories.User
 // @ID login
 // @Accept json
 // @Produce json
-// @Param body body validates.LoginReq true "Request Body"
+// @Param body body dto.LoginReq true "Request Body"
 // @Success 200 {object} utils.ResponseSuccess[string]
 // @Failure 400 {object} utils.ResponseError
 // @Failure 401 {object} utils.ResponseError
@@ -42,12 +42,12 @@ func NewAuthHandler(authService services.AuthService, userRepo repositories.User
 // @Router /api/v1/login [post]
 func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 
-	req := &validates.LoginReq{}
+	req := &dto.LoginReq{}
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	users, err := h.userRepo.Search(c.Context(), &validates.SearchUserReq{Username: req.Username})
+	users, err := h.userRepo.Search(c.Context(), &dto.SearchUserReq{Username: req.Username})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

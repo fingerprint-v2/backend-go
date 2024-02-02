@@ -8,9 +8,9 @@ import (
 
 	"github.com/fingerprint/configs"
 	"github.com/fingerprint/constants"
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/utils"
-	"github.com/fingerprint/validates"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -95,7 +95,7 @@ func (s *authServiceImpl) CheckPassword(password string, hash string) error {
 
 func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 
-	userCookie := &validates.CookiePayloadUser{}
+	userCookie := &dto.CookiePayloadUser{}
 	userJson, err := json.Marshal(user)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())

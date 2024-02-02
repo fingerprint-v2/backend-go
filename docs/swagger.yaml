@@ -1,5 +1,62 @@
 basePath: /
 definitions:
+  dto.CreateOrganizationReq:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.CreateUserReq:
+    properties:
+      organization_id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    required:
+    - organization_id
+    - password
+    - username
+    type: object
+  dto.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.SearchOrganizationReq:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.UpdateOrganizationReq:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.UpdateUserReq:
+    properties:
+      organization_id:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
   gorm.DeletedAt:
     properties:
       time:
@@ -183,8 +240,6 @@ definitions:
         $ref: '#/definitions/models.Organization'
       organization_id:
         type: string
-      password:
-        type: string
       role:
         type: string
       updated_at:
@@ -241,63 +296,6 @@ definitions:
       message:
         type: string
     type: object
-  validates.CreateOrganizationReq:
-    properties:
-      name:
-        type: string
-    required:
-    - name
-    type: object
-  validates.CreateUserReq:
-    properties:
-      organization_id:
-        type: string
-      password:
-        type: string
-      role:
-        type: string
-      username:
-        type: string
-    required:
-    - organization_id
-    - password
-    - username
-    type: object
-  validates.LoginReq:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  validates.SearchOrganizationReq:
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  validates.UpdateOrganizationReq:
-    properties:
-      name:
-        type: string
-    required:
-    - name
-    type: object
-  validates.UpdateUserReq:
-    properties:
-      organization_id:
-        type: string
-      password:
-        type: string
-      role:
-        type: string
-      username:
-        type: string
-    type: object
 host: localhost:8080
 info:
   contact:
@@ -323,7 +321,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.LoginReq'
+          $ref: '#/definitions/dto.LoginReq'
       produces:
       - application/json
       responses:
@@ -449,7 +447,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.CreateOrganizationReq'
+          $ref: '#/definitions/dto.CreateOrganizationReq'
       produces:
       - application/json
       responses:
@@ -539,7 +537,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.UpdateOrganizationReq'
+          $ref: '#/definitions/dto.UpdateOrganizationReq'
       produces:
       - application/json
       responses:
@@ -570,7 +568,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.SearchOrganizationReq'
+          $ref: '#/definitions/dto.SearchOrganizationReq'
       produces:
       - application/json
       responses:
@@ -601,7 +599,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.CreateUserReq'
+          $ref: '#/definitions/dto.CreateUserReq'
       produces:
       - application/json
       responses:
@@ -658,7 +656,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.UpdateUserReq'
+          $ref: '#/definitions/dto.UpdateUserReq'
       produces:
       - application/json
       responses:
@@ -685,7 +683,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/validates.CreateUserReq'
+          $ref: '#/definitions/dto.CreateUserReq'
       produces:
       - application/json
       responses:

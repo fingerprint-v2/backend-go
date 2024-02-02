@@ -21,6 +21,7 @@ type AuthService interface {
 	GenerateToken(*models.User) (*string, error)
 	CheckPassword(string, string) error
 	HashPassword(user *models.User) error
+	CheckValidRole(string) error
 }
 
 type authServiceImpl struct {
@@ -127,4 +128,15 @@ func (s *authServiceImpl) HashPassword(user *models.User) error {
 	}
 	user.Password = string(bytes)
 	return nil
+}
+
+func (s *authServiceImpl) CheckValidRole(role string) error {
+
+	roles := []constants.UserRole{constants.SUPERADMIN, constants.ADMIN, constants.USER}
+	for _, value := range roles {
+		if role == value.String() {
+			return nil
+		}
+	}
+	return errors.New("invalid role")
 }

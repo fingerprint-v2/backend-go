@@ -75,6 +75,11 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
+	err := h.authService.CheckValidRole(user.Role)
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
 	if err := h.authService.HashPassword(user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

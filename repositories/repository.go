@@ -2,9 +2,8 @@ package repositories
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 
+	"github.com/fingerprint/utils"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -44,9 +43,18 @@ func (r *repositoryImpl[M, V]) Create(ctx context.Context, ent *M) error {
 	return nil
 }
 func (r *repositoryImpl[M, V]) Update(ctx context.Context, id string, ent *M) error {
-	if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
+	// if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
+	// 	return err
+	// }
+
+	if err := r.db.Session(&gorm.Session{FullSaveAssociations: true}).Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
 		return err
 	}
+
+	if err := r.db.Preload(clause.Associations).First(ent, "id = ?", id).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 func (r *repositoryImpl[M, V]) Upsert(ctx context.Context, ent *M) error {
@@ -58,7 +66,12 @@ func (r *repositoryImpl[M, V]) Upsert(ctx context.Context, ent *M) error {
 
 func (r *repositoryImpl[M, V]) Delete(ctx context.Context, id string) error {
 	ent := new(M)
-	if err := r.db.Delete(ent, "id = ?", id).Error; err != nil {
+
+	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.Unscoped().Delete(ent, "id = ?", id).Error; err != nil {
 		return err
 	}
 	return nil
@@ -68,18 +81,24 @@ func (r *repositoryImpl[M, V]) Search(ctx context.Context, ent *V) (*[]M, error)
 
 	ents := &[]M{}
 
-	// I follow this example: https://stackoverflow.com/a/42849112
-	entJson, err := json.Marshal(ent)
+	// Convert payload into map
+	entMap, err := utils.TypeConverter[map[string]interface{}](*ent)
 	if err != nil {
 		return nil, err
 	}
-	var entMap map[string]interface{}
-	json.Unmarshal(entJson, &entMap)
-	if entMap == nil {
-		return nil, errors.New("invalid json")
-	}
 
-	if err := r.db.Find(ents, entMap).Error; err != nil {
+	// I follow this example: https://stackoverflow.com/a/42849112
+	// entJson, err := json.Marshal(ent)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// var entMap map[string]interface{}
+	// json.Unmarshal(entJson, &entMap)
+	// if entMap == nil {
+	// 	return nil, errors.New("invalid json")
+	// }
+
+	if err := r.db.Find(ents, *entMap).Error; err != nil {
 		return nil, err
 	}
 

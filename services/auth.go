@@ -1,7 +1,6 @@
 package services
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -96,12 +95,9 @@ func (s *authServiceImpl) CheckPassword(password string, hash string) error {
 
 func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 
-	userCookie := &dto.CookiePayloadUser{}
-	userJson, err := json.Marshal(user)
-	if err != nil {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-	err = json.Unmarshal(userJson, userCookie)
+	// Convert user to userCookie
+	userCookie, err := utils.TypeConverter[dto.CookiePayloadUser](user)
+
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -112,6 +108,7 @@ func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 	}
 	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+
 	// Generate encoded token and send it as response.
 	t, err := token.SignedString(configs.GetAccessTokenSignature())
 	if err != nil {
@@ -122,6 +119,9 @@ func (s *authServiceImpl) GenerateToken(user *models.User) (*string, error) {
 }
 
 func (s *authServiceImpl) HashPassword(user *models.User) error {
+	if user.Password == "" {
+		return errors.New("password is required")
+	}
 	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err != nil {
 		return err

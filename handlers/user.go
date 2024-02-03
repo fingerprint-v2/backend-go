@@ -58,6 +58,9 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
+	// Remove password from response
+	user.Password = ""
+
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[models.User]{
 		Message: "Get me sucessfully",
 		Data:    *user,
@@ -122,23 +125,32 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [put]
 func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
-	ctx := c.Context()
-	userId := c.Params("user_id")
-	user := &models.User{}
+
+	user := new(models.User)
 	if err := c.BodyParser(user); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if user.Password != "" {
+		if err := h.authService.HashPassword(user); err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+	}
+
+	if err := h.authService.CheckValidRole(user.Role); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := h.userRepo.Update(c.Context(), user.ID.String(), user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := h.authService.HashPassword(user); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
+	// Remove password from response
+	user.Password = ""
 
-	if err := h.userRepo.Update(ctx, userId, user); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.User]{
 		Message: "Update user sucessfully",
-		Data:    nil,
+		Data:    user,
 	})
 }
 

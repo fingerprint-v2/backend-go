@@ -8,6 +8,7 @@ type CreateUserReq struct {
 }
 
 type UpdateUserReq struct {
+	ID             string `json:"id" validate:"required,uuid4"`
 	Username       string `json:"username"`
 	Password       string `json:"password"`
 	Role           string `json:"role"`

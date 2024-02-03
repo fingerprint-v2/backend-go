@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/go-playground/validator/v10"
@@ -35,7 +34,7 @@ func ValidateRequest[T any](v Validator) fiber.Handler {
 
 		// Check if the struct is empty
 		if reflect.ValueOf(*ent).IsZero() {
-			return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("Invalid request body: %v", string(c.Body())))
+			return fiber.NewError(fiber.StatusBadRequest, "Empty request body after parsing")
 		}
 
 		if err := v.ValidateStruct(ent); err != nil {

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
@@ -14,17 +15,24 @@ type UserHandler interface {
 	CreateUser(*fiber.Ctx) error
 	UpdateUser(*fiber.Ctx) error
 	DeleteUser(*fiber.Ctx) error
+	SearchUser(*fiber.Ctx) error
 }
 
 type userHandlerImpl struct {
-	authService services.AuthService
-	userRepo    repositories.UserRepository
+	authService      services.AuthService
+	userRepo         repositories.UserRepository
+	organizationRepo repositories.OrganizationRepository
 }
 
-func NewUserHandler(authService services.AuthService, userRepo repositories.UserRepository) UserHandler {
+func NewUserHandler(
+	authService services.AuthService,
+	userRepo repositories.UserRepository,
+	organizationRepo repositories.OrganizationRepository,
+) UserHandler {
 	return &userHandlerImpl{
-		authService: authService,
-		userRepo:    userRepo,
+		authService:      authService,
+		userRepo:         userRepo,
+		organizationRepo: organizationRepo,
 	}
 }
 
@@ -75,9 +83,18 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	err := h.authService.CheckValidRole(user.Role)
-	if err != nil {
+	// Check for valid role
+	if err := h.authService.CheckValidRole(user.Role); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	// Check for valid organization
+	orgs, err := h.organizationRepo.Search(c.Context(), &dto.SearchOrganizationReq{ID: user.OrganizationID})
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+	if len(*orgs) != 1 {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid organization ID")
 	}
 
 	if err := h.authService.HashPassword(user); err != nil {
@@ -144,5 +161,22 @@ func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
 		Message: "Delete user sucessfully",
 		Data:    nil,
+	})
+}
+
+func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
+	ctx := c.Context()
+	user := &dto.SearchUserReq{}
+	if err := c.BodyParser(user); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	users, err := h.userRepo.Search(ctx, user)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.User]{
+		Message: "Search user sucessfully",
+		Data:    users,
 	})
 }

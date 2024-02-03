@@ -43,6 +43,9 @@ func (s *seederImpl) seedOrganization() []models.Organization {
 		org := models.Organization{
 			Name: s.faker.Company(),
 		}
+		if i == 0 {
+			org.Name = "org1"
+		}
 		orgs = append(orgs, org)
 	}
 

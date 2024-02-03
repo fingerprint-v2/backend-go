@@ -624,6 +624,7 @@ const docTemplate = `{
             "required": [
                 "organization_id",
                 "password",
+                "role",
                 "username"
             ],
             "properties": {

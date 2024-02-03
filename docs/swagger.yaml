@@ -20,6 +20,7 @@ definitions:
     required:
     - organization_id
     - password
+    - role
     - username
     type: object
   dto.LoginReq:

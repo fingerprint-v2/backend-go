@@ -39,7 +39,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
-	userHandler := handlers.NewUserHandler(authService, userRepository)
+	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
 	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler)
 	if err != nil {
 		return nil, nil, err

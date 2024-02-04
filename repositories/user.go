@@ -8,7 +8,7 @@ import (
 
 type UserRepository interface {
 	repository[models.User, dto.SearchUserReq]
-	// GetByUsername(context.Context, string) (*models.User, error)
+	GetUserWithOrganization(id string) (*models.User, error)
 }
 
 type userRepositoryImpl struct {
@@ -23,10 +23,10 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-// func (r *userRepositoryImpl) GetByUsername(ctx context.Context, username string) (*models.User, error) {
-// 	user := &models.User{}
-// 	if err := r.db.First(user, "username = ?", username).Error; err != nil {
-// 		return nil, err
-// 	}
-// 	return user, nil
-// }
+func (r *userRepositoryImpl) GetUserWithOrganization(id string) (*models.User, error) {
+	user := new(models.User)
+	if err := r.db.Preload("Organization").First(user, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}

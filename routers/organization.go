@@ -13,7 +13,7 @@ func SetupOrganizationRouter(router fiber.Router, v dto.Validator, handler handl
 	vSearchOrganizationReq := dto.ValidateRequest[dto.SearchOrganizationReq](v)
 
 	organization := router.Group("organizations")
-	organization.Get("/:organization_id", handler.GetOrganization)
+	organization.Get("/all", middleware.SuperAdminGuard(), handler.GetAllOrganizations)
 	organization.Post("/search", vSearchOrganizationReq, handler.SearchOrganization)
 	organization.Put("/", middleware.AdminGuard(), vCreateOrganizationReq, handler.CreateOrganization)
 	organization.Patch("/:organization_id", middleware.AdminGuard(), vUpdateOrganizationReq, handler.UpdateOrganization)

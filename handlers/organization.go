@@ -11,7 +11,7 @@ import (
 )
 
 type OrganizationHandler interface {
-	GetOrganization(ctx *fiber.Ctx) error
+	GetAllOrganizations(ctx *fiber.Ctx) error
 	SearchOrganization(ctx *fiber.Ctx) error
 	CreateOrganization(ctx *fiber.Ctx) error
 	UpdateOrganization(ctx *fiber.Ctx) error
@@ -41,16 +41,14 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 // @Failure 400 {object} utils.ResponseError
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [get]
-func (h *organizationHandlerImpl) GetOrganization(c *fiber.Ctx) error {
-	ctx := c.Context()
-	organizationId := c.Params("organization_id")
-	organization, err := h.organizationRepo.Get(ctx, organizationId)
+func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
+	organizations, err := h.organizationRepo.GetOrganizationsAllPreloads()
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[models.Organization]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.Organization]{
 		Message: "Get organization sucessfully",
-		Data:    *organization,
+		Data:    organizations,
 	})
 }
 

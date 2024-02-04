@@ -4,11 +4,12 @@ import (
 	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type OrganizationRepository interface {
 	repository[models.Organization, dto.SearchOrganizationReq]
-	// SearchOrganization(context.Context, *validates.SearchOrganizationReq) ([]models.Organization, error)
+	GetOrganizationsAllPreloads() (*[]models.Organization, error)
 }
 
 type organizationRepositoryImpl struct {
@@ -23,33 +24,10 @@ func NewOrganizationRepository(db *gorm.DB) OrganizationRepository {
 	}
 }
 
-// func (r organizationRepositoryImpl) SearchOrganization(ctx context.Context, org *validates.SearchOrganizationReq) ([]models.Organization, error) {
-// 	orgs := []models.Organization{}
-// 	// if err := r.db.Where("LOWER(name) LIKE LOWER(?)", org.Name+"%").Find(&orgs).Error; err != nil {
-// 	// 	return nil, err
-// 	// }
-
-// 	// fmt.Println(org)
-
-// 	orgJson, err := json.Marshal(org)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Println("------------------")
-// 	fmt.Println(string(orgJson))
-// 	fmt.Println("------------------")
-// 	var orgMap map[string]interface{}
-
-// 	json.Unmarshal(orgJson, &orgMap)
-
-// 	for field, val := range orgMap {
-// 		fmt.Println("KV Pair: ", field, val)
-// 	}
-
-// 	// fmt.Println(string(orgJson))
-// 	if err := r.db.Find(&orgs, orgMap).Error; err != nil {
-// 		return nil, err
-// 	}
-
-// 	return orgs, nil
-// }
+func (r *organizationRepositoryImpl) GetOrganizationsAllPreloads() (*[]models.Organization, error) {
+	organization := new([]models.Organization)
+	if err := r.db.Preload(clause.Associations).Find(organization, map[string]interface{}{}).Error; err != nil {
+		return nil, err
+	}
+	return organization, nil
+}

@@ -52,8 +52,7 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid User")
 	}
 
-	user, err := h.userRepo.Get(c.Context(), user.ID.String())
-
+	user, err := h.userRepo.GetUserWithOrganization(user.ID.String())
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -91,7 +90,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	// Check for valid organization
+	// Check for valid organization (not really needed because of data integrity)
 	orgs, err := h.organizationRepo.Search(c.Context(), &dto.SearchOrganizationReq{ID: user.OrganizationID})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
@@ -107,6 +106,10 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	if err := h.userRepo.Create(ctx, user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
+
+	// Remove password from response
+	user.Password = ""
+
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.User]{
 		Message: "Create user sucessfully",
 		Data:    user,
@@ -185,6 +188,11 @@ func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
 	users, err := h.userRepo.Search(ctx, user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	// Remove password from response
+	for i := range *users {
+		(*users)[i].Password = ""
 	}
 
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.User]{

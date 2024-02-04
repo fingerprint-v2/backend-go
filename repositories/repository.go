@@ -29,7 +29,7 @@ func newRepository[M any, V any](db *gorm.DB) *repositoryImpl[M, V] {
 }
 func (r *repositoryImpl[M, V]) Get(ctx context.Context, id string) (*M, error) {
 	ent := new(M)
-	if err := r.db.Preload(clause.Associations).First(ent, "id = ?", id).Error; err != nil {
+	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return ent, nil

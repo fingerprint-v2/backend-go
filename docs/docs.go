@@ -775,6 +775,12 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "sites": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Site"
+                    }
+                },
                 "updated_at": {
                     "type": "string"
                 },
@@ -783,6 +789,33 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.User"
                     }
+                }
+            }
+        },
+        "models.Site": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "Buildings      []Building     ` + "`" + `json:\"buildings\"` + "`" + `\nFloors         []Floor        ` + "`" + `json:\"floors\"` + "`" + `\nPoints         []Point        ` + "`" + `json:\"points\"` + "`" + `",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },

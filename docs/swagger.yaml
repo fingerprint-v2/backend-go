@@ -116,12 +116,37 @@ definitions:
         type: string
       name:
         type: string
+      sites:
+        items:
+          $ref: '#/definitions/models.Site'
+        type: array
       updated_at:
         type: string
       users:
         items:
           $ref: '#/definitions/models.User'
         type: array
+    type: object
+  models.Site:
+    properties:
+      created_at:
+        description: |-
+          Buildings      []Building     `json:"buildings"`
+          Floors         []Floor        `json:"floors"`
+          Points         []Point        `json:"points"`
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      updated_at:
+        type: string
     type: object
   models.User:
     properties:

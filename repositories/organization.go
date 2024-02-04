@@ -3,12 +3,11 @@ package repositories
 import (
 	"github.com/fingerprint/models"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type OrganizationRepository interface {
 	repository[models.Organization, models.SearchOrganization]
-	GetOrganizationsPreloads() (*[]models.Organization, error)
+	SearchOrganization() (*[]models.Organization, error)
 }
 
 type organizationRepositoryImpl struct {
@@ -23,10 +22,20 @@ func NewOrganizationRepository(db *gorm.DB) OrganizationRepository {
 	}
 }
 
-func (r *organizationRepositoryImpl) GetOrganizationsPreloads() (*[]models.Organization, error) {
+func (r *organizationRepositoryImpl) SearchOrganization() (*[]models.Organization, error) {
 	organization := new([]models.Organization)
-	if err := r.db.Preload(clause.Associations).Find(organization, map[string]interface{}{}).Error; err != nil {
+	// if err := r.db.Preload(clause.Associations).Find(organization, map[string]interface{}{}).Error; err != nil {
+	// 	return nil, err
+	// }
+
+	db := r.db
+
+	db = db.Preload("Users")
+	db = db.Preload("Sites")
+
+	if err := db.Find(organization, map[string]interface{}{}).Error; err != nil {
 		return nil, err
 	}
+
 	return organization, nil
 }

@@ -33,8 +33,10 @@ func NewSeeder(faker *gofakeit.Faker, db *gorm.DB, authService services.AuthServ
 }
 
 func (s *seederImpl) seed() {
+	s.resetDB()
 	orgs := s.seedOrganization()
 	s.seedUser(orgs)
+	s.seedSite(orgs)
 }
 
 func (s *seederImpl) seedOrganization() []models.Organization {
@@ -106,6 +108,34 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 	}
 
 	return users
+}
+
+func (s *seederImpl) seedSite(orgs []models.Organization) []models.Site {
+
+	var sites []models.Site
+	for orgIdx := range orgs {
+		for siteIdx := 0; siteIdx < 1; siteIdx++ {
+			site := models.Site{
+				Name:           s.faker.Name(),
+				OrganizationID: orgs[orgIdx].ID.String(),
+			}
+			sites = append(sites, site)
+		}
+	}
+
+	sites[0].Name = "site1"
+
+	if err := s.db.Create(&sites).Error; err != nil {
+		return nil
+	}
+
+	return sites
+}
+
+func (s *seederImpl) resetDB() {
+	s.db.Exec("TRUNCATE TABLE users CASCADE")
+	s.db.Exec("TRUNCATE TABLE sites CASCADE")
+	s.db.Exec("TRUNCATE TABLE organizations CASCADE")
 }
 
 func main() {

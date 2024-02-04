@@ -41,7 +41,7 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [get]
 func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
-	organizations, err := h.organizationRepo.GetOrganizationsPreloads()
+	organizations, err := h.organizationRepo.SearchOrganization()
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

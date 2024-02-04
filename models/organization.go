@@ -17,7 +17,9 @@ type Organization struct {
 	Sites     []Site          `json:"sites,omitempty"`
 }
 
+// Internal search
+// I have to use string as ID because zero-UUID is not considered empty and will mess up the search. See https://github.com/upper/db/issues/624#issuecomment-1836279092
 type SearchOrganization struct {
-	ID   string `json:"id,omitempty" validate:"omitempty,uuid4"`
-	Name string `json:"name,omitempty" validate:"omitempty"`
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
 }

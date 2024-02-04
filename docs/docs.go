@@ -306,49 +306,6 @@ const docTemplate = `{
             }
         },
         "/api/v1/organizations/{organization_id}": {
-            "get": {
-                "description": "get Organization",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organization"
-                ],
-                "summary": "Get Organization",
-                "operationId": "get-organization",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "organization's id",
-                        "name": "organization_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/utils.ResponseSuccess-models_Organization"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/utils.ResponseError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/utils.ResponseError"
-                        }
-                    }
-                }
-            },
             "put": {
                 "description": "update Organization",
                 "consumes": [
@@ -887,17 +844,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/minio.UploadInfo"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "utils.ResponseSuccess-models_Organization": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/models.Organization"
                 },
                 "message": {
                     "type": "string"

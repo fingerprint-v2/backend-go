@@ -196,13 +196,6 @@ definitions:
       message:
         type: string
     type: object
-  utils.ResponseSuccess-models_Organization:
-    properties:
-      data:
-        $ref: '#/definitions/models.Organization'
-      message:
-        type: string
-    type: object
   utils.ResponseSuccess-models_User:
     properties:
       data:
@@ -418,35 +411,6 @@ paths:
           schema:
             $ref: '#/definitions/utils.ResponseError'
       summary: Delete Organization
-      tags:
-      - Organization
-    get:
-      consumes:
-      - application/json
-      description: get Organization
-      operationId: get-organization
-      parameters:
-      - description: organization's id
-        in: path
-        name: organization_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/utils.ResponseSuccess-models_Organization'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.ResponseError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.ResponseError'
-      summary: Get Organization
       tags:
       - Organization
     put:

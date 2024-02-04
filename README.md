@@ -1,3 +1,8 @@
+# Dependencies
+
+- `go install golang.org/x/tools/cmd/stringer@latest`
+- `go install github.com/google/wire/cmd/wire@latest`
+
 # Setting up
 
 - `docker volume create fp2_vol_db`

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
@@ -51,10 +52,14 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid User")
 	}
 
-	user, err := h.userRepo.GetUserWithOrganization(user.ID.String())
+	users, err := h.userRepo.SearchUser(&dto.SearchUserReq{ID: user.ID.String(), WithOrganization: true})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
+	if len(*users) != 1 {
+		return fiber.NewError(fiber.StatusInternalServerError, "Invalid User")
+	}
+	user = &(*users)[0]
 
 	// Remove password from response
 	user.Password = ""
@@ -76,7 +81,6 @@ func (h *userHandlerImpl) GetMe(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users [post]
 func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
-	ctx := c.Context()
 	user := &models.User{
 		ID: uuid.New(),
 	}
@@ -90,7 +94,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	}
 
 	// Check for valid organization (not really needed because of data integrity)
-	orgs, err := h.organizationRepo.Find(c.Context(), &models.OrganizationFind{ID: user.OrganizationID})
+	orgs, err := h.organizationRepo.Find(&models.OrganizationFind{ID: user.OrganizationID})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -102,7 +106,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := h.userRepo.Create(ctx, user); err != nil {
+	if err := h.userRepo.Create(user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
@@ -143,7 +147,7 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.userRepo.Update(c.Context(), user.ID.String(), user); err != nil {
+	if err := h.userRepo.Update(user.ID.String(), user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
@@ -167,9 +171,8 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [delete]
 func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
-	ctx := c.Context()
 	userId := c.Params("user_id")
-	if err := h.userRepo.Delete(ctx, userId); err != nil {
+	if err := h.userRepo.Delete(userId); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
@@ -179,12 +182,12 @@ func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 }
 
 func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
-	ctx := c.Context()
-	user := &models.UserFind{}
+
+	user := new(dto.SearchUserReq)
 	if err := c.BodyParser(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	users, err := h.userRepo.Find(ctx, user)
+	users, err := h.userRepo.SearchUser(user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

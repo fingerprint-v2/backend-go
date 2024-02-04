@@ -1,21 +1,19 @@
 package repositories
 
 import (
-	"context"
-
 	"github.com/fingerprint/utils"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-// M is the model struct, V is the search struct
+// M is the model struct, S is the search struct
 type repository[M any, S any] interface {
-	Get(ctx context.Context, id string) (*M, error)
-	Create(ctx context.Context, ent *M) error
-	Update(ctx context.Context, id string, ent *M) error
-	Upsert(ctx context.Context, ent *M) error
-	Delete(ctx context.Context, id string) error
-	Find(ctx context.Context, ent *S) (*[]M, error)
+	Get(id string) (*M, error)
+	Create(ent *M) error
+	Update(id string, ent *M) error
+	Upsert(ent *M) error
+	Delete(id string) error
+	Find(ent *S) (*[]M, error)
 }
 
 type repositoryImpl[M any, S any] struct {
@@ -27,7 +25,7 @@ func newRepository[M any, S any](db *gorm.DB) *repositoryImpl[M, S] {
 		db: db,
 	}
 }
-func (r *repositoryImpl[M, S]) Get(ctx context.Context, id string) (*M, error) {
+func (r *repositoryImpl[M, S]) Get(id string) (*M, error) {
 	ent := new(M)
 	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -35,14 +33,14 @@ func (r *repositoryImpl[M, S]) Get(ctx context.Context, id string) (*M, error) {
 	return ent, nil
 }
 
-func (r *repositoryImpl[M, S]) Create(ctx context.Context, ent *M) error {
+func (r *repositoryImpl[M, S]) Create(ent *M) error {
 
 	if err := r.db.Create(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (r *repositoryImpl[M, S]) Update(ctx context.Context, id string, ent *M) error {
+func (r *repositoryImpl[M, S]) Update(id string, ent *M) error {
 	// if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
 	// 	return err
 	// }
@@ -57,14 +55,14 @@ func (r *repositoryImpl[M, S]) Update(ctx context.Context, id string, ent *M) er
 
 	return nil
 }
-func (r *repositoryImpl[M, S]) Upsert(ctx context.Context, ent *M) error {
+func (r *repositoryImpl[M, S]) Upsert(ent *M) error {
 	if err := r.db.Save(ent).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *repositoryImpl[M, S]) Delete(ctx context.Context, id string) error {
+func (r *repositoryImpl[M, S]) Delete(id string) error {
 	ent := new(M)
 
 	if err := r.db.First(ent, "id = ?", id).Error; err != nil {
@@ -77,7 +75,7 @@ func (r *repositoryImpl[M, S]) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (r *repositoryImpl[M, S]) Find(ctx context.Context, ent *S) (*[]M, error) {
+func (r *repositoryImpl[M, S]) Find(ent *S) (*[]M, error) {
 
 	ents := &[]M{}
 
@@ -86,17 +84,6 @@ func (r *repositoryImpl[M, S]) Find(ctx context.Context, ent *S) (*[]M, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// I follow this example: https://stackoverflow.com/a/42849112
-	// entJson, err := json.Marshal(ent)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// var entMap map[string]interface{}
-	// json.Unmarshal(entJson, &entMap)
-	// if entMap == nil {
-	// 	return nil, errors.New("invalid json")
-	// }
 
 	if err := r.db.Find(ents, *entMap).Error; err != nil {
 		return nil, err

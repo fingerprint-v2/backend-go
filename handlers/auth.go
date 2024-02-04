@@ -48,7 +48,7 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	users, err := h.userRepo.Find(c.Context(), &models.UserFind{Username: req.Username})
+	users, err := h.userRepo.Find(&models.UserFind{Username: req.Username})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

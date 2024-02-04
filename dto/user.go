@@ -16,10 +16,12 @@ type UpdateUserReq struct {
 }
 
 type SearchUserReq struct {
-	ID             string `json:"id,omitempty" validate:"omitempty,uuid4"`
-	Username       string `json:"username,omitempty" validate:"omitempty"`
-	Role           string `json:"role,omitempty" validate:"omitempty"`
-	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
+	ID               string `json:"id,omitempty" validate:"omitempty,uuid4"`
+	Username         string `json:"username,omitempty" validate:"omitempty"`
+	Role             string `json:"role,omitempty" validate:"omitempty"`
+	OrganizationID   string `json:"organization_id,omitempty" validate:"omitempty"`
+	WithOrganization bool   `json:"with_organization,omitempty" validate:"omitempty"`
+	All              bool   `json:"all,omitempty" validate:"omitempty"`
 }
 
 type CookiePayloadUser struct {

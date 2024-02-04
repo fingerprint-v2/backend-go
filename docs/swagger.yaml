@@ -49,6 +49,8 @@ definitions:
     type: object
   dto.UpdateUserReq:
     properties:
+      id:
+        type: string
       organization_id:
         type: string
       password:
@@ -57,6 +59,8 @@ definitions:
         type: string
       username:
         type: string
+    required:
+    - id
     type: object
   gorm.DeletedAt:
     properties:
@@ -102,58 +106,6 @@ definitions:
       versionID:
         type: string
     type: object
-  models.Building:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        $ref: '#/definitions/gorm.DeletedAt'
-      floors:
-        items:
-          $ref: '#/definitions/models.Floor'
-        type: array
-      id:
-        type: string
-      name:
-        type: string
-      points:
-        items:
-          $ref: '#/definitions/models.Point'
-        type: array
-      site:
-        $ref: '#/definitions/models.Site'
-      site_id:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  models.Floor:
-    properties:
-      building:
-        $ref: '#/definitions/models.Building'
-      building_id:
-        type: string
-      created_at:
-        type: string
-      deleted_at:
-        $ref: '#/definitions/gorm.DeletedAt'
-      id:
-        type: string
-      name:
-        type: string
-      number:
-        type: integer
-      points:
-        items:
-          $ref: '#/definitions/models.Point'
-        type: array
-      site:
-        $ref: '#/definitions/models.Site'
-      site_id:
-        type: string
-      updated_at:
-        type: string
-    type: object
   models.Organization:
     properties:
       created_at:
@@ -164,70 +116,12 @@ definitions:
         type: string
       name:
         type: string
-      sites:
-        items:
-          $ref: '#/definitions/models.Site'
-        type: array
       updated_at:
         type: string
       users:
         items:
           $ref: '#/definitions/models.User'
         type: array
-    type: object
-  models.Point:
-    properties:
-      building:
-        $ref: '#/definitions/models.Building'
-      building_id:
-        type: string
-      created_at:
-        type: string
-      deleted_at:
-        $ref: '#/definitions/gorm.DeletedAt'
-      floor:
-        $ref: '#/definitions/models.Floor'
-      floor_id:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      site:
-        $ref: '#/definitions/models.Site'
-      site_id:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  models.Site:
-    properties:
-      buildings:
-        items:
-          $ref: '#/definitions/models.Building'
-        type: array
-      created_at:
-        type: string
-      deleted_at:
-        $ref: '#/definitions/gorm.DeletedAt'
-      floors:
-        items:
-          $ref: '#/definitions/models.Floor'
-        type: array
-      id:
-        type: string
-      name:
-        type: string
-      organization:
-        $ref: '#/definitions/models.Organization'
-      organization_id:
-        type: string
-      points:
-        items:
-          $ref: '#/definitions/models.Point'
-        type: array
-      updated_at:
-        type: string
     type: object
   models.User:
     properties:
@@ -240,6 +134,8 @@ definitions:
       organization:
         $ref: '#/definitions/models.Organization'
       organization_id:
+        type: string
+      password:
         type: string
       role:
         type: string

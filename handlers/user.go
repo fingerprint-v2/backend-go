@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
@@ -91,7 +90,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	}
 
 	// Check for valid organization (not really needed because of data integrity)
-	orgs, err := h.organizationRepo.Search(c.Context(), &dto.SearchOrganizationReq{ID: user.OrganizationID})
+	orgs, err := h.organizationRepo.Search(c.Context(), &models.SearchOrganization{ID: user.OrganizationID})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -181,7 +180,7 @@ func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 
 func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
 	ctx := c.Context()
-	user := &dto.SearchUserReq{}
+	user := &models.SearchUser{}
 	if err := c.BodyParser(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

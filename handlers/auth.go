@@ -5,6 +5,7 @@ import (
 
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/dto"
+	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
@@ -47,7 +48,7 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	users, err := h.userRepo.Search(c.Context(), &dto.SearchUserReq{Username: req.Username})
+	users, err := h.userRepo.Search(c.Context(), &models.SearchUser{Username: req.Username})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

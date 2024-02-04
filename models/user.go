@@ -19,3 +19,10 @@ type User struct {
 	OrganizationID string          `json:"organization_id" gorm:"type:uuid;not null"`
 	Organization   *Organization   `json:"organization,omitempty" gorm:"foreignKey:OrganizationID;references:ID"`
 }
+
+type SearchUser struct {
+	ID             string `json:"id,omitempty" validate:"omitempty,uuid4"`
+	Username       string `json:"username,omitempty" validate:"omitempty"`
+	Role           string `json:"role,omitempty" validate:"omitempty"`
+	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
+}

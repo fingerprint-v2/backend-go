@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/services"
@@ -42,7 +41,7 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [get]
 func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
-	organizations, err := h.organizationRepo.GetOrganizationsAllPreloads()
+	organizations, err := h.organizationRepo.GetOrganizationsPreloads()
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -66,7 +65,7 @@ func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	ctx := c.Context()
 	// organization := &models.Organization{}
-	organization := &dto.SearchOrganizationReq{}
+	organization := &models.SearchOrganization{}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

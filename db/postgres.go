@@ -10,7 +10,7 @@ import (
 )
 
 func migrateModel(db *gorm.DB) error {
-	if err := db.AutoMigrate(&models.Organization{}, &models.User{}); err != nil {
+	if err := db.AutoMigrate(&models.Site{}, &models.Organization{}, &models.User{}); err != nil {
 		return err
 	}
 

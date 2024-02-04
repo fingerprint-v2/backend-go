@@ -14,5 +14,10 @@ type Organization struct {
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 	Users     []User          `json:"users,omitempty"`
-	// Sites     []Site          `json:"sites,omitempty"`
+	Sites     []Site          `json:"sites,omitempty"`
+}
+
+type SearchOrganization struct {
+	ID   string `json:"id,omitempty" validate:"omitempty,uuid4"`
+	Name string `json:"name,omitempty" validate:"omitempty"`
 }

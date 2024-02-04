@@ -58,4 +58,4 @@ var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, 
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewOrganizationService, services.NewUserService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository)

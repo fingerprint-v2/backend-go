@@ -681,7 +681,13 @@ const docTemplate = `{
         },
         "dto.UpdateUserReq": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "organization_id": {
                     "type": "string"
                 },
@@ -754,85 +760,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Building": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "floors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Floor"
-                    }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Point"
-                    }
-                },
-                "site": {
-                    "$ref": "#/definitions/models.Site"
-                },
-                "site_id": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Floor": {
-            "type": "object",
-            "properties": {
-                "building": {
-                    "$ref": "#/definitions/models.Building"
-                },
-                "building_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Point"
-                    }
-                },
-                "site": {
-                    "$ref": "#/definitions/models.Site"
-                },
-                "site_id": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Organization": {
             "type": "object",
             "properties": {
@@ -848,12 +775,6 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "sites": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Site"
-                    }
-                },
                 "updated_at": {
                     "type": "string"
                 },
@@ -862,88 +783,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.User"
                     }
-                }
-            }
-        },
-        "models.Point": {
-            "type": "object",
-            "properties": {
-                "building": {
-                    "$ref": "#/definitions/models.Building"
-                },
-                "building_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "floor": {
-                    "$ref": "#/definitions/models.Floor"
-                },
-                "floor_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "site": {
-                    "$ref": "#/definitions/models.Site"
-                },
-                "site_id": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Site": {
-            "type": "object",
-            "properties": {
-                "buildings": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Building"
-                    }
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "floors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Floor"
-                    }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "organization": {
-                    "$ref": "#/definitions/models.Organization"
-                },
-                "organization_id": {
-                    "type": "string"
-                },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Point"
-                    }
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -963,6 +802,9 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.Organization"
                 },
                 "organization_id": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 },
                 "role": {

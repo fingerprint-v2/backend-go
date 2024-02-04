@@ -5,6 +5,7 @@ type CreateOrganizationReq struct {
 }
 
 type UpdateOrganizationReq struct {
+	ID   string `json:"id" validate:"required,uuid4"`
 	Name string `json:"name" validate:"required"`
 }
 

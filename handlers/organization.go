@@ -119,17 +119,17 @@ func (h *organizationHandlerImpl) CreateOrganization(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [put]
 func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
-	organizationId := c.Params("organization_id")
-	organization := &models.Organization{}
-	if err := c.BodyParser(organization); err != nil {
+
+	org := new(models.Organization)
+	if err := c.BodyParser(org); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	if err := h.organizationRepo.Update(organizationId, organization); err != nil {
+	if err := h.organizationRepo.Update(org.ID.String(), org); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.Organization]{
 		Message: "Update organization sucessfully",
-		Data:    nil,
+		Data:    org,
 	})
 }
 

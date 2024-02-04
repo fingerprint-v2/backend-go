@@ -41,11 +41,14 @@ func (s *seederImpl) seed() {
 
 func (s *seederImpl) seedOrganization() []models.Organization {
 	var orgs []models.Organization
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 3; i++ {
 		org := models.Organization{
 			Name: s.faker.Company(),
 		}
 		if i == 0 {
+			org.Name = "SuperAdminOrg"
+		}
+		if i == 1 {
 			org.Name = "org1"
 		}
 		orgs = append(orgs, org)
@@ -68,12 +71,13 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 			Username:       s.faker.Username(),
 			Password:       "1234",
 			Role:           constants.USER.String(),
-			OrganizationID: orgs[0].ID.String(),
+			OrganizationID: orgs[1].ID.String(),
 		}
 
 		if i == 1 {
 			user.Role = constants.SUPERADMIN.String()
 			user.Username = "superadmin1"
+			user.OrganizationID = orgs[0].ID.String()
 		}
 
 		if i == 2 {
@@ -113,11 +117,11 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 func (s *seederImpl) seedSite(orgs []models.Organization) []models.Site {
 
 	var sites []models.Site
-	for orgIdx := range orgs {
+	for _, org := range orgs[1:] {
 		for siteIdx := 0; siteIdx < 1; siteIdx++ {
 			site := models.Site{
 				Name:           s.faker.Name(),
-				OrganizationID: orgs[orgIdx].ID.String(),
+				OrganizationID: org.ID.String(),
 			}
 			sites = append(sites, site)
 		}

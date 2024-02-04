@@ -14,7 +14,7 @@ func SetupOrganizationRouter(router fiber.Router, v dto.Validator, handler handl
 
 	organization := router.Group("organizations")
 	organization.Post("/search", middleware.SuperAdminGuard(), vSearchOrganizationReq, handler.SearchOrganization)
-	organization.Put("/", middleware.AdminGuard(), vCreateOrganizationReq, handler.CreateOrganization)
-	organization.Patch("/:organization_id", middleware.AdminGuard(), vUpdateOrganizationReq, handler.UpdateOrganization)
-	organization.Delete("/:organization_id", middleware.AdminGuard(), handler.DeleteOrganization)
+	organization.Put("/", middleware.SuperAdminGuard(), vCreateOrganizationReq, handler.CreateOrganization)
+	organization.Patch("/", middleware.SuperAdminGuard(), vUpdateOrganizationReq, handler.UpdateOrganization)
+	organization.Delete("/:organization_id", middleware.SuperAdminGuard(), handler.DeleteOrganization)
 }

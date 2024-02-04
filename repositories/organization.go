@@ -6,19 +6,19 @@ import (
 )
 
 type OrganizationRepository interface {
-	repository[models.Organization, models.SearchOrganization]
+	repository[models.Organization, models.OrganizationFind]
 	SearchOrganization() (*[]models.Organization, error)
 }
 
 type organizationRepositoryImpl struct {
 	db *gorm.DB
-	*repositoryImpl[models.Organization, models.SearchOrganization]
+	*repositoryImpl[models.Organization, models.OrganizationFind]
 }
 
 func NewOrganizationRepository(db *gorm.DB) OrganizationRepository {
 	return &organizationRepositoryImpl{
 		db:             db,
-		repositoryImpl: newRepository[models.Organization, models.SearchOrganization](db),
+		repositoryImpl: newRepository[models.Organization, models.OrganizationFind](db),
 	}
 }
 

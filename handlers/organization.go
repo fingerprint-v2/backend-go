@@ -65,11 +65,11 @@ func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
 func (h *organizationHandlerImpl) SearchOrganization(c *fiber.Ctx) error {
 	ctx := c.Context()
 	// organization := &models.Organization{}
-	organization := &models.SearchOrganization{}
+	organization := &models.OrganizationFind{}
 	if err := c.BodyParser(organization); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	organizations, err := h.organizationRepo.Search(ctx, organization)
+	organizations, err := h.organizationRepo.Find(ctx, organization)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

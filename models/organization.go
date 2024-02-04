@@ -19,7 +19,7 @@ type Organization struct {
 
 // Internal search
 // I have to use string as ID because zero-UUID is not considered empty and will mess up the search. See https://github.com/upper/db/issues/624#issuecomment-1836279092
-type SearchOrganization struct {
+type OrganizationFind struct {
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }

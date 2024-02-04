@@ -35,10 +35,16 @@ definitions:
     type: object
   dto.SearchOrganizationReq:
     properties:
+      all:
+        type: boolean
       id:
         type: string
       name:
         type: string
+      with_sites:
+        type: boolean
+      with_users:
+        type: boolean
     type: object
   dto.UpdateOrganizationReq:
     properties:

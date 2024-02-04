@@ -90,7 +90,7 @@ func (h *userHandlerImpl) CreateUser(c *fiber.Ctx) error {
 	}
 
 	// Check for valid organization (not really needed because of data integrity)
-	orgs, err := h.organizationRepo.Search(c.Context(), &models.SearchOrganization{ID: user.OrganizationID})
+	orgs, err := h.organizationRepo.Find(c.Context(), &models.OrganizationFind{ID: user.OrganizationID})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -180,11 +180,11 @@ func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 
 func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
 	ctx := c.Context()
-	user := &models.SearchUser{}
+	user := &models.UserFind{}
 	if err := c.BodyParser(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	users, err := h.userRepo.Search(ctx, user)
+	users, err := h.userRepo.Find(ctx, user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

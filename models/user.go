@@ -21,7 +21,7 @@ type User struct {
 }
 
 // Internal search
-type SearchUser struct {
+type UserFind struct {
 	ID             string `json:"id,omitempty"`
 	Username       string `json:"username,omitempty"`
 	Role           string `json:"role,omitempty"`

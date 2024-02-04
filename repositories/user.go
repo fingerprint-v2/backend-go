@@ -6,19 +6,19 @@ import (
 )
 
 type UserRepository interface {
-	repository[models.User, models.SearchUser]
+	repository[models.User, models.UserFind]
 	GetUserWithOrganization(id string) (*models.User, error)
 }
 
 type userRepositoryImpl struct {
 	db *gorm.DB
-	*repositoryImpl[models.User, models.SearchUser]
+	*repositoryImpl[models.User, models.UserFind]
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepositoryImpl{
 		db:             db,
-		repositoryImpl: newRepository[models.User, models.SearchUser](db),
+		repositoryImpl: newRepository[models.User, models.UserFind](db),
 	}
 }
 

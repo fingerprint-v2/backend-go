@@ -15,7 +15,7 @@ type repository[M any, S any] interface {
 	Update(ctx context.Context, id string, ent *M) error
 	Upsert(ctx context.Context, ent *M) error
 	Delete(ctx context.Context, id string) error
-	Search(ctx context.Context, ent *S) (*[]M, error)
+	Find(ctx context.Context, ent *S) (*[]M, error)
 }
 
 type repositoryImpl[M any, S any] struct {
@@ -77,7 +77,7 @@ func (r *repositoryImpl[M, S]) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (r *repositoryImpl[M, S]) Search(ctx context.Context, ent *S) (*[]M, error) {
+func (r *repositoryImpl[M, S]) Find(ctx context.Context, ent *S) (*[]M, error) {
 
 	ents := &[]M{}
 

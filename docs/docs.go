@@ -660,11 +660,20 @@ const docTemplate = `{
         "dto.SearchOrganizationReq": {
             "type": "object",
             "properties": {
+                "all": {
+                    "type": "boolean"
+                },
                 "id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
+                },
+                "with_sites": {
+                    "type": "boolean"
+                },
+                "with_users": {
+                    "type": "boolean"
                 }
             }
         },

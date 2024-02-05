@@ -571,6 +571,9 @@ const docTemplate = `{
                 "name"
             ],
             "properties": {
+                "is_system": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -625,6 +628,15 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "with_buildings": {
+                    "type": "boolean"
+                },
+                "with_floors": {
+                    "type": "boolean"
+                },
+                "with_points": {
+                    "type": "boolean"
                 },
                 "with_sites": {
                     "type": "boolean"
@@ -730,9 +742,59 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Organization": {
+        "models.Building": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "floors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Floor"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
+                },
+                "site": {
+                    "$ref": "#/definitions/models.Site"
+                },
+                "site_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Floor": {
+            "type": "object",
+            "properties": {
+                "building": {
+                    "$ref": "#/definitions/models.Building"
+                },
+                "building_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -744,6 +806,68 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "number": {
+                    "type": "number"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
+                },
+                "site": {
+                    "$ref": "#/definitions/models.Site"
+                },
+                "site_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Organization": {
+            "type": "object",
+            "properties": {
+                "buildings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Building"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "floors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Floor"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_system": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
                 },
                 "sites": {
                     "type": "array",
@@ -762,15 +886,83 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Site": {
+        "models.Point": {
             "type": "object",
             "properties": {
+                "building": {
+                    "$ref": "#/definitions/models.Building"
+                },
+                "building_id": {
+                    "type": "string"
+                },
                 "created_at": {
-                    "description": "Buildings      []Building     ` + "`" + `json:\"buildings\"` + "`" + `\nFloors         []Floor        ` + "`" + `json:\"floors\"` + "`" + `\nPoints         []Point        ` + "`" + `json:\"points\"` + "`" + `",
                     "type": "string"
                 },
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "floor": {
+                    "$ref": "#/definitions/models.Floor"
+                },
+                "floor_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_supervised": {
+                    "type": "boolean"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "Self-referential",
+                    "type": "string"
+                },
+                "site": {
+                    "$ref": "#/definitions/models.Site"
+                },
+                "site_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Site": {
+            "type": "object",
+            "properties": {
+                "buildings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Building"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "floors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Floor"
+                    }
                 },
                 "id": {
                     "type": "string"
@@ -783,6 +975,12 @@ const docTemplate = `{
                 },
                 "organization_id": {
                     "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
                 },
                 "updated_at": {
                     "type": "string"

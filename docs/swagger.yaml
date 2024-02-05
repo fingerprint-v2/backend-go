@@ -2,6 +2,8 @@ basePath: /
 definitions:
   dto.CreateOrganizationReq:
     properties:
+      is_system:
+        type: boolean
       name:
         type: string
     required:
@@ -41,6 +43,12 @@ definitions:
         type: string
       name:
         type: string
+      with_buildings:
+        type: boolean
+      with_floors:
+        type: boolean
+      with_points:
+        type: boolean
       with_sites:
         type: boolean
       with_users:
@@ -115,8 +123,41 @@ definitions:
       versionID:
         type: string
     type: object
-  models.Organization:
+  models.Building:
     properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floors:
+        items:
+          $ref: '#/definitions/models.Floor'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Floor:
+    properties:
+      building:
+        $ref: '#/definitions/models.Building'
+      building_id:
+        type: string
       created_at:
         type: string
       deleted_at:
@@ -125,6 +166,47 @@ definitions:
         type: string
       name:
         type: string
+      number:
+        type: number
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Organization:
+    properties:
+      buildings:
+        items:
+          $ref: '#/definitions/models.Building'
+        type: array
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floors:
+        items:
+          $ref: '#/definitions/models.Floor'
+        type: array
+      id:
+        type: string
+      is_system:
+        type: boolean
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
       sites:
         items:
           $ref: '#/definitions/models.Site'
@@ -136,16 +218,58 @@ definitions:
           $ref: '#/definitions/models.User'
         type: array
     type: object
-  models.Site:
+  models.Point:
     properties:
+      building:
+        $ref: '#/definitions/models.Building'
+      building_id:
+        type: string
       created_at:
-        description: |-
-          Buildings      []Building     `json:"buildings"`
-          Floors         []Floor        `json:"floors"`
-          Points         []Point        `json:"points"`
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
+      floor:
+        $ref: '#/definitions/models.Floor'
+      floor_id:
+        type: string
+      id:
+        type: string
+      is_supervised:
+        type: boolean
+      members:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      parent_id:
+        description: Self-referential
+        type: string
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Site:
+    properties:
+      buildings:
+        items:
+          $ref: '#/definitions/models.Building'
+        type: array
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      floors:
+        items:
+          $ref: '#/definitions/models.Floor'
+        type: array
       id:
         type: string
       name:
@@ -154,6 +278,10 @@ definitions:
         $ref: '#/definitions/models.Organization'
       organization_id:
         type: string
+      points:
+        items:
+          $ref: '#/definitions/models.Point'
+        type: array
       updated_at:
         type: string
     type: object

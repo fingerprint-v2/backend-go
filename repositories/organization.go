@@ -34,8 +34,11 @@ func (r *organizationRepositoryImpl) SearchOrganization(req *dto.SearchOrganizat
 	if err != nil {
 		return nil, err
 	}
-	delete(*orgMap, "with_sites")
 	delete(*orgMap, "with_users")
+	delete(*orgMap, "with_sites")
+	delete(*orgMap, "with_buildings")
+	delete(*orgMap, "with_floors")
+	delete(*orgMap, "with_points")
 	delete(*orgMap, "all")
 	// Make sure that map is not empty when "all" is false
 	if len(*orgMap) == 0 && !req.All {
@@ -52,6 +55,15 @@ func (r *organizationRepositoryImpl) SearchOrganization(req *dto.SearchOrganizat
 	}
 	if req.WithUsers {
 		db = db.Preload("Users")
+	}
+	if req.WithBuildings {
+		db = db.Preload("Buildings")
+	}
+	if req.WithFloors {
+		db = db.Preload("Floors")
+	}
+	if req.WithPoints {
+		db = db.Preload("Points")
 	}
 
 	// DB query

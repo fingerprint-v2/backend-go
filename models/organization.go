@@ -14,8 +14,12 @@ type Organization struct {
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
-	Users     []User          `json:"users,omitempty"`
-	Sites     []Site          `json:"sites,omitempty"`
+	//
+	Users     []User     `json:"users,omitempty"`
+	Sites     []Site     `json:"sites,omitempty"`
+	Buildings []Building `json:"buildings,omitempty"`
+	Floors    []Floor    `json:"floors,omitempty"`
+	Points    []Point    `json:"points,omitempty"`
 }
 
 // Internal search

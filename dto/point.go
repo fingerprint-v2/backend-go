@@ -10,13 +10,15 @@ type SearchPointReq struct {
 	ID           string `json:"id,omitempty" validate:"omitempty,uuid4"`
 	Name         string `json:"name,omitempty"`
 	ExternalName string `json:"external_name"`
+	IsGroup      bool   `json:"is_group"`
 	//
 	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
 	SiteID         string `json:"site_id,omitempty" validate:"omitempty,uuid4"`
 	BuildingID     string `json:"building_id,omitempty" validate:"omitempty,uuid4"`
 	FloorID        string `json:"floor_id,omitempty" validate:"omitempty,uuid4"`
 	//
-	All bool `json:"all,omitempty"`
+	WithMembers bool `json:"with_points,omitempty"` // Get all child points
+	All         bool `json:"all,omitempty"`
 }
 
 type DeletePointReq struct {

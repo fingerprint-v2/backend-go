@@ -27,10 +27,11 @@ type Floor struct {
 
 // Internal search
 type FloorFind struct {
-	ID             string  `json:"id,omitempty"`
-	Name           string  `json:"name,omitempty"`
-	Number         float32 `json:"number,omitempty"`
-	OrganizationID string  `json:"organization_id,omitempty"`
-	SiteID         string  `json:"site_id,omitempty"`
-	BuildingID     string  `json:"building_id,omitempty"`
+	ID     string  `json:"id,omitempty"`
+	Name   string  `json:"name,omitempty"`
+	Number float32 `json:"number,omitempty"`
+	//
+	BuildingID     string `json:"building_id,omitempty"`
+	SiteID         string `json:"site_id,omitempty"`
+	OrganizationID string `json:"organization_id,omitempty"`
 }

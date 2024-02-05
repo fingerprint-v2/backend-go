@@ -16,12 +16,12 @@ type Point struct {
 	UpdatedAt    *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt    *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 	//
-	Site           *Site         `json:"site" gorm:"foreignKey:SiteID;references:ID"`
-	SiteID         string        `json:"site_id" gorm:"type:uuid;not null"`
-	Building       *Building     `json:"building" gorm:"foreignKey:BuildingID;references:ID"`
-	BuildingID     string        `json:"building_id" gorm:"type:uuid;not null"`
 	Floor          *Floor        `json:"floor" gorm:"foreignKey:FloorID;references:ID"`
 	FloorID        string        `json:"floor_id" gorm:"type:uuid;not null"`
+	Building       *Building     `json:"building" gorm:"foreignKey:BuildingID;references:ID"`
+	BuildingID     string        `json:"building_id" gorm:"type:uuid;not null"`
+	Site           *Site         `json:"site" gorm:"foreignKey:SiteID;references:ID"`
+	SiteID         string        `json:"site_id" gorm:"type:uuid;not null"`
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
 	// Self-referential
@@ -31,11 +31,13 @@ type Point struct {
 
 // Internal search
 type PointFind struct {
-	ID             string  `json:"id,omitempty"`
-	Name           string  `json:"name,omitempty"`
-	Number         float32 `json:"number,omitempty"`
-	OrganizationID string  `json:"organization_id,omitempty"`
-	SiteID         string  `json:"site_id,omitempty"`
-	BuildingID     string  `json:"building_id,omitempty"`
-	FloorID        string  `json:"floor_id,omitempty"`
+	ID           string `json:"id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	ExternalName string `json:"external_name"`
+	IsGroup      bool   `json:"is_group"`
+	//
+	FloorID        string `json:"floor_id,omitempty"`
+	SiteID         string `json:"site_id,omitempty"`
+	BuildingID     string `json:"building_id,omitempty"`
+	OrganizationID string `json:"organization_id,omitempty"`
 }

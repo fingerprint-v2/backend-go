@@ -25,8 +25,10 @@ type Building struct {
 }
 
 type BuildingFind struct {
-	ID             string `json:"id,omitempty"`
-	Name           string `json:"name,omitempty"`
-	OrganizationID string `json:"organization_id,omitempty"`
+	ID           string `json:"id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	ExternalName string `json:"external_name"`
+	//
 	SiteID         string `json:"site_id,omitempty"`
+	OrganizationID string `json:"organization_id,omitempty"`
 }

@@ -11,7 +11,6 @@ import (
 )
 
 type OrganizationHandler interface {
-	// GetAllOrganizations(ctx *fiber.Ctx) error
 	SearchOrganization(ctx *fiber.Ctx) error
 	CreateOrganization(ctx *fiber.Ctx) error
 	UpdateOrganization(ctx *fiber.Ctx) error
@@ -29,28 +28,6 @@ func NewOrganizationHandler(organizationService services.OrganizationService, or
 		organizationRepo:    organizationRepo,
 	}
 }
-
-// @Tags Organization
-// @Summary Get Organization
-// @Description get Organization
-// @ID get-organization
-// @Accept json
-// @Produce json
-// @Param  organization_id path string  true  "organization's id"
-// @Success 200 {object} utils.ResponseSuccess[models.Organization]
-// @Failure 400 {object} utils.ResponseError
-// @Failure 500 {object} utils.ResponseError
-// @Router /api/v1/organizations/{organization_id} [get]
-// func (h *organizationHandlerImpl) GetAllOrganizations(c *fiber.Ctx) error {
-// 	organizations, err := h.organizationRepo.SearchOrganization()
-// 	if err != nil {
-// 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-// 	}
-// 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.Organization]{
-// 		Message: "Get organization sucessfully",
-// 		Data:    organizations,
-// 	})
-// }
 
 // @Tags Organization
 // @Summary Search Organization
@@ -144,8 +121,12 @@ func (h *organizationHandlerImpl) UpdateOrganization(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/organizations/{organization_id} [delete]
 func (h *organizationHandlerImpl) DeleteOrganization(c *fiber.Ctx) error {
-	organizationId := c.Params("organization_id")
-	if err := h.organizationRepo.Delete(organizationId); err != nil {
+	req := new(dto.DeleteOrganizationReq)
+	if err := c.BodyParser(req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := h.organizationRepo.Delete(req.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{

@@ -4,7 +4,7 @@ type CreateUserReq struct {
 	Username       string `json:"username" validate:"required"`
 	Password       string `json:"password" validate:"required"`
 	Role           string `json:"role" validate:"required"`
-	OrganizationID string `json:"organization_id" validate:"required"`
+	OrganizationID string `json:"organization_id" validate:"required,uuid4"`
 }
 
 type UpdateUserReq struct {
@@ -13,6 +13,10 @@ type UpdateUserReq struct {
 	Password       string `json:"password"`
 	Role           string `json:"role"`
 	OrganizationID string `json:"organization_id"`
+}
+
+type DeleteUserReq struct {
+	ID string `json:"id" validate:"required,uuid4"`
 }
 
 type SearchUserReq struct {

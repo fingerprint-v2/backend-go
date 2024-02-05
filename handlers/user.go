@@ -171,8 +171,12 @@ func (h *userHandlerImpl) UpdateUser(c *fiber.Ctx) error {
 // @Failure 500 {object} utils.ResponseError
 // @Router /api/v1/users/{user_id} [delete]
 func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
-	userId := c.Params("user_id")
-	if err := h.userRepo.Delete(userId); err != nil {
+	req := new(dto.DeleteUserReq)
+	if err := c.BodyParser(req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := h.userRepo.Delete(req.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
@@ -183,11 +187,11 @@ func (h *userHandlerImpl) DeleteUser(c *fiber.Ctx) error {
 
 func (h *userHandlerImpl) SearchUser(c *fiber.Ctx) error {
 
-	user := new(dto.SearchUserReq)
-	if err := c.BodyParser(user); err != nil {
+	req := new(dto.SearchUserReq)
+	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	users, err := h.userRepo.SearchUser(user)
+	users, err := h.userRepo.SearchUser(req)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

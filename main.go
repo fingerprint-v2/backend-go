@@ -25,7 +25,9 @@ func NewApp(
 	authHandler handlers.AuthHandler,
 	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,
-	userHandler handlers.UserHandler) (*fiber.App, error) {
+	userHandler handlers.UserHandler,
+	siteHandler handlers.SiteHandler,
+) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
 	})
@@ -45,6 +47,7 @@ func NewApp(
 		minioHandler,
 		organizationHandler,
 		userHandler,
+		siteHandler,
 		middleware,
 	)
 	return app, nil

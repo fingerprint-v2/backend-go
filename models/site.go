@@ -20,7 +20,10 @@ type Site struct {
 	OrganizationID string          `json:"organization_id" gorm:"type:uuid;not null"`
 }
 
-type SearchSite struct {
-	ID   string `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	Name string `json:"name" gorm:"type:varchar(255);not null"`
+// Internal search
+// I have to use string as ID because zero-UUID is not considered empty and will mess up the search. See https://github.com/upper/db/issues/624#issuecomment-1836279092
+type SiteFind struct {
+	ID             string `json:"id,omitempty"`
+	Name           string `json:"name,omitempty"`
+	OrganizationID string `json:"organization_id,omitempty"`
 }

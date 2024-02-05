@@ -11,11 +11,12 @@ func SetupUserRouter(router fiber.Router, v dto.Validator, handler handlers.User
 	vCreateUserReq := dto.ValidateRequest[dto.CreateUserReq](v)
 	vUpdateUserReq := dto.ValidateRequest[dto.UpdateUserReq](v)
 	vSearchUserReq := dto.ValidateRequest[dto.SearchUserReq](v)
+	vDeleteUserReq := dto.ValidateRequest[dto.DeleteUserReq](v)
 
 	user := router.Group("users")
 	user.Get("/me", handler.GetMe)
 	user.Put("/", middleware.AdminGuard(), vCreateUserReq, handler.CreateUser)
 	user.Patch("/", middleware.AdminGuard(), vUpdateUserReq, handler.UpdateUser)
-	user.Delete("/:user_id", middleware.AdminGuard(), handler.DeleteUser)
+	user.Delete("/", middleware.AdminGuard(), vDeleteUserReq, handler.DeleteUser)
 	user.Post("/search", middleware.AdminGuard(), vSearchUserReq, handler.SearchUser)
 }

@@ -34,6 +34,7 @@ var HandlerSet = wire.NewSet(
 	handlers.NewMinioHandler,
 	handlers.NewOrganizationHandler,
 	handlers.NewUserHandler,
+	handlers.NewSiteHandler,
 )
 
 var ServiceSet = wire.NewSet(

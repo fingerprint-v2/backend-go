@@ -1,12 +1,17 @@
 package dto
 
 type CreateOrganizationReq struct {
-	Name string `json:"name" validate:"required"`
+	Name     string `json:"name" validate:"required"`
+	IsSystem bool   `json:"is_system" validate:"omitempty"`
 }
 
 type UpdateOrganizationReq struct {
 	ID   string `json:"id" validate:"required,uuid4"`
 	Name string `json:"name" validate:"required"`
+}
+
+type DeleteOrganizationReq struct {
+	ID string `json:"id" validate:"required,uuid4"`
 }
 
 // I have to use string as ID because zero-UUID is not considered empty. See https://github.com/upper/db/issues/624#issuecomment-1836279092

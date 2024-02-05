@@ -14,6 +14,7 @@ func SetupRoutes(
 	minioHandler handlers.MinioHandler,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
+	siteHandler handlers.SiteHandler,
 	middleware *middleware.AuthMiddleware,
 ) {
 	router.Get("/hello-world", func(c *fiber.Ctx) error {
@@ -25,5 +26,6 @@ func SetupRoutes(
 	SetUpAuthRouter(v1, validator, authHandler)
 	SetUpMinioRouter(v1, validator, minioHandler)
 	SetupOrganizationRouter(v1, validator, organizationHandler, middleware)
+	SetupSiteRouter(v1, validator, siteHandler, middleware)
 	SetupUserRouter(v1, validator, userHandler, middleware)
 }

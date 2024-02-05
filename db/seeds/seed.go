@@ -47,6 +47,7 @@ func (s *seederImpl) seedOrganization() []models.Organization {
 		}
 		if i == 0 {
 			org.Name = "SuperAdminOrg"
+			org.IsSystem = true
 		}
 		if i == 1 {
 			org.Name = "org1"

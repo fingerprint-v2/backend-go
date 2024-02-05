@@ -48,9 +48,12 @@ definitions:
     type: object
   dto.UpdateOrganizationReq:
     properties:
+      id:
+        type: string
       name:
         type: string
     required:
+    - id
     - name
     type: object
   dto.UpdateUserReq:

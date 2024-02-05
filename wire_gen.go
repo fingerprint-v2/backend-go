@@ -30,7 +30,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	userService := services.NewUserService(userRepository)
 	authService := services.NewAuthService(userService)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
-	authMiddleware := middleware.NewAuthMiddleware(authService, organizationRepository)
+	authMiddleware := middleware.NewAuthMiddleware(authService, organizationRepository, userRepository)
 	validator := dto.NewValidator()
 	authHandler := handlers.NewAuthHandler(authService, userRepository)
 	client := configs.NewMinioClient()

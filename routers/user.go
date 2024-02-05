@@ -15,8 +15,8 @@ func SetupUserRouter(router fiber.Router, v dto.Validator, handler handlers.User
 
 	user := router.Group("users")
 	user.Get("/me", handler.GetMe)
-	user.Put("/", middleware.AdminGuard(), vCreateUserReq, handler.CreateUser)
-	user.Patch("/", middleware.AdminGuard(), vUpdateUserReq, handler.UpdateUser)
-	user.Delete("/", middleware.AdminGuard(), vDeleteUserReq, handler.DeleteUser)
-	user.Post("/search", middleware.AdminGuard(), vSearchUserReq, handler.SearchUser)
+	user.Put("/", middleware.AdminGuard(), vCreateUserReq, middleware.OrganizationGuard(), handler.CreateUser)
+	user.Patch("/", middleware.AdminGuard(), vUpdateUserReq, middleware.OrganizationGuard(), handler.UpdateUser)
+	user.Delete("/", middleware.AdminGuard(), vDeleteUserReq, middleware.OrganizationGuard(), handler.DeleteUser)
+	user.Post("/search", middleware.AdminGuard(), vSearchUserReq, middleware.OrganizationGuard(), handler.SearchUser)
 }

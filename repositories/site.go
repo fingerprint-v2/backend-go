@@ -35,6 +35,9 @@ func (r *siteRepositoryImpl) SearchSite(req *dto.SearchSiteReq) (*[]models.Site,
 		return nil, err
 	}
 	delete(*siteMap, "all")
+	delete(*siteMap, "with_buildings")
+	delete(*siteMap, "with_floors")
+	delete(*siteMap, "with_points")
 
 	// Make sure that map is not empty when "all" is false
 	if len(*siteMap) == 0 && !req.All {
@@ -46,6 +49,15 @@ func (r *siteRepositoryImpl) SearchSite(req *dto.SearchSiteReq) (*[]models.Site,
 
 	// Optional preload
 	db := r.db
+	if req.WithBuildings {
+		db = db.Preload("Buildings")
+	}
+	if req.WithFloors {
+		db = db.Preload("Floors")
+	}
+	if req.WithPoints {
+		db = db.Preload("Points")
+	}
 
 	// DB query
 	if err := db.Find(sites, *siteMap).Error; err != nil {

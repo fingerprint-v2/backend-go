@@ -10,7 +10,7 @@ import (
 type Floor struct {
 	ID        uuid.UUID       `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
 	Name      string          `json:"name" gorm:"type:varchar(255);not null"`
-	Number    float32         `json:"number" gorm:"type:float;not null"`
+	Number    float32         `json:"number" gorm:"type:float;not null"` // Numeric floor number used for ordering.  Can be decimal such floor 1.5.
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`

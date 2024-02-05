@@ -8,12 +8,13 @@ import (
 )
 
 type Point struct {
-	ID             uuid.UUID       `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	Name           string          `json:"name" gorm:"type:varchar(255);not null"`
-	IsUnsupervised bool            `json:"is_supervised" gorm:"type:boolean;not null;default:false"`
-	CreatedAt      time.Time       `json:"created_at" gorm:"<-:create"`
-	UpdatedAt      *time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt      *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	ID           uuid.UUID       `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	Name         string          `json:"name" gorm:"type:varchar(255);not null"`
+	ExternalName string          `json:"external_name" gorm:"type:varchar(255)"`
+	IsGroup      bool            `json:"is_group" gorm:"type:boolean;not null;default:false"`
+	CreatedAt    time.Time       `json:"created_at" gorm:"<-:create"`
+	UpdatedAt    *time.Time      `json:"updated_at" gorm:"<-:update"`
+	DeletedAt    *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 	//
 	Site           *Site         `json:"site" gorm:"foreignKey:SiteID;references:ID"`
 	SiteID         string        `json:"site_id" gorm:"type:uuid;not null"`

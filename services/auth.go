@@ -179,7 +179,7 @@ func (s *authServiceImpl) GetOrganizationIDfromContext(c *fiber.Ctx) (*string, e
 	method := c.Method()
 
 	// Search entity. Require organization_id for all search
-	if method == "POST" || strings.Contains(path, "search") {
+	if method == "POST" && strings.Contains(path, "search") {
 		if req.OrganizationID == "" {
 			return nil, fiber.NewError(fiber.StatusBadRequest, "No organization ID")
 		}

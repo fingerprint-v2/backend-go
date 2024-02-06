@@ -17,8 +17,13 @@ type SearchPointReq struct {
 	BuildingID     string `json:"building_id,omitempty" validate:"omitempty,uuid4"`
 	FloorID        string `json:"floor_id,omitempty" validate:"omitempty,uuid4"`
 	//
-	WithMembers bool `json:"with_points,omitempty"` // Get all child points
-	All         bool `json:"all,omitempty"`
+	WithOrganization bool `json:"with_organization,omitempty"`
+	WithSite         bool `json:"with_site,omitempty"`
+	WithBuilding     bool `json:"with_building,omitempty"`
+	WithFloor        bool `json:"with_floor,omitempty"`
+	// Plural
+	WithMember bool `json:"with_member,omitempty"` // Get all child points
+	All        bool `json:"all,omitempty"`
 }
 
 type DeletePointReq struct {

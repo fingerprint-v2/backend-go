@@ -624,6 +624,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "id": {
+                    "description": "I have to use string as ID because zero-UUID is not considered empty. See https://github.com/upper/db/issues/624#issuecomment-1836279092",
                     "type": "string"
                 },
                 "name": {
@@ -751,6 +752,9 @@ const docTemplate = `{
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
+                "external_name": {
+                    "type": "string"
+                },
                 "floors": {
                     "type": "array",
                     "items": {
@@ -808,6 +812,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "number": {
+                    "description": "Numeric floor number used for ordering.  Can be decimal such floor 1.5.",
                     "type": "number"
                 },
                 "organization": {
@@ -901,6 +906,9 @@ const docTemplate = `{
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
+                "external_name": {
+                    "type": "string"
+                },
                 "floor": {
                     "$ref": "#/definitions/models.Floor"
                 },
@@ -910,7 +918,7 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "is_supervised": {
+                "is_group": {
                     "type": "boolean"
                 },
                 "members": {

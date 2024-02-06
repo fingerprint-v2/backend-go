@@ -8,12 +8,13 @@ type CreateUserReq struct {
 }
 
 type SearchUserReq struct {
-	ID               string `json:"id,omitempty" validate:"omitempty,uuid4"`
-	Username         string `json:"username,omitempty"`
-	Role             string `json:"role,omitempty"`
-	OrganizationID   string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
-	WithOrganization bool   `json:"with_organization,omitempty"`
-	All              bool   `json:"all,omitempty"`
+	ID             string `json:"id,omitempty" validate:"omitempty,uuid4"`
+	Username       string `json:"username,omitempty"`
+	Role           string `json:"role,omitempty"`
+	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
+	//
+	WithOrganization bool `json:"with_organization,omitempty"`
+	All              bool `json:"all,omitempty"`
 }
 
 type DeleteUserReq struct {

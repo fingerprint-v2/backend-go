@@ -280,8 +280,14 @@ func (s *seederImpl) resetDB() {
 func main() {
 	faker := gofakeit.New(0)
 	db := db.NewPostgresDatabase()
+	//
 	userRepo := repositories.NewUserRepository(db)
+	siteRepo := repositories.NewSiteRepository(db)
+	buildingRepo := repositories.NewBuildingRepository(db)
+	floorRepo := repositories.NewFloorRepository(db)
+	pointRepo := repositories.NewPointRepository(db)
+	//
 	userService := services.NewUserService(userRepo)
-	authService := services.NewAuthService(userService)
+	authService := services.NewAuthService(userService, userRepo, siteRepo, buildingRepo, floorRepo, pointRepo)
 	NewSeeder(faker, db, authService).seed()
 }

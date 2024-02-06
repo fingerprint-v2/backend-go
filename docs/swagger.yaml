@@ -40,6 +40,8 @@ definitions:
       all:
         type: boolean
       id:
+        description: I have to use string as ID because zero-UUID is not considered
+          empty. See https://github.com/upper/db/issues/624#issuecomment-1836279092
         type: string
       name:
         type: string
@@ -129,6 +131,8 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
+      external_name:
+        type: string
       floors:
         items:
           $ref: '#/definitions/models.Floor'
@@ -167,6 +171,8 @@ definitions:
       name:
         type: string
       number:
+        description: Numeric floor number used for ordering.  Can be decimal such
+          floor 1.5.
         type: number
       organization:
         $ref: '#/definitions/models.Organization'
@@ -228,13 +234,15 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
+      external_name:
+        type: string
       floor:
         $ref: '#/definitions/models.Floor'
       floor_id:
         type: string
       id:
         type: string
-      is_supervised:
+      is_group:
         type: boolean
       members:
         items:

@@ -28,7 +28,11 @@ func InitializeApp() (*fiber.App, func(), error) {
 	gormDB := db.NewPostgresDatabase()
 	userRepository := repositories.NewUserRepository(gormDB)
 	userService := services.NewUserService(userRepository)
-	authService := services.NewAuthService(userService)
+	siteRepository := repositories.NewSiteRepository(gormDB)
+	buildingRepository := repositories.NewBuildingRepository(gormDB)
+	floorRepository := repositories.NewFloorRepository(gormDB)
+	pointRepository := repositories.NewPointRepository(gormDB)
+	authService := services.NewAuthService(userService, userRepository, siteRepository, buildingRepository, floorRepository, pointRepository)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	authMiddleware := middleware.NewAuthMiddleware(authService, organizationRepository, userRepository)
 	validator := dto.NewValidator()
@@ -40,7 +44,6 @@ func InitializeApp() (*fiber.App, func(), error) {
 	organizationService := services.NewOrganizationService(organizationRepository)
 	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
 	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
-	siteRepository := repositories.NewSiteRepository(gormDB)
 	siteHandler := handlers.NewSiteHandler(siteRepository)
 	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler)
 	if err != nil {
@@ -60,4 +63,4 @@ var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, 
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewOrganizationService, services.NewUserService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository)

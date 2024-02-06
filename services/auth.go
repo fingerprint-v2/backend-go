@@ -3,12 +3,14 @@ package services
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/fingerprint/configs"
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
+	"github.com/fingerprint/repositories"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -21,15 +23,33 @@ type AuthService interface {
 	CheckPassword(string, string) error
 	HashPassword(user *models.User) error
 	CheckValidRole(string) error
+	GetOrganizationIDfromContext(c *fiber.Ctx) (*string, error)
 }
 
 type authServiceImpl struct {
-	userService UserService
+	userService  UserService
+	userRepo     repositories.UserRepository
+	siteRepo     repositories.SiteRepository
+	buildingRepo repositories.BuildingRepository
+	floorRepo    repositories.FloorRepository
+	pointRepo    repositories.PointRepository
 }
 
-func NewAuthService(userService UserService) AuthService {
+func NewAuthService(
+	userService UserService,
+	userRepo repositories.UserRepository,
+	siteRepo repositories.SiteRepository,
+	buildingRepo repositories.BuildingRepository,
+	floorRepo repositories.FloorRepository,
+	pointRepo repositories.PointRepository,
+) AuthService {
 	return &authServiceImpl{
-		userService: userService,
+		userService:  userService,
+		userRepo:     userRepo,
+		siteRepo:     siteRepo,
+		buildingRepo: buildingRepo,
+		floorRepo:    floorRepo,
+		pointRepo:    pointRepo,
 	}
 }
 
@@ -139,4 +159,110 @@ func (s *authServiceImpl) CheckValidRole(role string) error {
 		}
 	}
 	return errors.New("invalid role")
+}
+
+type organizationContextOption struct {
+	OrganizationID string `json:"organization_id"`
+	SiteID         string `json:"site_id"`
+	BuildingID     string `json:"building_id"`
+	FloorID        string `json:"floor_id"`
+	ID             string `json:"id"`
+}
+
+func (s *authServiceImpl) GetOrganizationIDfromContext(c *fiber.Ctx) (*string, error) {
+
+	req := new(organizationContextOption)
+	if err := c.BodyParser(req); err != nil {
+		return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	path := c.Path()
+	method := c.Method()
+
+	// Search entity. Require organization_id for all search
+	if method == "POST" || strings.Contains(path, "search") {
+		if req.OrganizationID == "" {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "No organization ID")
+		}
+		return &req.OrganizationID, nil
+	}
+
+	// Create and update entity
+	if method == "PUT" || c.Method() == "PATCH" {
+		if strings.Contains(path, "users") || strings.Contains(path, "sites") {
+			if req.OrganizationID == "" {
+				return nil, fiber.NewError(fiber.StatusBadRequest, "No organization ID")
+			}
+			return &req.OrganizationID, nil
+		} else if strings.Contains(path, "buildings") {
+			if req.SiteID == "" {
+				return nil, fiber.NewError(fiber.StatusBadRequest, "No site ID")
+			}
+			site, err := s.siteRepo.Get(req.SiteID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &site.OrganizationID, nil
+
+		} else if strings.Contains(path, "floors") {
+			if req.BuildingID == "" {
+				return nil, fiber.NewError(fiber.StatusBadRequest, "No building ID")
+			}
+			building, err := s.buildingRepo.Get(req.BuildingID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &building.OrganizationID, nil
+		} else if strings.Contains(path, "points") {
+			if req.FloorID == "" {
+				return nil, fiber.NewError(fiber.StatusBadRequest, "No floor ID")
+			}
+			floor, err := s.floorRepo.Get(req.FloorID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &floor.OrganizationID, nil
+		}
+	}
+
+	// Delete entity
+	if method == "DELETE" {
+
+		if req.ID == "" {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "No ID")
+		}
+
+		if strings.Contains(path, "users") {
+			user, err := s.userRepo.Get(req.ID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &user.OrganizationID, nil
+		} else if strings.Contains(path, "sites") {
+			site, err := s.siteRepo.Get(req.ID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &site.OrganizationID, nil
+		} else if strings.Contains(path, "buildings") {
+			building, err := s.buildingRepo.Get(req.ID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &building.OrganizationID, nil
+		} else if strings.Contains(path, "floors") {
+			floor, err := s.floorRepo.Get(req.ID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &floor.OrganizationID, nil
+		} else if strings.Contains(path, "points") {
+			point, err := s.pointRepo.Get(req.ID)
+			if err != nil {
+				return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+			}
+			return &point.OrganizationID, nil
+		}
+	}
+
+	return nil, fiber.NewError(fiber.StatusBadRequest, "Cannot obtain organization context")
 }

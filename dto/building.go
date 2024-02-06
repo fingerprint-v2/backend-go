@@ -14,9 +14,12 @@ type SearchBuildingReq struct {
 	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
 	SiteID         string `json:"site_id,omitempty" validate:"omitempty,uuid4"`
 	//
-	WithFloors bool `json:"with_floors,omitempty"`
-	WithPoints bool `json:"with_points,omitempty"`
-	All        bool `json:"all,omitempty"`
+	WithOrganization bool `json:"with_organization,omitempty"`
+	WithSite         bool `json:"with_site,omitempty"`
+	//
+	WithFloor bool `json:"with_floor,omitempty"`
+	WithPoint bool `json:"with_point,omitempty"`
+	All       bool `json:"all,omitempty"`
 }
 
 type DeleteBuildingReq struct {

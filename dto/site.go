@@ -11,10 +11,12 @@ type SearchSiteReq struct {
 	//
 	OrganizationID string `json:"organization_id,omitempty" validate:"omitempty,uuid4"`
 	//
-	WithBuildings bool `json:"with_buildings,omitempty"`
-	WithFloors    bool `json:"with_floors,omitempty"`
-	WithPoints    bool `json:"with_points,omitempty"`
-	All           bool `json:"all,omitempty"`
+	WithOrganization bool `json:"with_organization,omitempty"`
+	//
+	WithBuilding bool `json:"with_building,omitempty"`
+	WithFloor    bool `json:"with_floor,omitempty"`
+	WithPoint    bool `json:"with_point,omitempty"`
+	All          bool `json:"all,omitempty"`
 }
 
 type DeleteSiteReq struct {

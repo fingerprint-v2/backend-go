@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"strings"
-
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
@@ -86,12 +84,6 @@ func (a *AuthMiddleware) validateUserByRole(roles []constants.UserRole) fiber.Ha
 
 // Organization Guard Middleware
 
-type OrganizationGuardOptions struct {
-	OrganizationID string `json:"organization_id"`
-	All            bool   `json:"all"`
-	ID             string `json:"id"`
-}
-
 func (a *AuthMiddleware) OrganizationGuard() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
@@ -103,48 +95,25 @@ func (a *AuthMiddleware) OrganizationGuard() fiber.Handler {
 			return c.Next()
 		}
 
-		var organizationID string
-		//
-		req := new(OrganizationGuardOptions)
+		// Non-superadmin cannot set "all" field to true
+		req := new(struct {
+			All bool `json:"all"`
+		})
 		if err := c.BodyParser(req); err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		// Non-superadmin cannot set "all" field to true
 		if req.All {
 			return fiber.NewError(fiber.StatusUnauthorized, "Not allow all field to be true")
 		}
-		// Make sure that user input organization id if it is not DELETE method
-		if req.OrganizationID == "" && c.Method() != "DELETE" {
-			return fiber.NewError(fiber.StatusBadRequest, "organization_id is required")
-		}
-		organizationID = req.OrganizationID
 
-		// If it is PUT, PATCH, or POST method, we need to check if the organization_id is valid
-		if c.Method() == "PUT" || c.Method() == "PATCH" || c.Method() == "POST" {
-			orgs, err := a.organizationRepo.Find(&models.OrganizationFind{ID: req.OrganizationID})
-			if err != nil {
-				return fiber.NewError(fiber.StatusNotFound, err.Error())
-			}
-			if len(*orgs) != 1 {
-				return fiber.NewError(fiber.StatusNotFound, "Invalid organization_id")
-			}
-		} else if c.Method() == "DELETE" {
-			// If it is DELETE method, we need to retrieve the organization_id from the entity
-			path := c.Path()
-			if strings.Contains(path, "users") {
-				users, err := a.userRepo.Find(&models.UserFind{ID: req.ID})
-				if err != nil {
-					return fiber.NewError(fiber.StatusNotFound, err.Error())
-				}
-				if len(*users) != 1 {
-					return fiber.NewError(fiber.StatusNotFound, "User not found")
-				}
-				organizationID = (*users)[0].OrganizationID
-			}
+		// Get organizationID from request
+		orgID, err := a.authService.GetOrganizationIDfromContext(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusUnauthorized, err.Error())
 		}
 
 		// Validation
-		if user.OrganizationID != organizationID {
+		if user.OrganizationID != *orgID {
 			return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized access to organization")
 		}
 		return c.Next()

@@ -11,6 +11,9 @@ import (
 
 func migrateModel(db *gorm.DB) error {
 	if err := db.AutoMigrate(
+		&models.Wifi{},
+		&models.Device{},
+		&models.Fingerprint{},
 		&models.Point{},
 		&models.Floor{},
 		&models.Building{},

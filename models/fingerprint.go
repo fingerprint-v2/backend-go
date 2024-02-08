@@ -8,16 +8,29 @@ import (
 )
 
 type Fingerprint struct {
-	ID             uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	IsUnsupervised bool      `json:"is_unsupervised" gorm:"type:boolean;not null;default:false"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	// Mode: SUPERVISED, UNSUPERVISED, PREDICTION
+	Mode              string `json:"mode" gorm:"type:varchar(255);not null"`
+	IsOutsideCoverage bool   `json:"is_outside_coverage" gorm:"type:boolean;not null;default:false"`
+	IsBetweenPoints   bool   `json:"is_between_points" gorm:"type:boolean;not null;default:false"`
+	IsCurrent         bool   `json:"is_current" gorm:"type:boolean;not null;default:false"`
 	//
-	Device   Device `json:"device" gorm:"foreignKey:DeviceID;references:ID"`
-	DeviceID string `json:"device_id" gorm:"type:uuid;not null"`
-	User     User   `json:"user" gorm:"foreignKey:UserID;references:ID"`
-	UserID   string `json:"user_id" gorm:"type:uuid;not null"`
+	CollectDevice   CollectDevice `json:"collect_device" gorm:"foreignKey:CollectDeviceID;references:ID"`
+	CollectDeviceID string        `json:"collect_device_id" gorm:"type:uuid;not null"`
+	// Organization   Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
+	// OrganizationID string       `json:"organization_id" gorm:"type:uuid;not null"`
 	// Nullable
-	Point   *Point  `json:"point" gorm:"foreignKey:PointID;references:ID"`
-	PointID *string `json:"point_id" gorm:"type:uuid"`
+	Label        *Point  `json:"label" gorm:"foreignKey:LabelID;references:ID"`
+	LabelID      *string `json:"label_id" gorm:"type:uuid"`
+	Prediction   *Point  `json:"prediction" gorm:"foreignKey:PredictionID;references:ID"`
+	PredictionID *string `json:"prediction_id" gorm:"type:uuid"`
+	NearPoints   []Point `json:"near_points,omitempty" gorm:"many2many:fingerprint_near_points;"`
+	Wifis        []Wifi  `json:"wifis,omitempty" gorm:"foreignKey:FingerprintID;references:ID"`
+	Upload       Upload  `json:"upload,omitempty" gorm:"foreignKey:UploadID;references:ID"`
+	UploadID     string  `json:"upload_id" gorm:"type:uuid;not null"`
+	//
+	TrackedEntityID   string `json:"tracked_entity" gorm:"type:varchar(255);not null"`
+	TrackedEntityType string `json:"tracked_entity_type" gorm:"type:varchar(255);not null"`
 	//
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`

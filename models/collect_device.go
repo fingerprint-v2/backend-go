@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Device struct {
+type CollectDevice struct {
 	ID                 uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
 	DeviceUID          string    `json:"device_uid" gorm:"type:varchar(255);not null;unique"` // Unique
 	DeviceID           string    `json:"device_id" gorm:"type:varchar(255);not null"`
@@ -15,13 +15,15 @@ type Device struct {
 	DeviceManufacturer string    `json:"device_manufacturer" gorm:"type:varchar(255);not null"`
 	DeviceModel        string    `json:"device_model" gorm:"type:varchar(255);not null"`
 	//
+	Fingerprints []Fingerprint `json:"fingerprints,omitempty" gorm:"foreignKey:CollectDeviceID;references:ID"`
+	//
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 // Internal search
-type DeviceFind struct {
+type CollectDeviceFind struct {
 	ID                 string `json:"id,omitempty"`
 	DeviceUID          string `json:"device_uid,omitempty"`
 	DeviceID           string `json:"device_id,omitempty"`

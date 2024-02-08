@@ -784,6 +784,105 @@
                 }
             }
         },
+        "models.Device": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "device_carrier": {
+                    "type": "string"
+                },
+                "device_id": {
+                    "type": "string"
+                },
+                "device_manufacturer": {
+                    "type": "string"
+                },
+                "device_model": {
+                    "type": "string"
+                },
+                "device_uid": {
+                    "description": "Unique",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Fingerprint": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "device": {
+                    "$ref": "#/definitions/models.Device"
+                },
+                "device_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_between_points": {
+                    "type": "boolean"
+                },
+                "is_current": {
+                    "type": "boolean"
+                },
+                "is_outside_coverage": {
+                    "type": "boolean"
+                },
+                "label": {
+                    "description": "Nullable",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Point"
+                        }
+                    ]
+                },
+                "label_id": {
+                    "type": "string"
+                },
+                "mode": {
+                    "description": "Mode: SUPERVISED, UNSUPERVISED, PREDICTION",
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "prediction": {
+                    "$ref": "#/definitions/models.Point"
+                },
+                "prediction_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "wifis": {
+                    "description": "NearPoints   []Point `json:\"near_points,omitempty\" gorm:\"many2many:fingerprint_near_points;\"`",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Wifi"
+                    }
+                }
+            }
+        },
         "models.Floor": {
             "type": "object",
             "properties": {
@@ -909,6 +1008,19 @@
                 "floor_id": {
                     "type": "string"
                 },
+                "fp_label": {
+                    "description": "Fingerprint Reference",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
+                },
+                "fp_prediction": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1017,6 +1129,44 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Wifi": {
+            "type": "object",
+            "properties": {
+                "bssid": {
+                    "type": "string"
+                },
+                "capabilities": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprint": {
+                    "$ref": "#/definitions/models.Fingerprint"
+                },
+                "fingerprint_id:": {
+                    "type": "string"
+                },
+                "frequency": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "ssid": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

@@ -19,6 +19,10 @@ type User struct {
 	//
 	Organization   *Organization `json:"organization,omitempty" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
+	//
+	Fingerprints []Fingerprint `json:"fingerprints,omitempty" gorm:"polymorphic:TrackedEntity;polymorphic_value:user"`
+	//
+	Uploads []Upload `json:"uploads,omitempty" gorm:"foreignKey:UserID;references:ID"`
 }
 
 // Internal search

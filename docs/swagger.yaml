@@ -156,6 +156,71 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.Device:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      device_carrier:
+        type: string
+      device_id:
+        type: string
+      device_manufacturer:
+        type: string
+      device_model:
+        type: string
+      device_uid:
+        description: Unique
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Fingerprint:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      device:
+        $ref: '#/definitions/models.Device'
+      device_id:
+        type: string
+      id:
+        type: string
+      is_between_points:
+        type: boolean
+      is_current:
+        type: boolean
+      is_outside_coverage:
+        type: boolean
+      label:
+        allOf:
+        - $ref: '#/definitions/models.Point'
+        description: Nullable
+      label_id:
+        type: string
+      mode:
+        description: 'Mode: SUPERVISED, UNSUPERVISED, PREDICTION'
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      prediction:
+        $ref: '#/definitions/models.Point'
+      prediction_id:
+        type: string
+      updated_at:
+        type: string
+      wifis:
+        description: NearPoints   []Point `json:"near_points,omitempty" gorm:"many2many:fingerprint_near_points;"`
+        items:
+          $ref: '#/definitions/models.Wifi'
+        type: array
+    type: object
   models.Floor:
     properties:
       building:
@@ -240,6 +305,15 @@ definitions:
         $ref: '#/definitions/models.Floor'
       floor_id:
         type: string
+      fp_label:
+        description: Fingerprint Reference
+        items:
+          $ref: '#/definitions/models.Fingerprint'
+        type: array
+      fp_prediction:
+        items:
+          $ref: '#/definitions/models.Fingerprint'
+        type: array
       id:
         type: string
       is_group:
@@ -312,6 +386,31 @@ definitions:
       updated_at:
         type: string
       username:
+        type: string
+    type: object
+  models.Wifi:
+    properties:
+      bssid:
+        type: string
+      capabilities:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      fingerprint:
+        $ref: '#/definitions/models.Fingerprint'
+      'fingerprint_id:':
+        type: string
+      frequency:
+        type: integer
+      id:
+        type: string
+      level:
+        type: integer
+      ssid:
+        type: string
+      updated_at:
         type: string
     type: object
   utils.ResponseError:

@@ -24,9 +24,14 @@ type Point struct {
 	SiteID         string        `json:"site_id" gorm:"type:uuid;not null"`
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
-	// Self-referential
-	GroupID *string `json:"parent_id" gorm:"type:uuid"`
+	// Fingerprint Reference
+	FPLabel      []Fingerprint `json:"fp_label,omitempty" gorm:"foreignKey:LabelID;references:ID"`
+	FPPrediction []Fingerprint `json:"fp_prediction,omitempty" gorm:"foreignKey:PredictionID;references:ID"`
+	// Self-referential: Grouping
+	GroupID *string `json:"group_id" gorm:"type:uuid"`
 	Members []Point `json:"members,omitempty" gorm:"foreignKey:GroupID;references:ID"`
+	// Many-to-many: Vicinity Points
+	VinityPoints []*Point `json:"vinity_points,omitempty" gorm:"many2many:point_vinity_points;"`
 }
 
 // Internal search

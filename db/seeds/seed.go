@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sync"
+
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/db"
@@ -64,63 +66,10 @@ func (s *seederImpl) seedOrganization() []models.Organization {
 	return orgs
 }
 
-// func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
-// 	var users []models.User
-// 	var wg sync.WaitGroup
-// 	hashedUsers := make(chan models.User, 100)
-
-// 	for i := 0; i < 10; i++ {
-// 		user := models.User{
-// 			Username:       s.faker.Username(),
-// 			Password:       "1234",
-// 			Role:           constants.USER.String(),
-// 			OrganizationID: orgs[2].ID.String(),
-// 		}
-
-// 		if i == 1 {
-// 			user.Role = constants.SUPERADMIN.String()
-// 			user.Username = "superadmin1"
-// 			user.OrganizationID = orgs[0].ID.String()
-// 		}
-
-// 		if i == 2 {
-// 			user.Role = constants.ADMIN.String()
-// 			user.Username = "admin1"
-// 			user.OrganizationID = orgs[1].ID.String()
-// 		}
-
-// 		if i == 3 {
-// 			user.Role = constants.USER.String()
-// 			user.Username = "user1"
-// 			user.OrganizationID = orgs[1].ID.String()
-// 		}
-
-// 		wg.Add(1)
-// 		go func(u models.User) {
-// 			defer wg.Done()
-// 			s.authService.HashPassword(&u)
-// 			hashedUsers <- u
-// 		}(user)
-// 	}
-
-// 	go func() {
-// 		wg.Wait()
-// 		close(hashedUsers)
-// 	}()
-
-// 	for hashedUser := range hashedUsers {
-// 		users = append(users, hashedUser)
-// 	}
-
-// 	if err := s.db.Create(&users).Error; err != nil {
-// 		return nil
-// 	}
-
-// 	return users
-// }
-
 func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 	var users []models.User
+	var wg sync.WaitGroup
+	hashedUsers := make(chan models.User, 100)
 
 	// Superadmin1
 	user := models.User{
@@ -162,9 +111,24 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 		}
 	}
 
-	// Hashing passwords
-	for i := range users {
-		s.authService.HashPassword(&users[i])
+	for _, user := range users {
+		wg.Add(1)
+		go func(u models.User) {
+			defer wg.Done()
+			s.authService.HashPassword(&u)
+			hashedUsers <- u
+		}(user)
+	}
+
+	go func() {
+		wg.Wait()
+		close(hashedUsers)
+	}()
+
+	// Resetting
+	users = []models.User{}
+	for hashedUser := range hashedUsers {
+		users = append(users, hashedUser)
 	}
 
 	if err := s.db.Create(&users).Error; err != nil {

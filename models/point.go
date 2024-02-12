@@ -32,7 +32,7 @@ type Point struct {
 	GroupID *string `json:"group_id" gorm:"type:uuid"`
 	Members []Point `json:"members,omitempty" gorm:"foreignKey:GroupID;references:ID"`
 	// Many-to-many: Vicinity Points
-	VinityPoints []*Point `json:"vinity_points,omitempty" gorm:"many2many:point_vinity_points;"`
+	VicinityPoints []*Point `json:"vicinity_points,omitempty" gorm:"many2many:point_vicinity_points;"`
 }
 
 // Internal search

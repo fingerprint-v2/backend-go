@@ -1079,12 +1079,6 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Fingerprint"
                     }
                 },
-                "fp_prediction": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Fingerprint"
-                    }
-                },
                 "group_id": {
                     "description": "Self-referential: Grouping",
                     "type": "string"
@@ -1126,7 +1120,7 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
-                "vinity_points": {
+                "vicinity_points": {
                     "description": "Many-to-many: Vicinity Points",
                     "type": "array",
                     "items": {

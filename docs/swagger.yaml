@@ -351,10 +351,6 @@ definitions:
         items:
           $ref: '#/definitions/models.Fingerprint'
         type: array
-      fp_prediction:
-        items:
-          $ref: '#/definitions/models.Fingerprint'
-        type: array
       group_id:
         description: 'Self-referential: Grouping'
         type: string
@@ -383,7 +379,7 @@ definitions:
         type: string
       updated_at:
         type: string
-      vinity_points:
+      vicinity_points:
         description: 'Many-to-many: Vicinity Points'
         items:
           $ref: '#/definitions/models.Point'

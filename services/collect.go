@@ -2,12 +2,14 @@ package services
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/repositories"
 )
 
 type CollectService interface {
-	Collect(ctx context.Context) error
+	Collect(ctx context.Context, req *dto.CreateSurveyReq) error
 }
 
 type collectServiceImpl struct {
@@ -20,6 +22,9 @@ func NewCollectService(collectDeviceRepo repositories.CollectDeviceRepository) C
 	}
 }
 
-func (s *collectServiceImpl) Collect(ctx context.Context) error {
+func (s *collectServiceImpl) Collect(ctx context.Context, req *dto.CreateSurveyReq) error {
+
+	fmt.Println(req)
 	return nil
+
 }

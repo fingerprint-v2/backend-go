@@ -1,6 +1,6 @@
 package dto
 
-type SurveyReq struct {
-	PointID string `json:"point_id" validate:"required,uuid4"`
-	// Device  CollectDeviceReq `json:"device" validate:"required"`
+type CreateSurveyReq struct {
+	PointID string                 `json:"point_id" validate:"required,uuid4"`
+	Device  CreateCollectDeviceReq `json:"device" validate:"required"`
 }

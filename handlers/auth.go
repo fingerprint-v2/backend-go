@@ -77,6 +77,6 @@ func (h *authHandlerImpl) Login(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
 		Message: "Login successful",
-		Data:    nil,
+		Data:    map[string]interface{}{"access_token": *t},
 	})
 }

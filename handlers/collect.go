@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"fmt"
-
+	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
@@ -10,7 +9,7 @@ import (
 )
 
 type CollectHandler interface {
-	Collect(ctx *fiber.Ctx) error
+	CreateSurvey(ctx *fiber.Ctx) error
 }
 
 type collectHandlerImpl struct {
@@ -23,9 +22,14 @@ func NewCollectHandler(collectService services.CollectService) CollectHandler {
 	}
 }
 
-func (h *collectHandlerImpl) Collect(c *fiber.Ctx) error {
-	fmt.Println("Collect-Handler")
-	err := h.collectService.Collect(c.Context())
+func (h *collectHandlerImpl) CreateSurvey(c *fiber.Ctx) error {
+	req := new(dto.CreateSurveyReq)
+
+	if err := c.BodyParser(req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	err := h.collectService.Collect(c.Context(), req)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

@@ -9,6 +9,8 @@ import (
 
 func SetupCollectRouter(router fiber.Router, v dto.Validator, handler handlers.CollectHandler, middleware *middleware.AuthMiddleware) {
 
+	vCreateSurveyReq := dto.ValidateRequest[dto.CreateSurveyReq](v)
+
 	collect := router.Group("collect")
-	collect.Post("/", handler.Collect)
+	collect.Post("/", vCreateSurveyReq, handler.CreateSurvey)
 }

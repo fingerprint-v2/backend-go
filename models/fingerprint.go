@@ -20,14 +20,13 @@ type Fingerprint struct {
 	// Organization   Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	// OrganizationID string       `json:"organization_id" gorm:"type:uuid;not null"`
 	// Nullable
-	Label        *Point  `json:"label" gorm:"foreignKey:LabelID;references:ID"`
-	LabelID      *string `json:"label_id" gorm:"type:uuid"`
-	Prediction   *Point  `json:"prediction" gorm:"foreignKey:PredictionID;references:ID"`
-	PredictionID *string `json:"prediction_id" gorm:"type:uuid"`
-	NearPoints   []Point `json:"near_points,omitempty" gorm:"many2many:fingerprint_near_points;"`
-	Wifis        []Wifi  `json:"wifis,omitempty" gorm:"foreignKey:FingerprintID;references:ID"`
-	Upload       Upload  `json:"upload,omitempty" gorm:"foreignKey:UploadID;references:ID"`
-	UploadID     string  `json:"upload_id" gorm:"type:uuid;not null"`
+	Label       *Point       `json:"label" gorm:"foreignKey:LabelID;references:ID"`
+	LabelID     *string      `json:"label_id" gorm:"type:uuid"`
+	Predictions []Prediction `json:"predictions" gorm:"foreignKey:FingerprintID;references:ID"`
+	NearPoints  []Point      `json:"near_points,omitempty" gorm:"many2many:fingerprint_near_points;"`
+	Wifis       []Wifi       `json:"wifis,omitempty" gorm:"foreignKey:FingerprintID;references:ID"`
+	Upload      Upload       `json:"upload,omitempty" gorm:"foreignKey:UploadID;references:ID"`
+	UploadID    string       `json:"upload_id" gorm:"type:uuid;not null"`
 	//
 	TrackedEntityID   string `json:"tracked_entity" gorm:"type:varchar(255);not null"`
 	TrackedEntityType string `json:"tracked_entity_type" gorm:"type:varchar(255);not null"`

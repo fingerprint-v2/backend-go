@@ -11,6 +11,7 @@ import (
 
 func migrateModel(db *gorm.DB) error {
 	if err := db.AutoMigrate(
+		&models.Prediction{},
 		&models.Upload{},
 		&models.ExternalEntity{},
 		&models.Wifi{},

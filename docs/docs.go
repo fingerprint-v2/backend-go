@@ -790,7 +790,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Device": {
+        "models.CollectDevice": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -815,7 +815,48 @@ const docTemplate = `{
                     "description": "Unique",
                     "type": "string"
                 },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
+                },
                 "id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ExternalEntity": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -826,17 +867,17 @@ const docTemplate = `{
         "models.Fingerprint": {
             "type": "object",
             "properties": {
+                "collect_device": {
+                    "$ref": "#/definitions/models.CollectDevice"
+                },
+                "collect_device_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "device": {
-                    "$ref": "#/definitions/models.Device"
-                },
-                "device_id": {
-                    "type": "string"
                 },
                 "id": {
                     "type": "string"
@@ -851,7 +892,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "label": {
-                    "description": "Nullable",
+                    "description": "Organization   Organization ` + "`" + `json:\"organization\" gorm:\"foreignKey:OrganizationID;references:ID\"` + "`" + `\nOrganizationID string       ` + "`" + `json:\"organization_id\" gorm:\"type:uuid;not null\"` + "`" + `\nNullable",
                     "allOf": [
                         {
                             "$ref": "#/definitions/models.Point"
@@ -865,23 +906,34 @@ const docTemplate = `{
                     "description": "Mode: SUPERVISED, UNSUPERVISED, PREDICTION",
                     "type": "string"
                 },
-                "organization": {
-                    "$ref": "#/definitions/models.Organization"
+                "near_points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
                 },
-                "organization_id": {
+                "predictions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Prediction"
+                    }
+                },
+                "tracked_entity": {
                     "type": "string"
                 },
-                "prediction": {
-                    "$ref": "#/definitions/models.Point"
-                },
-                "prediction_id": {
+                "tracked_entity_type": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
                 },
+                "upload": {
+                    "$ref": "#/definitions/models.Upload"
+                },
+                "upload_id": {
+                    "type": "string"
+                },
                 "wifis": {
-                    "description": "NearPoints   []Point ` + "`" + `json:\"near_points,omitempty\" gorm:\"many2many:fingerprint_near_points;\"` + "`" + `",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Wifi"
@@ -951,6 +1003,12 @@ const docTemplate = `{
                 },
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "external_entities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ExternalEntity"
+                    }
                 },
                 "floors": {
                     "type": "array",
@@ -1027,6 +1085,10 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Fingerprint"
                     }
                 },
+                "group_id": {
+                    "description": "Self-referential: Grouping",
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1048,15 +1110,57 @@ const docTemplate = `{
                 "organization_id": {
                     "type": "string"
                 },
-                "parent_id": {
-                    "description": "Self-referential",
-                    "type": "string"
+                "predictions": {
+                    "description": "Prediction Reference",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Prediction"
+                    }
                 },
                 "site": {
                     "$ref": "#/definitions/models.Site"
                 },
                 "site_id": {
                     "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "vinity_points": {
+                    "description": "Many-to-many: Vicinity Points",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Point"
+                    }
+                }
+            }
+        },
+        "models.Prediction": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprint": {
+                    "$ref": "#/definitions/models.Fingerprint"
+                },
+                "fingerprint_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "point": {
+                    "$ref": "#/definitions/models.Point"
+                },
+                "point_id": {
+                    "type": "string"
+                },
+                "probability": {
+                    "type": "number"
                 },
                 "updated_at": {
                     "type": "string"
@@ -1107,6 +1211,35 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Upload": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "properties": {
@@ -1115,6 +1248,12 @@ const docTemplate = `{
                 },
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
                 },
                 "id": {
                     "type": "string"
@@ -1133,6 +1272,12 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "uploads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Upload"
+                    }
                 },
                 "username": {
                     "type": "string"

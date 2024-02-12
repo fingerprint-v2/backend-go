@@ -35,13 +35,13 @@ var HandlerSet = wire.NewSet(
 	handlers.NewOrganizationHandler,
 	handlers.NewUserHandler,
 	handlers.NewSiteHandler,
+	handlers.NewCollectHandler,
 )
 
 var ServiceSet = wire.NewSet(
 	services.NewAuthService,
 	services.NewMinioService,
-	services.NewOrganizationService,
-	services.NewUserService,
+	services.NewCollectService,
 )
 
 var RepositorySet = wire.NewSet(
@@ -52,4 +52,5 @@ var RepositorySet = wire.NewSet(
 	repositories.NewBuildingRepository,
 	repositories.NewFloorRepository,
 	repositories.NewPointRepository,
+	repositories.NewCollectDeviceRepository,
 )

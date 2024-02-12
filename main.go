@@ -27,6 +27,7 @@ func NewApp(
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 	siteHandler handlers.SiteHandler,
+	collectHandler handlers.CollectHandler,
 ) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
@@ -48,6 +49,7 @@ func NewApp(
 		organizationHandler,
 		userHandler,
 		siteHandler,
+		collectHandler,
 		middleware,
 	)
 	return app, nil

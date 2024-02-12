@@ -27,7 +27,6 @@ type AuthService interface {
 }
 
 type authServiceImpl struct {
-	userService  UserService
 	userRepo     repositories.UserRepository
 	siteRepo     repositories.SiteRepository
 	buildingRepo repositories.BuildingRepository
@@ -36,7 +35,6 @@ type authServiceImpl struct {
 }
 
 func NewAuthService(
-	userService UserService,
 	userRepo repositories.UserRepository,
 	siteRepo repositories.SiteRepository,
 	buildingRepo repositories.BuildingRepository,
@@ -44,7 +42,6 @@ func NewAuthService(
 	pointRepo repositories.PointRepository,
 ) AuthService {
 	return &authServiceImpl{
-		userService:  userService,
 		userRepo:     userRepo,
 		siteRepo:     siteRepo,
 		buildingRepo: buildingRepo,

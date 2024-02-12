@@ -27,12 +27,11 @@ import (
 func InitializeApp() (*fiber.App, func(), error) {
 	gormDB := db.NewPostgresDatabase()
 	userRepository := repositories.NewUserRepository(gormDB)
-	userService := services.NewUserService(userRepository)
 	siteRepository := repositories.NewSiteRepository(gormDB)
 	buildingRepository := repositories.NewBuildingRepository(gormDB)
 	floorRepository := repositories.NewFloorRepository(gormDB)
 	pointRepository := repositories.NewPointRepository(gormDB)
-	authService := services.NewAuthService(userService, userRepository, siteRepository, buildingRepository, floorRepository, pointRepository)
+	authService := services.NewAuthService(userRepository, siteRepository, buildingRepository, floorRepository, pointRepository)
 	organizationRepository := repositories.NewOrganizationRepository(gormDB)
 	authMiddleware := middleware.NewAuthMiddleware(authService, organizationRepository, userRepository)
 	validator := dto.NewValidator()
@@ -41,11 +40,13 @@ func InitializeApp() (*fiber.App, func(), error) {
 	minioRepository := repositories.NewMinioRepository(client)
 	minioService := services.NewMinioService(minioRepository)
 	minioHandler := handlers.NewMinioHandler(minioService)
-	organizationService := services.NewOrganizationService(organizationRepository)
-	organizationHandler := handlers.NewOrganizationHandler(organizationService, organizationRepository)
+	organizationHandler := handlers.NewOrganizationHandler(organizationRepository)
 	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
 	siteHandler := handlers.NewSiteHandler(siteRepository)
-	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler)
+	collectDeviceRepository := repositories.NewCollectDeviceRepository(gormDB)
+	collectService := services.NewCollectService(collectDeviceRepository)
+	collectHandler := handlers.NewCollectHandler(collectService)
+	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -59,8 +60,8 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewOrganizationService, services.NewUserService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewCollectService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository)

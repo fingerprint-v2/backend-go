@@ -251,7 +251,6 @@ func main() {
 	floorRepo := repositories.NewFloorRepository(db)
 	pointRepo := repositories.NewPointRepository(db)
 	//
-	userService := services.NewUserService(userRepo)
-	authService := services.NewAuthService(userService, userRepo, siteRepo, buildingRepo, floorRepo, pointRepo)
+	authService := services.NewAuthService(userRepo, siteRepo, buildingRepo, floorRepo, pointRepo)
 	NewSeeder(faker, db, authService).seed()
 }

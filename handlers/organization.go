@@ -4,7 +4,6 @@ import (
 	"github.com/fingerprint/dto"
 	"github.com/fingerprint/models"
 	"github.com/fingerprint/repositories"
-	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -18,14 +17,12 @@ type OrganizationHandler interface {
 }
 
 type organizationHandlerImpl struct {
-	organizationRepo    repositories.OrganizationRepository
-	organizationService services.OrganizationService
+	organizationRepo repositories.OrganizationRepository
 }
 
-func NewOrganizationHandler(organizationService services.OrganizationService, organizationRepo repositories.OrganizationRepository) OrganizationHandler {
+func NewOrganizationHandler(organizationRepo repositories.OrganizationRepository) OrganizationHandler {
 	return &organizationHandlerImpl{
-		organizationService: organizationService,
-		organizationRepo:    organizationRepo,
+		organizationRepo: organizationRepo,
 	}
 }
 

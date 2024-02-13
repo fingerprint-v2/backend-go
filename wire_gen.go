@@ -45,7 +45,8 @@ func InitializeApp() (*fiber.App, func(), error) {
 	siteHandler := handlers.NewSiteHandler(siteRepository)
 	collectDeviceRepository := repositories.NewCollectDeviceRepository(gormDB)
 	uploadRepository := repositories.NewUploadRepository(gormDB)
-	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository)
+	fingerprintRepository := repositories.NewFingerprintRepository(gormDB)
+	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
 	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler)
@@ -66,4 +67,4 @@ var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, 
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewCollectService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository)

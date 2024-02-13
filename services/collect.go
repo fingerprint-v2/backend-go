@@ -18,12 +18,18 @@ type CollectService interface {
 type collectServiceImpl struct {
 	collectDeviceRepo repositories.CollectDeviceRepository
 	uploadRepo        repositories.UploadRepository
+	fingerprintRepo   repositories.FingerprintRepository
 }
 
-func NewCollectService(collectDeviceRepo repositories.CollectDeviceRepository, uploadrepo repositories.UploadRepository) CollectService {
+func NewCollectService(
+	collectDeviceRepo repositories.CollectDeviceRepository,
+	uploadrepo repositories.UploadRepository,
+	fingerprintRepo repositories.FingerprintRepository,
+) CollectService {
 	return &collectServiceImpl{
 		collectDeviceRepo: collectDeviceRepo,
 		uploadRepo:        uploadrepo,
+		fingerprintRepo:   fingerprintRepo,
 	}
 }
 

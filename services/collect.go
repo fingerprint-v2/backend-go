@@ -19,43 +19,52 @@ type collectServiceImpl struct {
 	collectDeviceRepo repositories.CollectDeviceRepository
 	uploadRepo        repositories.UploadRepository
 	fingerprintRepo   repositories.FingerprintRepository
+	pointRepo         repositories.PointRepository
+	siteRepo          repositories.SiteRepository
 }
 
 func NewCollectService(
 	collectDeviceRepo repositories.CollectDeviceRepository,
 	uploadrepo repositories.UploadRepository,
 	fingerprintRepo repositories.FingerprintRepository,
+	pointRepo repositories.PointRepository,
+	siteRepo repositories.SiteRepository,
 ) CollectService {
 	return &collectServiceImpl{
 		collectDeviceRepo: collectDeviceRepo,
 		uploadRepo:        uploadrepo,
 		fingerprintRepo:   fingerprintRepo,
+		pointRepo:         pointRepo,
+		siteRepo:          siteRepo,
 	}
 }
 
 func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User) error {
 
 	// Collect Device
-	collectDeviceReq, err := utils.TypeConverter[models.CollectDevice](req.Device)
+	collectDeviceReq, err := utils.TypeConverter[models.CollectDevice](req.CollectDevice)
 	if err != nil {
 		return err
 	}
 
-	devices, err := s.collectDeviceRepo.Find(&models.CollectDeviceFind{DeviceUID: collectDeviceReq.DeviceUID})
+	var collectDeviceID string
+	collectDevices, err := s.collectDeviceRepo.Find(&models.CollectDeviceFind{DeviceUID: collectDeviceReq.DeviceUID})
 	if err != nil {
 		return err
 	}
-	if len(*devices) > 0 {
+	if len(*collectDevices) > 0 {
 		// Update
-		device := (*devices)[0]
-		if err := s.collectDeviceRepo.Update(device.ID.String(), collectDeviceReq); err != nil {
+		collectDevice := (*collectDevices)[0]
+		if err := s.collectDeviceRepo.Update(collectDevice.ID.String(), collectDeviceReq); err != nil {
 			return err
 		}
+		collectDeviceID = collectDevice.ID.String()
 	} else {
 		// Create
 		if err := s.collectDeviceRepo.Create(collectDeviceReq); err != nil {
 			return err
 		}
+		collectDeviceID = collectDeviceReq.ID.String()
 	}
 
 	// Upload
@@ -65,15 +74,55 @@ func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User
 	if err := s.uploadRepo.Create(upload); err != nil {
 		return err
 	}
+	uploadID := upload.ID.String()
+
+	// Check Valid Collect Mode (just to make sure)
+	if err := s.CheckValidCollectMode(req.Mode); err != nil {
+		return err
+	}
+	mode := req.Mode
+
+	// Determine SiteID
+	var siteID string
+	if mode == constants.SUPERVISED.String() {
+		point, err := s.pointRepo.Get(req.PointID)
+		if err != nil {
+			return err
+		}
+		siteID = point.SiteID
+	} else if (mode == constants.UNSUPERVISED.String()) || (mode == constants.PREDICTION.String()) {
+		if req.SiteID == "" {
+			return errors.New("site_id is required")
+		}
+		siteID = req.SiteID
+	}
+
+	// Determine OrganizationID
+	site, err := s.siteRepo.Get(siteID)
+	if err != nil {
+		return err
+	}
+	organizationID := site.OrganizationID
 
 	// Fingerprint
+	fingerprint := &models.Fingerprint{
+		Mode:            req.Mode,
+		CollectDeviceID: collectDeviceID,
+		SiteID:          siteID,
+		OrganizationID:  organizationID,
+		UploadID:        uploadID,
+	}
+
+	if err := s.fingerprintRepo.Create(fingerprint); err != nil {
+		return err
+	}
 
 	fmt.Println(req, user)
 	return nil
 
 }
 
-func (s *authServiceImpl) CheckValidCollectMode(mode string) error {
+func (s *collectServiceImpl) CheckValidCollectMode(mode string) error {
 
 	modes := []constants.CollectMode{constants.PREDICTION, constants.SUPERVISED, constants.UNSUPERVISED}
 	for _, value := range modes {

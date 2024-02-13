@@ -46,7 +46,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectDeviceRepository := repositories.NewCollectDeviceRepository(gormDB)
 	uploadRepository := repositories.NewUploadRepository(gormDB)
 	fingerprintRepository := repositories.NewFingerprintRepository(gormDB)
-	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository)
+	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
 	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler)

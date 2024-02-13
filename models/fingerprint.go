@@ -30,8 +30,8 @@ type Fingerprint struct {
 	Upload       Upload       `json:"upload" gorm:"foreignKey:UploadID;references:ID"`
 	UploadID     string       `json:"upload_id" gorm:"type:uuid;not null"`
 	//
-	TrackedEntityID   string `json:"tracked_entity" gorm:"type:varchar(255);not null"`
-	TrackedEntityType string `json:"tracked_entity_type" gorm:"type:varchar(255);not null"`
+	TrackedEntityID   *string `json:"tracked_entity" gorm:"type:varchar(255)"`
+	TrackedEntityType *string `json:"tracked_entity_type" gorm:"type:varchar(255)"`
 	//
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`

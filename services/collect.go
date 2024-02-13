@@ -118,6 +118,7 @@ func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User
 	}
 
 	fmt.Println(req, user)
+
 	return nil
 
 }

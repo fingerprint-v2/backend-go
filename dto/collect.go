@@ -3,6 +3,11 @@ package dto
 type CreateSurveyReq struct {
 	PointID       string                 `json:"point_id" validate:"required,uuid4"`
 	CollectDevice CreateCollectDeviceReq `json:"collect_device"`
-	Mode          string                 `json:"mode" validate:"required,oneof=SUPERVISED UNSUPERVISED PREDICTION"`
 	SiteID        string                 `json:"site_id" validate:"omitempty,uuid4"`
+	//
+	Mode              string `json:"mode" validate:"required,oneof=SUPERVISED UNSUPERVISED PREDICTION"`
+	IsBetweenPoints   bool   `json:"is_between_points"`
+	IsOutsideCoverage bool   `json:"is_outside_coverage"`
+	//
+	Fingerprints []CreateFingerprintReq `json:"fingerprints" validate:"required,min=1,dive"`
 }

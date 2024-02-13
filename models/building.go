@@ -13,21 +13,21 @@ type Building struct {
 	ExternalName string          `json:"external_name" gorm:"type:varchar(255)"`
 	CreatedAt    time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt    *time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt    *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	DeletedAt    *gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	//
 	Site           *Site         `json:"site" gorm:"foreignKey:SiteID;references:ID"`
 	SiteID         string        `json:"site_id" gorm:"type:uuid;not null"`
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
 	//
-	Floors []Floor `json:"floors,omitempty"`
-	Points []Point `json:"points,omitempty"`
+	Floors []Floor `json:"floors"`
+	Points []Point `json:"points"`
 }
 
 type BuildingFind struct {
 	ID           string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
-	ExternalName string `json:"external_name"`
+	ExternalName string `json:"external_name,omitempty"`
 	//
 	SiteID         string `json:"site_id,omitempty"`
 	OrganizationID string `json:"organization_id,omitempty"`

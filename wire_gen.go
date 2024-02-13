@@ -44,9 +44,11 @@ func InitializeApp() (*fiber.App, func(), error) {
 	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
 	siteHandler := handlers.NewSiteHandler(siteRepository)
 	collectDeviceRepository := repositories.NewCollectDeviceRepository(gormDB)
-	collectService := services.NewCollectService(collectDeviceRepository)
+	uploadRepository := repositories.NewUploadRepository(gormDB)
+	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
-	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler)
+	pointHandler := handlers.NewPointHandler(pointRepository)
+	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -60,8 +62,8 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler)
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewCollectService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository)
+var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository)

@@ -17,12 +17,12 @@ type User struct {
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 	//
-	Organization   *Organization `json:"organization,omitempty" gorm:"foreignKey:OrganizationID;references:ID"`
+	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
 	//
-	Fingerprints []Fingerprint `json:"fingerprints,omitempty" gorm:"polymorphic:TrackedEntity;polymorphic_value:user"`
+	Fingerprints []Fingerprint `json:"fingerprints" gorm:"polymorphic:TrackedEntity;polymorphic_value:user"`
 	//
-	Uploads []Upload `json:"uploads,omitempty" gorm:"foreignKey:UserID;references:ID"`
+	Uploads []Upload `json:"uploads" gorm:"foreignKey:UserID;references:ID"`
 }
 
 // Internal search

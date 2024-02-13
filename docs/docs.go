@@ -891,17 +891,6 @@ const docTemplate = `{
                 "is_outside_coverage": {
                     "type": "boolean"
                 },
-                "label": {
-                    "description": "Organization   Organization ` + "`" + `json:\"organization\" gorm:\"foreignKey:OrganizationID;references:ID\"` + "`" + `\nOrganizationID string       ` + "`" + `json:\"organization_id\" gorm:\"type:uuid;not null\"` + "`" + `\nNullable",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.Point"
-                        }
-                    ]
-                },
-                "label_id": {
-                    "type": "string"
-                },
                 "mode": {
                     "description": "Mode: SUPERVISED, UNSUPERVISED, PREDICTION",
                     "type": "string"
@@ -912,11 +901,34 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Point"
                     }
                 },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "point_label": {
+                    "description": "Nullable",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Point"
+                        }
+                    ]
+                },
+                "point_label_id": {
+                    "type": "string"
+                },
                 "predictions": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Prediction"
                     }
+                },
+                "site": {
+                    "$ref": "#/definitions/models.Site"
+                },
+                "site_id": {
+                    "type": "string"
                 },
                 "tracked_entity": {
                     "type": "string"
@@ -1008,6 +1020,12 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.ExternalEntity"
+                    }
+                },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
                     }
                 },
                 "floors": {
@@ -1175,6 +1193,12 @@ const docTemplate = `{
                 },
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fingerprints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Fingerprint"
+                    }
                 },
                 "floors": {
                     "type": "array",

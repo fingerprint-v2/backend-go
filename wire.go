@@ -36,6 +36,7 @@ var HandlerSet = wire.NewSet(
 	handlers.NewUserHandler,
 	handlers.NewSiteHandler,
 	handlers.NewCollectHandler,
+	handlers.NewPointHandler,
 )
 
 var ServiceSet = wire.NewSet(
@@ -53,4 +54,5 @@ var RepositorySet = wire.NewSet(
 	repositories.NewFloorRepository,
 	repositories.NewPointRepository,
 	repositories.NewCollectDeviceRepository,
+	repositories.NewUploadRepository,
 )

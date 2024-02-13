@@ -25,5 +25,11 @@ func NewCollectDeviceRepository(db *gorm.DB) CollectDeviceRepository {
 
 func (r *collectDeviceRepositoryImpl) SearchCollectDevice(req *dto.SearchCollectDeviceReq) (*[]models.CollectDevice, error) {
 	collectDevices := new([]models.CollectDevice)
+
+	// DB query
+	if err := r.db.Find(collectDevices, req).Error; err != nil {
+		return nil, err
+	}
+
 	return collectDevices, nil
 }

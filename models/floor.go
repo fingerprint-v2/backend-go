@@ -22,7 +22,7 @@ type Floor struct {
 	Organization   Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string       `json:"organization_id" gorm:"type:uuid;not null"`
 	//
-	Points []Point `json:"points,omitempty"`
+	Points []Point `json:"points"`
 }
 
 // Internal search

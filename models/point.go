@@ -14,7 +14,7 @@ type Point struct {
 	IsGroup      bool            `json:"is_group" gorm:"type:boolean;not null;default:false"`
 	CreatedAt    time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt    *time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt    *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	DeletedAt    *gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	//
 	Floor          *Floor        `json:"floor" gorm:"foreignKey:FloorID;references:ID"`
 	FloorID        string        `json:"floor_id" gorm:"type:uuid;not null"`
@@ -25,22 +25,22 @@ type Point struct {
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
 	// Fingerprint Reference
-	FPLabel []Fingerprint `json:"fp_label,omitempty" gorm:"foreignKey:LabelID;references:ID"`
+	FPLabel *[]Fingerprint `json:"fp_label" gorm:"foreignKey:PointLabelID;references:ID"`
 	// Prediction Reference
-	Predictions []Prediction `json:"predictions,omitempty" gorm:"foreignKey:PointID;references:ID"`
+	Predictions *[]Prediction `json:"predictions" gorm:"foreignKey:PointID;references:ID"`
 	// Self-referential: Grouping
-	GroupID *string `json:"group_id" gorm:"type:uuid"`
-	Members []Point `json:"members,omitempty" gorm:"foreignKey:GroupID;references:ID"`
+	GroupID *string  `json:"group_id" gorm:"type:uuid"`
+	Members *[]Point `json:"members" gorm:"foreignKey:GroupID;references:ID"`
 	// Many-to-many: Vicinity Points
-	VicinityPoints []*Point `json:"vicinity_points,omitempty" gorm:"many2many:point_vicinity_points;"`
+	VicinityPoints []*Point `json:"vicinity_points" gorm:"many2many:point_vicinity_points;"`
 }
 
 // Internal search
 type PointFind struct {
 	ID           string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
-	ExternalName string `json:"external_name"`
-	IsGroup      bool   `json:"is_group"`
+	ExternalName string `json:"external_name,omitempty"`
+	IsGroup      bool   `json:"is_group,omitempty"`
 	//
 	FloorID        string `json:"floor_id,omitempty"`
 	SiteID         string `json:"site_id,omitempty"`

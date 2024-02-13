@@ -3,6 +3,7 @@ package constants
 import "time"
 
 type UserRole int
+type CollectMode int
 
 const (
 
@@ -16,4 +17,10 @@ const (
 	USER
 )
 
-//go:generate stringer -type=UserRole
+const (
+	SUPERVISED CollectMode = iota + 1
+	UNSUPERVISED
+	PREDICTION
+)
+
+//go:generate stringer -type=UserRole,CollectMode

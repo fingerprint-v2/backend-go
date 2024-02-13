@@ -223,15 +223,6 @@ definitions:
         type: boolean
       is_outside_coverage:
         type: boolean
-      label:
-        allOf:
-        - $ref: '#/definitions/models.Point'
-        description: |-
-          Organization   Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
-          OrganizationID string       `json:"organization_id" gorm:"type:uuid;not null"`
-          Nullable
-      label_id:
-        type: string
       mode:
         description: 'Mode: SUPERVISED, UNSUPERVISED, PREDICTION'
         type: string
@@ -239,10 +230,24 @@ definitions:
         items:
           $ref: '#/definitions/models.Point'
         type: array
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      point_label:
+        allOf:
+        - $ref: '#/definitions/models.Point'
+        description: Nullable
+      point_label_id:
+        type: string
       predictions:
         items:
           $ref: '#/definitions/models.Prediction'
         type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
       tracked_entity:
         type: string
       tracked_entity_type:
@@ -304,6 +309,10 @@ definitions:
       external_entities:
         items:
           $ref: '#/definitions/models.ExternalEntity'
+        type: array
+      fingerprints:
+        items:
+          $ref: '#/definitions/models.Fingerprint'
         type: array
       floors:
         items:
@@ -416,6 +425,10 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
+      fingerprints:
+        items:
+          $ref: '#/definitions/models.Fingerprint'
+        type: array
       floors:
         items:
           $ref: '#/definitions/models.Floor'

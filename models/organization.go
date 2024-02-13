@@ -13,14 +13,15 @@ type Organization struct {
 	IsSystem  bool            `json:"is_system" gorm:"default:false"`
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`
-	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	DeletedAt *gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	//
-	Users            []User           `json:"users,omitempty"`
-	ExternalEntities []ExternalEntity `json:"external_entities,omitempty"`
-	Sites            []Site           `json:"sites,omitempty"`
-	Buildings        []Building       `json:"buildings,omitempty"`
-	Floors           []Floor          `json:"floors,omitempty"`
-	Points           []Point          `json:"points,omitempty"`
+	Users            []User           `json:"users"`
+	ExternalEntities []ExternalEntity `json:"external_entities"`
+	Sites            []Site           `json:"sites"`
+	Buildings        []Building       `json:"buildings"`
+	Floors           []Floor          `json:"floors"`
+	Points           []Point          `json:"points"`
+	Fingerprints     []Fingerprint    `json:"fingerprints"`
 }
 
 // Internal search

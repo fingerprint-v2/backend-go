@@ -16,6 +16,10 @@ definitions:
       password:
         type: string
       role:
+        enum:
+        - SUPERADMIN
+        - ADMIN
+        - USER
         type: string
       username:
         type: string

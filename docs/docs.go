@@ -595,7 +595,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "SUPERADMIN",
+                        "ADMIN",
+                        "USER"
+                    ]
                 },
                 "username": {
                     "type": "string"

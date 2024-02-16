@@ -19,6 +19,7 @@ type collectServiceImpl struct {
 	collectDeviceRepo repositories.CollectDeviceRepository
 	uploadRepo        repositories.UploadRepository
 	fingerprintRepo   repositories.FingerprintRepository
+	wifiRepo          repositories.WifiRepository
 	pointRepo         repositories.PointRepository
 	siteRepo          repositories.SiteRepository
 }
@@ -27,6 +28,7 @@ func NewCollectService(
 	collectDeviceRepo repositories.CollectDeviceRepository,
 	uploadrepo repositories.UploadRepository,
 	fingerprintRepo repositories.FingerprintRepository,
+	wifiRepo repositories.WifiRepository,
 	pointRepo repositories.PointRepository,
 	siteRepo repositories.SiteRepository,
 ) CollectService {
@@ -34,6 +36,7 @@ func NewCollectService(
 		collectDeviceRepo: collectDeviceRepo,
 		uploadRepo:        uploadrepo,
 		fingerprintRepo:   fingerprintRepo,
+		wifiRepo:          wifiRepo,
 		pointRepo:         pointRepo,
 		siteRepo:          siteRepo,
 	}
@@ -69,7 +72,9 @@ func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User
 
 	// Upload
 	upload := &models.Upload{
-		UserID: user.ID.String(),
+		UserID:       user.ID.String(),
+		ScanMode:     req.ScanMode,
+		ScanInterval: req.ScanInterval,
 	}
 	if err := s.uploadRepo.Create(upload); err != nil {
 		return err
@@ -85,7 +90,7 @@ func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User
 	// Determine SiteID
 	var siteID string
 	if mode == constants.SUPERVISED.String() {
-		point, err := s.pointRepo.Get(req.PointID)
+		point, err := s.pointRepo.Get(req.PointLabelID)
 		if err != nil {
 			return err
 		}
@@ -104,18 +109,47 @@ func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User
 	}
 	organizationID := site.OrganizationID
 
-	// Fingerprint
-	fingerprint := &models.Fingerprint{
-		Mode:            req.Mode,
-		CollectDeviceID: collectDeviceID,
-		SiteID:          siteID,
-		OrganizationID:  organizationID,
-		UploadID:        uploadID,
+	// Determine PointID
+	pointLabelID := new(string)
+	if mode == constants.SUPERVISED.String() {
+		point, err := s.pointRepo.Get(req.PointLabelID)
+		if err != nil {
+			return err
+		}
+		tempStr := point.ID.String()
+		pointLabelID = &tempStr
 	}
 
-	if err := s.fingerprintRepo.Create(fingerprint); err != nil {
+	// Create Fingerprint
+	fingerprints := []*models.Fingerprint{}
+	for _, fingerprintReq := range req.Fingerprints {
+		wifis := []models.Wifi{}
+		for _, wifiReq := range fingerprintReq.Wifis {
+			wifi, err := utils.TypeConverter[models.Wifi](wifiReq)
+			if err != nil {
+				return err
+			}
+			wifis = append(wifis, *wifi)
+		}
+		fingerprint := &models.Fingerprint{
+			Mode:            req.Mode,
+			CollectDeviceID: collectDeviceID,
+			SiteID:          siteID,
+			OrganizationID:  organizationID,
+			UploadID:        uploadID,
+			Wifis:           wifis,
+			PointLabelID:    pointLabelID,
+		}
+		fingerprints = append(fingerprints, fingerprint)
+	}
+
+	if err := s.fingerprintRepo.CreateMultiple(fingerprints); err != nil {
 		return err
 	}
+
+	// Create Wifis
+
+	// wifis := req.Fingerprints
 
 	fmt.Println(req, user)
 

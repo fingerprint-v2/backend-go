@@ -10,6 +10,7 @@ import (
 type repository[M any, S any] interface {
 	Get(id string) (*M, error)
 	Create(ent *M) error
+	CreateMultiple(ents []*M) error
 	Update(id string, ent *M) error
 	Upsert(ent *M) error
 	Delete(id string) error
@@ -40,6 +41,11 @@ func (r *repositoryImpl[M, S]) Create(ent *M) error {
 	}
 	return nil
 }
+
+func (r *repositoryImpl[M, S]) CreateMultiple(ents []*M) error {
+	return r.db.Create(ents).Error
+}
+
 func (r *repositoryImpl[M, S]) Update(id string, ent *M) error {
 	// if err := r.db.Model(ent).Where("id = ?", id).Updates(ent).Error; err != nil {
 	// 	return err
@@ -55,6 +61,7 @@ func (r *repositoryImpl[M, S]) Update(id string, ent *M) error {
 
 	return nil
 }
+
 func (r *repositoryImpl[M, S]) Upsert(ent *M) error {
 	if err := r.db.Save(ent).Error; err != nil {
 		return err

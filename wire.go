@@ -56,4 +56,5 @@ var RepositorySet = wire.NewSet(
 	repositories.NewCollectDeviceRepository,
 	repositories.NewUploadRepository,
 	repositories.NewFingerprintRepository,
+	repositories.NewWifiRepository,
 )

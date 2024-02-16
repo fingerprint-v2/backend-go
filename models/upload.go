@@ -8,7 +8,9 @@ import (
 )
 
 type Upload struct {
-	ID uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	ID           uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	ScanMode     string    `json:"scan_mode" gorm:"type:varchar(255);not null"`
+	ScanInterval *int      `json:"scan_interval" gorm:"type:integer"`
 	//
 	Fingerprints []Fingerprint `json:"fingerprints" gorm:"foreignKey:UploadID;references:ID"`
 	//

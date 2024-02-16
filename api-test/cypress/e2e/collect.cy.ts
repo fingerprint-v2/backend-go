@@ -61,22 +61,33 @@ describe("Collect", () => {
 
     cy.log(pointId);
 
+    const payload = {
+      point_label_id: pointId,
+      mode: "SUPERVISED",
+      collect_device: {
+        device_uid: "device3",
+        device_id: "device_id3",
+      },
+      scan_mode: "INTERVAL",
+      scan_interval: 1000,
+
+      fingerprints: [
+        {
+          wifis: wifis,
+        },
+        {
+          wifis: wifis,
+        },
+        {
+          wifis: wifis,
+        },
+      ],
+    };
+
     cy.request({
       method: "POST",
       url: "/collect",
-      body: {
-        point_id: pointId,
-        mode: "SUPERVISED",
-        collect_device: {
-          device_uid: "device3",
-          device_id: "device_id3",
-        },
-        fingerprints: [
-          {
-            wifis: wifis,
-          },
-        ],
-      },
+      body: payload,
     });
   });
 });

@@ -1252,6 +1252,12 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "scan_interval": {
+                    "type": "integer"
+                },
+                "scan_mode": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
                 },

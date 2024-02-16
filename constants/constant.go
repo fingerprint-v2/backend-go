@@ -4,6 +4,7 @@ import "time"
 
 type UserRole int
 type CollectMode int
+type ScanMode int
 
 const (
 
@@ -23,4 +24,9 @@ const (
 	PREDICTION
 )
 
-//go:generate stringer -type=UserRole,CollectMode
+const (
+	INTERVAL ScanMode = iota + 1
+	SINGLE
+)
+
+//go:generate stringer -type=UserRole,CollectMode,ScanMode

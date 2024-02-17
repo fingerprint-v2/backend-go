@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.25.3
-// source: grpc/proto/todo.proto
+// source: grpc/todo/todo.proto
 
 package todo
 
@@ -101,5 +101,5 @@ var TodoService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/proto/todo.proto",
+	Metadata: "grpc/todo/todo.proto",
 }

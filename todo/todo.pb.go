@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v4.25.3
-// source: grpc/proto/todo.proto
+// source: grpc/todo/todo.proto
 
 package todo
 
@@ -33,7 +33,7 @@ type Todo struct {
 func (x *Todo) Reset() {
 	*x = Todo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_grpc_proto_todo_proto_msgTypes[0]
+		mi := &file_grpc_todo_todo_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -46,7 +46,7 @@ func (x *Todo) String() string {
 func (*Todo) ProtoMessage() {}
 
 func (x *Todo) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_proto_todo_proto_msgTypes[0]
+	mi := &file_grpc_todo_todo_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *Todo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Todo.ProtoReflect.Descriptor instead.
 func (*Todo) Descriptor() ([]byte, []int) {
-	return file_grpc_proto_todo_proto_rawDescGZIP(), []int{0}
+	return file_grpc_todo_todo_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Todo) GetId() int32 {
@@ -94,7 +94,7 @@ type Todos struct {
 func (x *Todos) Reset() {
 	*x = Todos{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_grpc_proto_todo_proto_msgTypes[1]
+		mi := &file_grpc_todo_todo_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -107,7 +107,7 @@ func (x *Todos) String() string {
 func (*Todos) ProtoMessage() {}
 
 func (x *Todos) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_proto_todo_proto_msgTypes[1]
+	mi := &file_grpc_todo_todo_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -120,7 +120,7 @@ func (x *Todos) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Todos.ProtoReflect.Descriptor instead.
 func (*Todos) Descriptor() ([]byte, []int) {
-	return file_grpc_proto_todo_proto_rawDescGZIP(), []int{1}
+	return file_grpc_todo_todo_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Todos) GetTodos() []*Todo {
@@ -139,7 +139,7 @@ type Empty struct {
 func (x *Empty) Reset() {
 	*x = Empty{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_grpc_proto_todo_proto_msgTypes[2]
+		mi := &file_grpc_todo_todo_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -152,7 +152,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_proto_todo_proto_msgTypes[2]
+	mi := &file_grpc_todo_todo_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -165,49 +165,49 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_grpc_proto_todo_proto_rawDescGZIP(), []int{2}
+	return file_grpc_todo_todo_proto_rawDescGZIP(), []int{2}
 }
 
-var File_grpc_proto_todo_proto protoreflect.FileDescriptor
+var File_grpc_todo_todo_proto protoreflect.FileDescriptor
 
-var file_grpc_proto_todo_proto_rawDesc = []byte{
-	0x0a, 0x15, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x74, 0x6f, 0x64,
-	0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04, 0x74, 0x6f, 0x64, 0x6f, 0x22, 0x4a, 0x0a,
-	0x04, 0x54, 0x6f, 0x64, 0x6f, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x63,
-	0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09,
-	0x63, 0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x22, 0x29, 0x0a, 0x05, 0x54, 0x6f, 0x64,
-	0x6f, 0x73, 0x12, 0x20, 0x0a, 0x05, 0x74, 0x6f, 0x64, 0x6f, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
-	0x0b, 0x32, 0x0a, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e, 0x54, 0x6f, 0x64, 0x6f, 0x52, 0x05, 0x74,
-	0x6f, 0x64, 0x6f, 0x73, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x32, 0x35, 0x0a,
-	0x0b, 0x54, 0x6f, 0x64, 0x6f, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x26, 0x0a, 0x08,
-	0x47, 0x65, 0x74, 0x54, 0x6f, 0x64, 0x6f, 0x73, 0x12, 0x0b, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e,
-	0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0b, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e, 0x54, 0x6f, 0x64,
-	0x6f, 0x73, 0x22, 0x00, 0x42, 0x1d, 0x5a, 0x1b, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x66, 0x69, 0x6e, 0x67, 0x65, 0x72, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x2f, 0x74,
-	0x6f, 0x64, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_grpc_todo_todo_proto_rawDesc = []byte{
+	0x0a, 0x14, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x74, 0x6f, 0x64, 0x6f, 0x2f, 0x74, 0x6f, 0x64, 0x6f,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04, 0x74, 0x6f, 0x64, 0x6f, 0x22, 0x4a, 0x0a, 0x04,
+	0x54, 0x6f, 0x64, 0x6f, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6f,
+	0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x63,
+	0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x22, 0x29, 0x0a, 0x05, 0x54, 0x6f, 0x64, 0x6f,
+	0x73, 0x12, 0x20, 0x0a, 0x05, 0x74, 0x6f, 0x64, 0x6f, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x0a, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e, 0x54, 0x6f, 0x64, 0x6f, 0x52, 0x05, 0x74, 0x6f,
+	0x64, 0x6f, 0x73, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x32, 0x35, 0x0a, 0x0b,
+	0x54, 0x6f, 0x64, 0x6f, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x26, 0x0a, 0x08, 0x47,
+	0x65, 0x74, 0x54, 0x6f, 0x64, 0x6f, 0x73, 0x12, 0x0b, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e, 0x45,
+	0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0b, 0x2e, 0x74, 0x6f, 0x64, 0x6f, 0x2e, 0x54, 0x6f, 0x64, 0x6f,
+	0x73, 0x22, 0x00, 0x42, 0x1d, 0x5a, 0x1b, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
+	0x6d, 0x2f, 0x66, 0x69, 0x6e, 0x67, 0x65, 0x72, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x2f, 0x74, 0x6f,
+	0x64, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_grpc_proto_todo_proto_rawDescOnce sync.Once
-	file_grpc_proto_todo_proto_rawDescData = file_grpc_proto_todo_proto_rawDesc
+	file_grpc_todo_todo_proto_rawDescOnce sync.Once
+	file_grpc_todo_todo_proto_rawDescData = file_grpc_todo_todo_proto_rawDesc
 )
 
-func file_grpc_proto_todo_proto_rawDescGZIP() []byte {
-	file_grpc_proto_todo_proto_rawDescOnce.Do(func() {
-		file_grpc_proto_todo_proto_rawDescData = protoimpl.X.CompressGZIP(file_grpc_proto_todo_proto_rawDescData)
+func file_grpc_todo_todo_proto_rawDescGZIP() []byte {
+	file_grpc_todo_todo_proto_rawDescOnce.Do(func() {
+		file_grpc_todo_todo_proto_rawDescData = protoimpl.X.CompressGZIP(file_grpc_todo_todo_proto_rawDescData)
 	})
-	return file_grpc_proto_todo_proto_rawDescData
+	return file_grpc_todo_todo_proto_rawDescData
 }
 
-var file_grpc_proto_todo_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_grpc_proto_todo_proto_goTypes = []interface{}{
+var file_grpc_todo_todo_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_grpc_todo_todo_proto_goTypes = []interface{}{
 	(*Todo)(nil),  // 0: todo.Todo
 	(*Todos)(nil), // 1: todo.Todos
 	(*Empty)(nil), // 2: todo.Empty
 }
-var file_grpc_proto_todo_proto_depIdxs = []int32{
+var file_grpc_todo_todo_proto_depIdxs = []int32{
 	0, // 0: todo.Todos.todos:type_name -> todo.Todo
 	2, // 1: todo.TodoService.GetTodos:input_type -> todo.Empty
 	1, // 2: todo.TodoService.GetTodos:output_type -> todo.Todos
@@ -218,13 +218,13 @@ var file_grpc_proto_todo_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_grpc_proto_todo_proto_init() }
-func file_grpc_proto_todo_proto_init() {
-	if File_grpc_proto_todo_proto != nil {
+func init() { file_grpc_todo_todo_proto_init() }
+func file_grpc_todo_todo_proto_init() {
+	if File_grpc_todo_todo_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_grpc_proto_todo_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_grpc_todo_todo_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Todo); i {
 			case 0:
 				return &v.state
@@ -236,7 +236,7 @@ func file_grpc_proto_todo_proto_init() {
 				return nil
 			}
 		}
-		file_grpc_proto_todo_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_grpc_todo_todo_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Todos); i {
 			case 0:
 				return &v.state
@@ -248,7 +248,7 @@ func file_grpc_proto_todo_proto_init() {
 				return nil
 			}
 		}
-		file_grpc_proto_todo_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_grpc_todo_todo_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Empty); i {
 			case 0:
 				return &v.state
@@ -265,18 +265,18 @@ func file_grpc_proto_todo_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_grpc_proto_todo_proto_rawDesc,
+			RawDescriptor: file_grpc_todo_todo_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_grpc_proto_todo_proto_goTypes,
-		DependencyIndexes: file_grpc_proto_todo_proto_depIdxs,
-		MessageInfos:      file_grpc_proto_todo_proto_msgTypes,
+		GoTypes:           file_grpc_todo_todo_proto_goTypes,
+		DependencyIndexes: file_grpc_todo_todo_proto_depIdxs,
+		MessageInfos:      file_grpc_todo_todo_proto_msgTypes,
 	}.Build()
-	File_grpc_proto_todo_proto = out.File
-	file_grpc_proto_todo_proto_rawDesc = nil
-	file_grpc_proto_todo_proto_goTypes = nil
-	file_grpc_proto_todo_proto_depIdxs = nil
+	File_grpc_todo_todo_proto = out.File
+	file_grpc_todo_todo_proto_rawDesc = nil
+	file_grpc_todo_todo_proto_goTypes = nil
+	file_grpc_todo_todo_proto_depIdxs = nil
 }

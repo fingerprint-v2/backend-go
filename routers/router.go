@@ -11,7 +11,7 @@ func SetupRoutes(
 	router fiber.Router,
 	validator dto.Validator,
 	authHandler handlers.AuthHandler,
-	minioHandler handlers.MinioHandler,
+	minioHandler handlers.ObjectStorageHandler,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 	siteHandler handlers.SiteHandler,
@@ -27,7 +27,7 @@ func SetupRoutes(
 	})
 	v1 := router.Group("/v1")
 	SetUpAuthRouter(v1, validator, authHandler)
-	SetUpMinioRouter(v1, validator, minioHandler)
+	SetUpObjectStorageRouter(v1, validator, minioHandler)
 	SetupOrganizationRouter(v1, validator, organizationHandler, middleware)
 	SetupSiteRouter(v1, validator, siteHandler, middleware)
 	SetupUserRouter(v1, validator, userHandler, middleware)

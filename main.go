@@ -23,7 +23,7 @@ func NewApp(
 	middleware *middleware.AuthMiddleware,
 	validator dto.Validator,
 	authHandler handlers.AuthHandler,
-	minioHandler handlers.MinioHandler,
+	minioHandler handlers.ObjectStorageHandler,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 	siteHandler handlers.SiteHandler,

@@ -12,7 +12,7 @@ import (
 )
 
 type CollectService interface {
-	Collect(req *dto.CreateSurveyReq, user *models.User) error
+	CreateSurvey(req *dto.CreateSurveyReq, user *models.User) error
 }
 
 type collectServiceImpl struct {
@@ -42,7 +42,7 @@ func NewCollectService(
 	}
 }
 
-func (s *collectServiceImpl) Collect(req *dto.CreateSurveyReq, user *models.User) error {
+func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models.User) error {
 
 	// Collect Device
 	collectDeviceReq, err := utils.TypeConverter[models.CollectDevice](req.CollectDevice)

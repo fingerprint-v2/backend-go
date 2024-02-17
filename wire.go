@@ -31,7 +31,7 @@ var AppSet = wire.NewSet(
 
 var HandlerSet = wire.NewSet(
 	handlers.NewAuthHandler,
-	handlers.NewMinioHandler,
+	handlers.NewObjectStorageHandler,
 	handlers.NewOrganizationHandler,
 	handlers.NewUserHandler,
 	handlers.NewSiteHandler,
@@ -42,12 +42,12 @@ var HandlerSet = wire.NewSet(
 
 var ServiceSet = wire.NewSet(
 	services.NewAuthService,
-	services.NewMinioService,
+	services.NewObjectStorageService,
 	services.NewCollectService,
+	services.NewTrainingService,
 )
 
 var RepositorySet = wire.NewSet(
-	repositories.NewMinioRepository,
 	repositories.NewOrganizationRepository,
 	repositories.NewUserRepository,
 	repositories.NewSiteRepository,

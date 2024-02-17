@@ -37,8 +37,8 @@ func InitializeApp() (*fiber.App, func(), error) {
 	validator := dto.NewValidator()
 	authHandler := handlers.NewAuthHandler(authService, userRepository)
 	client := configs.NewMinioClient()
-	objectStorageService := services.NewMinioService(client)
-	minioHandler := handlers.NewMinioHandler(objectStorageService)
+	objectStorageService := services.NewObjectStorageService(client)
+	objectStorageHandler := handlers.NewObjectStorageHandler(objectStorageService)
 	organizationHandler := handlers.NewOrganizationHandler(organizationRepository)
 	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
 	siteHandler := handlers.NewSiteHandler(siteRepository)
@@ -49,8 +49,9 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	trainingHandler := handlers.NewTrainingHandler()
-	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, trainingHandler)
+	trainingService := services.NewTrainingService(objectStorageService)
+	trainingHandler := handlers.NewTrainingHandler(trainingService)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, trainingHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -64,8 +65,8 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewTrainingHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewTrainingHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewCollectService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewTrainingService)
 
-var RepositorySet = wire.NewSet(repositories.NewMinioRepository, repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)
+var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)

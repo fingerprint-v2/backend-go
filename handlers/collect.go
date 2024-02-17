@@ -30,13 +30,13 @@ func (h *collectHandlerImpl) CreateSurvey(c *fiber.Ctx) error {
 	}
 
 	user := c.Locals("user").(*models.User)
-	err := h.collectService.Collect(req, user)
+	err := h.collectService.CreateSurvey(req, user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*[]models.Organization]{
-		Message: "Search collect sucessfully",
+	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
+		Message: "Create survey successfully",
 		Data:    nil,
 	})
 }

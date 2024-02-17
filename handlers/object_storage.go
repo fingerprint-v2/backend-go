@@ -18,7 +18,7 @@ type objectStorageHandlerImpl struct {
 	objectStorageService services.ObjectStorageService
 }
 
-func NewMinioHandler(objectStorageService services.ObjectStorageService) ObjectStorageHandler {
+func NewObjectStorageHandler(objectStorageService services.ObjectStorageService) ObjectStorageHandler {
 	return &objectStorageHandlerImpl{
 		objectStorageService: objectStorageService,
 	}

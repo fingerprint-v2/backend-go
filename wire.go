@@ -24,6 +24,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 var AppSet = wire.NewSet(
 	NewApp,
 	configs.NewMinioClient,
+	configs.NewGRPCClient,
 	database.NewPostgresDatabase,
 	middleware.NewAuthMiddleware,
 	dto.NewValidator,
@@ -45,6 +46,7 @@ var ServiceSet = wire.NewSet(
 	services.NewObjectStorageService,
 	services.NewCollectService,
 	services.NewTrainingService,
+	services.NewGRPCService,
 )
 
 var RepositorySet = wire.NewSet(

@@ -12,11 +12,13 @@ type TrainingService interface {
 
 type trainingServiceImpl struct {
 	objectStorageService ObjectStorageService
+	gRPCService          GRPCService
 }
 
-func NewTrainingService(objectStrorageService ObjectStorageService) TrainingService {
+func NewTrainingService(objectStrorageService ObjectStorageService, gRPCService GRPCService) TrainingService {
 	return &trainingServiceImpl{
 		objectStorageService: objectStrorageService,
+		gRPCService:          gRPCService,
 	}
 }
 
@@ -30,6 +32,10 @@ func (s *trainingServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTraini
 	}
 
 	if err := s.objectStorageService.WriteJSON(c.Context(), "training", "training.json", req); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	if err := s.gRPCService.NewTodo(); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return nil

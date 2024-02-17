@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+grpcio = "*"
+grpcio-tools = "*"
+
+[dev-packages]
+py-mon = "*"
+
+[requires]
+python_version = "3.11"
+
+[scripts]
+proto = "python -m grpc_tools.protoc -I./proto --python_out=./server --pyi_out=./server --grpc_python_out=./server ./proto/todo.proto"
+server = "pymon ./server/server.py"

@@ -1,0 +1,19 @@
+syntax = "proto3";
+package todo;
+option go_package = "github.com/fingerprint/todo";
+
+service TodoService {
+    rpc GetTodos (Empty) returns (Todos) {}
+}
+
+message Todo {
+    int32 id = 1;
+    string title = 2;
+    bool completed = 3;
+}
+
+message Todos {
+    repeated Todo todos = 1;
+}
+
+message Empty {}

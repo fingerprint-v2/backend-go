@@ -49,7 +49,9 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	trainingService := services.NewTrainingService(objectStorageService)
+	clientConn := configs.NewGRPCClient()
+	grpcService := services.NewGRPCService(clientConn)
+	trainingService := services.NewTrainingService(objectStorageService, grpcService)
 	trainingHandler := handlers.NewTrainingHandler(trainingService)
 	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, trainingHandler)
 	if err != nil {
@@ -62,11 +64,11 @@ func InitializeApp() (*fiber.App, func(), error) {
 // wire.go:
 
 var AppSet = wire.NewSet(
-	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
+	NewApp, configs.NewMinioClient, configs.NewGRPCClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
 var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewTrainingHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewTrainingService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewTrainingService, services.NewGRPCService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)

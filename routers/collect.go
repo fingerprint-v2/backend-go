@@ -12,5 +12,5 @@ func SetupCollectRouter(router fiber.Router, v dto.Validator, handler handlers.C
 	vCreateSurveyReq := dto.ValidateRequest[dto.CreateSurveyReq](v)
 
 	collect := router.Group("collect")
-	collect.Post("/", vCreateSurveyReq, handler.CreateSurvey)
+	collect.Put("/", vCreateSurveyReq, handler.CreateSurvey)
 }

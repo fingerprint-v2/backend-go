@@ -50,7 +50,8 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler)
+	trainingHandler := handlers.NewTrainingHandler()
+	app, err := NewApp(authMiddleware, validator, authHandler, minioHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, trainingHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -64,7 +65,7 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewMinioHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewTrainingHandler)
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewMinioService, services.NewCollectService)
 

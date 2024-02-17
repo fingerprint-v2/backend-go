@@ -15,10 +15,10 @@ type MinioHandler interface {
 }
 
 type minioHandlerImpl struct {
-	minioService services.MinioService
+	minioService services.ObjectStorageService
 }
 
-func NewMinioHandler(minioService services.MinioService) MinioHandler {
+func NewMinioHandler(minioService services.ObjectStorageService) MinioHandler {
 	return &minioHandlerImpl{
 		minioService: minioService,
 	}

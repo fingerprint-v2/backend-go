@@ -15,11 +15,15 @@ before(() => {
   });
 });
 
-describe("Files", () => {
-  it("creates a bucket", () => {
+describe("Training", () => {
+  it("start training", () => {
     cy.request({
-      method: "POST",
-      url: "/files/bucket/bucket2",
+      method: "PUT",
+      url: "/training/",
+      body: {
+        training_name: "training1",
+        training_type: "SUPERVISED",
+      },
     });
   });
 });

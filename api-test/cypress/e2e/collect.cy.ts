@@ -85,7 +85,7 @@ describe("Collect", () => {
     };
 
     cy.request({
-      method: "POST",
+      method: "PUT",
       url: "/collect",
       body: payload,
     });

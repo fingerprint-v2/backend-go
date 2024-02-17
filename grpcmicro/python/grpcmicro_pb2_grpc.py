@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import todo_pb2 as todo__pb2
+import grpcmicro_pb2 as grpcmicro__pb2
 
 
 class TodoServiceStub(object):
@@ -15,9 +15,9 @@ class TodoServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetTodos = channel.unary_unary(
-                '/todo.TodoService/GetTodos',
-                request_serializer=todo__pb2.Empty.SerializeToString,
-                response_deserializer=todo__pb2.Todos.FromString,
+                '/grpcmicro.TodoService/GetTodos',
+                request_serializer=grpcmicro__pb2.Empty.SerializeToString,
+                response_deserializer=grpcmicro__pb2.Todos.FromString,
                 )
 
 
@@ -35,12 +35,12 @@ def add_TodoServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetTodos': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTodos,
-                    request_deserializer=todo__pb2.Empty.FromString,
-                    response_serializer=todo__pb2.Todos.SerializeToString,
+                    request_deserializer=grpcmicro__pb2.Empty.FromString,
+                    response_serializer=grpcmicro__pb2.Todos.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'todo.TodoService', rpc_method_handlers)
+            'grpcmicro.TodoService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,8 +59,8 @@ class TodoService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/todo.TodoService/GetTodos',
-            todo__pb2.Empty.SerializeToString,
-            todo__pb2.Todos.FromString,
+        return grpc.experimental.unary_unary(request, target, '/grpcmicro.TodoService/GetTodos',
+            grpcmicro__pb2.Empty.SerializeToString,
+            grpcmicro__pb2.Todos.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

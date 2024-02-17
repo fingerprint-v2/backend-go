@@ -14,5 +14,5 @@ py-mon = "*"
 python_version = "3.11"
 
 [scripts]
-proto = "python -m grpc_tools.protoc -I./proto --python_out=./server --pyi_out=./server --grpc_python_out=./server ./proto/todo.proto"
-server = "pymon ./server/server.py"
+compile = "python -m grpc_tools.protoc --proto_path=. --python_out=./python --pyi_out=./python --grpc_python_out=./python grpcmicro.proto"
+start = "pymon ./python/server.py"

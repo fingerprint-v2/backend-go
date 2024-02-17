@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/fingerprint/todo"
+	"github.com/fingerprint/grpcmicro"
 	"google.golang.org/grpc"
 )
 
@@ -26,12 +26,12 @@ func NewGRPCService(client *grpc.ClientConn) GRPCService {
 
 func (s *gRPCServiceImpl) NewTodo() error {
 
-	c := todo.NewTodoServiceClient(s.client)
+	c := grpcmicro.NewTodoServiceClient(s.client)
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.GetTodos(ctx, &todo.Empty{})
+	r, err := c.GetTodos(ctx, &grpcmicro.Empty{})
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

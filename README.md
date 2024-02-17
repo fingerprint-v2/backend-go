@@ -27,9 +27,18 @@
 
 # GRPC
 
+## Golang
+
 - `choco install protoc`
 - `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28`
 - `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`
-<!-- - `protoc --proto_path=. --go_out=./grpc/todo ./grpc/proto/todo.proto` -->
+- `protoc --proto_path=./grpcmicro --go_out=./grpcmicro --go_opt=paths=source_relative --go-grpc_out=./grpcmicro --go-grpc_opt=paths=source_relative grpcmicro.proto`
 
-- protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative ./grpc/todo/todo.proto
+## Python
+
+- Make sure the root is at `./grpcmicro`
+- `pip install pipenv`
+- `pipenv shell`
+- `pipenv install --dev`
+- `pipenv run compile`
+- `pipenv run start`

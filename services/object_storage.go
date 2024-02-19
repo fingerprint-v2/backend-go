@@ -10,6 +10,7 @@ import (
 )
 
 type ObjectStorageService interface {
+	Initialize() error
 	CreateBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOptions) error
 	UploadObject(context.Context, string, string, string, minio.PutObjectOptions) (*minio.UploadInfo, error)
 	DownloadObject(context.Context, string, string, string, minio.GetObjectOptions) error
@@ -26,7 +27,7 @@ func NewObjectStorageService(client *minio.Client) ObjectStorageService {
 	}
 }
 
-func (s *objectStorageServiceImpl) InitializeBuckets() error {
+func (s *objectStorageServiceImpl) Initialize() error {
 
 	c := context.Background()
 	if err := s.CreateBucket(c, "models", minio.MakeBucketOptions{

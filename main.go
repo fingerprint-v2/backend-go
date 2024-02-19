@@ -12,6 +12,7 @@ import (
 	"github.com/fingerprint/handlers"
 	middleware "github.com/fingerprint/middlewares"
 	"github.com/fingerprint/routers"
+	"github.com/fingerprint/services"
 	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -24,6 +25,7 @@ func NewApp(
 	validator dto.Validator,
 	authHandler handlers.AuthHandler,
 	objectStorageHandler handlers.ObjectStorageHandler,
+	objectStorageService services.ObjectStorageService,
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 	siteHandler handlers.SiteHandler,
@@ -56,6 +58,9 @@ func NewApp(
 		trainingHandler,
 		middleware,
 	)
+
+	objectStorageService.Initialize()
+
 	return app, nil
 }
 

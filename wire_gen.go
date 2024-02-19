@@ -49,7 +49,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	clientConn, err := configs.NewGRPCConnection()
+	clientConn, cleanup, err := configs.NewGRPCConnection()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -57,11 +57,13 @@ func InitializeApp() (*fiber.App, func(), error) {
 	grpcService := services.NewGRPCService(fingperintClient)
 	mlService := services.NewMLService(objectStorageService, grpcService)
 	mlHandler := handlers.NewMLHandler(mlService)
-	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	return app, func() {
+		cleanup()
 	}, nil
 }
 

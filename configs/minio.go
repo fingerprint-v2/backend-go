@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"log"
 	"os"
 	"strconv"
 
@@ -39,7 +40,9 @@ func NewMinioClient() *minio.Client {
 		Secure: configs.UseSSL,
 	})
 	if err != nil {
+		log.Fatalln(err.Error())
 		return nil
+
 	}
 
 	return minioClient

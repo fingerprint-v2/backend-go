@@ -12,19 +12,19 @@ type MLService interface {
 	CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error
 }
 
-type MLServiceImpl struct {
+type mLServiceImpl struct {
 	objectStorageService ObjectStorageService
 	gRPCService          GRPCService
 }
 
 func NewMLService(objectStrorageService ObjectStorageService, gRPCService GRPCService) MLService {
-	return &MLServiceImpl{
+	return &mLServiceImpl{
 		objectStorageService: objectStrorageService,
 		gRPCService:          gRPCService,
 	}
 }
 
-func (s *MLServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error {
+func (s *mLServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error {
 
 	if err := s.objectStorageService.CreateBucket(c.Context(), "training", minio.MakeBucketOptions{
 		Region:        "us-east-1",

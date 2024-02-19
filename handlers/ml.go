@@ -11,17 +11,17 @@ type MLHandler interface {
 	CreateTraining(c *fiber.Ctx) error
 }
 
-type MLHandlerImpl struct {
+type mLHandlerImpl struct {
 	trainingService services.MLService
 }
 
 func NewMLHandler(trainingService services.MLService) MLHandler {
-	return &MLHandlerImpl{
+	return &mLHandlerImpl{
 		trainingService: trainingService,
 	}
 }
 
-func (h *MLHandlerImpl) CreateTraining(c *fiber.Ctx) error {
+func (h *mLHandlerImpl) CreateTraining(c *fiber.Ctx) error {
 
 	req := new(dto.CreateTrainingReq)
 

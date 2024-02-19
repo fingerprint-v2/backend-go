@@ -25,6 +25,22 @@ func NewObjectStorageService(client *minio.Client) ObjectStorageService {
 		client: client,
 	}
 }
+
+func (s *objectStorageServiceImpl) InitializeBuckets() error {
+
+	c := context.Background()
+	if err := s.CreateBucket(c, "models", minio.MakeBucketOptions{
+		Region:        "us-east-1",
+		ObjectLocking: false,
+	}); err != nil {
+		// return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		fmt.Println(err.Error())
+	}
+
+	return nil
+
+}
+
 func (s *objectStorageServiceImpl) CreateBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOptions) error {
 	err := s.client.MakeBucket(ctx, bucketName, opts)
 	if err != nil {

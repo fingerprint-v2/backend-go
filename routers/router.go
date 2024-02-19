@@ -17,7 +17,7 @@ func SetupRoutes(
 	siteHandler handlers.SiteHandler,
 	collectHandler handlers.CollectHandler,
 	pointHandler handlers.PointHandler,
-	trainingHandler handlers.TrainingHandler,
+	trainingHandler handlers.MLHandler,
 	middleware *middleware.AuthMiddleware,
 ) {
 	router.Get("/hello-world", func(c *fiber.Ctx) error {

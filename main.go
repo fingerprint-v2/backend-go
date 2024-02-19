@@ -29,7 +29,7 @@ func NewApp(
 	siteHandler handlers.SiteHandler,
 	collectHandler handlers.CollectHandler,
 	pointHandler handlers.PointHandler,
-	trainingHandler handlers.TrainingHandler,
+	trainingHandler handlers.MLHandler,
 ) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,

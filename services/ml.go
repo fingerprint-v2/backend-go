@@ -8,23 +8,23 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-type TrainingService interface {
+type MLService interface {
 	CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error
 }
 
-type trainingServiceImpl struct {
+type MLServiceImpl struct {
 	objectStorageService ObjectStorageService
 	gRPCService          GRPCService
 }
 
-func NewTrainingService(objectStrorageService ObjectStorageService, gRPCService GRPCService) TrainingService {
-	return &trainingServiceImpl{
+func NewMLService(objectStrorageService ObjectStorageService, gRPCService GRPCService) MLService {
+	return &MLServiceImpl{
 		objectStorageService: objectStrorageService,
 		gRPCService:          gRPCService,
 	}
 }
 
-func (s *trainingServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error {
+func (s *MLServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error {
 
 	if err := s.objectStorageService.CreateBucket(c.Context(), "training", minio.MakeBucketOptions{
 		Region:        "us-east-1",
@@ -38,7 +38,7 @@ func (s *trainingServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTraini
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	if err := s.gRPCService.NewTodo(); err != nil {
+	if err := s.gRPCService.CheckModel(); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return nil

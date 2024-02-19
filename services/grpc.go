@@ -6,32 +6,37 @@ import (
 	"log"
 	"time"
 
-	"github.com/fingerprint/grpcmicro"
-	"google.golang.org/grpc"
+	"github.com/fingerprint/ml"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type GRPCService interface {
-	NewTodo() error
+	CheckModel() error
 }
 
 type gRPCServiceImpl struct {
-	client *grpc.ClientConn
+	client ml.FingperintClient
 }
 
-func NewGRPCService(client *grpc.ClientConn) GRPCService {
+func NewGRPCService(client ml.FingperintClient) GRPCService {
 	return &gRPCServiceImpl{
 		client: client,
 	}
 }
 
-func (s *gRPCServiceImpl) NewTodo() error {
+func (s *gRPCServiceImpl) CheckModel() error {
 
-	c := grpcmicro.NewTodoServiceClient(s.client)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	grpcCtx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.GetTodos(ctx, &grpcmicro.Empty{})
+
+	_, err := s.client.LoadModel(grpcCtx, &ml.LoadModelReq{
+		Path: "model",
+	})
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	r, err := s.client.CheckModel(grpcCtx, &emptypb.Empty{})
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

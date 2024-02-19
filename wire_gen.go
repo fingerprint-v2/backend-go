@@ -49,11 +49,15 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	clientConn := configs.NewGRPCClient()
-	grpcService := services.NewGRPCService(clientConn)
-	trainingService := services.NewTrainingService(objectStorageService, grpcService)
-	trainingHandler := handlers.NewTrainingHandler(trainingService)
-	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, trainingHandler)
+	clientConn, err := configs.NewGRPCConnection()
+	if err != nil {
+		return nil, nil, err
+	}
+	fingperintClient := configs.NewGRPCClient(clientConn)
+	grpcService := services.NewGRPCService(fingperintClient)
+	mlService := services.NewMLService(objectStorageService, grpcService)
+	mlHandler := handlers.NewMLHandler(mlService)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -64,11 +68,11 @@ func InitializeApp() (*fiber.App, func(), error) {
 // wire.go:
 
 var AppSet = wire.NewSet(
-	NewApp, configs.NewMinioClient, configs.NewGRPCClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
+	NewApp, configs.NewMinioClient, configs.NewGRPCConnection, configs.NewGRPCClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewTrainingHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewMLHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewTrainingService, services.NewGRPCService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewMLService, services.NewGRPCService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)

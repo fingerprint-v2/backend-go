@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"github.com/fingerprint/ml"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -22,10 +23,15 @@ func GetGRPCAddress() string {
 	return configs.Host + ":" + configs.Port
 }
 
-func NewGRPCClient() *grpc.ClientConn {
+func NewGRPCConnection() (*grpc.ClientConn, error) {
 	conn, err := grpc.Dial(GetGRPCAddress(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return nil
+		return nil, nil
 	}
-	return conn
+	return conn, nil
+}
+
+func NewGRPCClient(conn *grpc.ClientConn) ml.FingperintClient {
+	client := ml.NewFingperintClient(conn)
+	return client
 }

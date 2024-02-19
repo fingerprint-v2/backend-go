@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dependency-injector = "*"
+pandas = "*"
+protobuf = "*"
+
+[dev-packages]
+py-mon = "*"
+grpcio = "*"
+grpcio-tools = "*"
+
+[requires]
+python_version = "3.11"
+
+[scripts]
+compile = "python -m grpc_tools.protoc --proto_path=. --python_out=./src --pyi_out=./src --grpc_python_out=./src ml.proto"
+start = "pymon ./src/main.py"

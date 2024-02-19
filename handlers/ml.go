@@ -7,21 +7,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type TrainingHandler interface {
+type MLHandler interface {
 	CreateTraining(c *fiber.Ctx) error
 }
 
-type trainingHandlerImpl struct {
-	trainingService services.TrainingService
+type MLHandlerImpl struct {
+	trainingService services.MLService
 }
 
-func NewTrainingHandler(trainingService services.TrainingService) TrainingHandler {
-	return &trainingHandlerImpl{
+func NewMLHandler(trainingService services.MLService) MLHandler {
+	return &MLHandlerImpl{
 		trainingService: trainingService,
 	}
 }
 
-func (h *trainingHandlerImpl) CreateTraining(c *fiber.Ctx) error {
+func (h *MLHandlerImpl) CreateTraining(c *fiber.Ctx) error {
 
 	req := new(dto.CreateTrainingReq)
 

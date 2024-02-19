@@ -1,0 +1,53 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package ml;
+option go_package = "github.com/fingerprint/ml";
+service Fingperint {
+    rpc Train (TrainReq) returns (TrainRes) {}
+    rpc Predict (PredictReq) returns (PredictRes) {}
+    rpc LoadModel (LoadModelReq) returns (google.protobuf.Empty) {}
+    rpc CheckModel (google.protobuf.Empty) returns (CheckModelRes) {}
+}
+
+message Point {
+    string ID = 1;
+    string name = 2;
+    repeated Fingerprint fingerprints = 3;
+}
+
+message Fingerprint {
+    repeated Wifi wifis = 1;
+}
+
+message Wifi {
+    string SSID = 1;
+    string BSSID = 2;
+    int32 frequency = 4;
+    int32 level = 5;
+}
+
+message TrainReq {
+    string name = 1;
+    repeated Point points = 2;
+}
+
+message TrainRes {
+    bool completed = 1;
+}
+
+message PredictReq {
+    repeated Fingerprint fingerprints = 1;
+}
+
+message PredictRes {
+    string point_id = 1;
+}
+
+message LoadModelReq {
+    string path = 1;
+}   
+
+message CheckModelRes {
+    string model_name = 1;
+}

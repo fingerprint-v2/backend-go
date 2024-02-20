@@ -18,8 +18,8 @@ type ExternalEntity struct {
 	//
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
-	//
-	Fingerprints []Fingerprint `json:"fingerprints" gorm:"polymorphic:TrackedEntity;polymorphic_value:external_entity"`
+	// Zone predictions (polymorphic relationship)
+	Predictions []Prediction `json:"predictions" gorm:"polymorphic:TrackedEntity;polymorphic_value:external_entity"`
 }
 
 // Internal search

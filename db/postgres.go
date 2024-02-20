@@ -23,6 +23,7 @@ func migrateModel(db *gorm.DB) error {
 		&models.Site{},
 		&models.Organization{},
 		&models.User{},
+		&models.Model{},
 	); err != nil {
 		return err
 	}

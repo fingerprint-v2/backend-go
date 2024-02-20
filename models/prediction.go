@@ -15,6 +15,11 @@ type Prediction struct {
 	PointID       string      `json:"point_id" gorm:"type:uuid;not null"`
 	Fingerprint   Fingerprint `json:"fingerprint" gorm:"foreignKey:FingerprintID;references:ID"`
 	FingerprintID string      `json:"fingerprint_id" gorm:"type:uuid;not null"`
+	// Tracked entities can be internal or external users that the system is tracking locations
+	TrackedEntityID   *string `json:"tracked_entity" gorm:"type:varchar(255)"`
+	TrackedEntityType *string `json:"tracked_entity_type" gorm:"type:varchar(255)"`
+	Model             Model   `json:"model" gorm:"foreignKey:ModelID;references:ID"`
+	ModelID           string  `json:"model_id" gorm:"type:uuid;not null"`
 	//
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`

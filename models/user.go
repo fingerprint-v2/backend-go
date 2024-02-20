@@ -19,8 +19,8 @@ type User struct {
 	//
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
-	//
-	Fingerprints []Fingerprint `json:"fingerprints" gorm:"polymorphic:TrackedEntity;polymorphic_value:user"`
+	// Zone predictions (polymorphic relationship)
+	Predictions []Prediction `json:"predictions" gorm:"polymorphic:TrackedEntity;polymorphic_value:user"`
 	//
 	Uploads []Upload `json:"uploads" gorm:"foreignKey:UserID;references:ID"`
 }

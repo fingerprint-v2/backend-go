@@ -55,7 +55,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	}
 	fingperintClient := configs.NewGRPCClient(clientConn)
 	grpcService := services.NewGRPCService(fingperintClient)
-	mlService := services.NewMLService(objectStorageService, grpcService)
+	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository)
 	mlHandler := handlers.NewMLHandler(mlService)
 	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
 	if err != nil {

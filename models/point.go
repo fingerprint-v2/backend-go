@@ -25,7 +25,7 @@ type Point struct {
 	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID"`
 	OrganizationID string        `json:"organization_id" gorm:"type:uuid;not null"`
 	// Fingerprint Reference
-	FPLabel *[]Fingerprint `json:"fp_label" gorm:"foreignKey:PointLabelID;references:ID"`
+	Fingerprints *[]Fingerprint `json:"fingerprints" gorm:"foreignKey:PointLabelID;references:ID"`
 	// Prediction Reference
 	Predictions *[]Prediction `json:"predictions" gorm:"foreignKey:PointID;references:ID"`
 	// Self-referential: Grouping

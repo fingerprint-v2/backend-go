@@ -15,8 +15,8 @@ type Wifi struct {
 	Frequency    int       `json:"frequency" gorm:"type:integer;not null"`
 	Level        int       `json:"level" gorm:"type:integer;not null"`
 	//
-	Fingerprint   Fingerprint `json:"fingerprint" gorm:"foreignKey:FingerprintID;references:ID"`
-	FingerprintID string      `json:"fingerprint_id:" gorm:"type:uuid;not null"`
+	Fingerprint   *Fingerprint `json:"fingerprint" gorm:"foreignKey:FingerprintID;references:ID"`
+	FingerprintID string       `json:"fingerprint_id:" gorm:"type:uuid;not null"`
 	//
 	CreatedAt time.Time       `json:"created_at" gorm:"<-:create"`
 	UpdatedAt *time.Time      `json:"updated_at" gorm:"<-:update"`

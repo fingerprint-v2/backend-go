@@ -12,6 +12,7 @@ import (
 type PointRepository interface {
 	repository[models.Point, models.PointFind]
 	SearchPoint(*dto.SearchPointReq) (*[]models.Point, error)
+	GetPointsWithFingerprints(siteID string) (*[]models.Point, error)
 }
 
 type pointRepositoryImpl struct {
@@ -40,6 +41,7 @@ func (r *pointRepositoryImpl) SearchPoint(req *dto.SearchPointReq) (*[]models.Po
 	delete(*pointMap, "with_building")
 	delete(*pointMap, "with_floor")
 	delete(*pointMap, "with_member")
+	delete(*pointMap, "with_fingerprint")
 
 	// Make sure that map is not empty when "all" is false
 	if len(*pointMap) == 0 && !req.All {
@@ -66,9 +68,21 @@ func (r *pointRepositoryImpl) SearchPoint(req *dto.SearchPointReq) (*[]models.Po
 	if req.WithMember {
 		db = db.Preload("Points") // plural
 	}
+	if req.WithFingerprint {
+		db = db.Preload("Fingerprints") // plural
+	}
 
 	// DB query
 	if err := db.Find(points, *pointMap).Error; err != nil {
+		return nil, err
+	}
+	return points, nil
+}
+
+func (r *pointRepositoryImpl) GetPointsWithFingerprints(siteID string) (*[]models.Point, error) {
+	points := new([]models.Point)
+
+	if err := r.db.Debug().Preload("Fingerprints.Wifis").Find(points, "site_id = ?", siteID).Error; err != nil {
 		return nil, err
 	}
 	return points, nil

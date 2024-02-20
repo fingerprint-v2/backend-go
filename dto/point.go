@@ -22,8 +22,9 @@ type SearchPointReq struct {
 	WithBuilding     bool `json:"with_building,omitempty"`
 	WithFloor        bool `json:"with_floor,omitempty"`
 	// Plural
-	WithMember bool `json:"with_member,omitempty"` // Get all child points
-	All        bool `json:"all,omitempty"`
+	WithFingerprint bool `json:"with_fingerprint,omitempty"`
+	WithMember      bool `json:"with_member,omitempty"` // Get all child points
+	All             bool `json:"all,omitempty"`
 }
 
 type DeletePointReq struct {

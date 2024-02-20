@@ -29,13 +29,14 @@ func (h *mLHandlerImpl) CreateTraining(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.trainingService.CreateTraining(c, req); err != nil {
+	res, err := h.trainingService.CreateTraining(c, req)
+	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[interface{}]{
 		Message: "Create training successfully",
-		Data:    nil,
+		Data:    res,
 	})
 
 }

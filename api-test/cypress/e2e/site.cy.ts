@@ -15,15 +15,15 @@ before(() => {
   });
 });
 
-describe("Point", () => {
-  it("get all points", () => {
+describe("Site", () => {
+  it("get all sites", () => {
     cy.request({
       method: "POST",
-      url: "/points/search",
+      url: "/sites/search",
       body: {
         all: true,
-        with_fingerprint: true,
-        with_site: true,
+        with_organization: true,
+        with_point: true,
       },
     });
   });

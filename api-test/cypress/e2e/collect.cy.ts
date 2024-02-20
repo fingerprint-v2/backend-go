@@ -1,25 +1,7 @@
-const wifis = [
-  {
-    SSID: ".@ TrueMove H",
-    BSSID: "e4:4e:2d:8b:d0:8e",
-    capabilities: "[ESS]",
-    frequency: 5220,
-    level: -48,
-    timestamp: 1702449979,
-  },
-  {
-    SSID: ".@ TRUEWIFI",
-    BSSID: "e4:4e:2d:8b:d0:8f",
-    capabilities: "[ESS]",
-    frequency: 5220,
-    level: -48,
-    timestamp: 1702449979,
-  },
-];
+import { genFingerprints } from "../../src/fake";
 
 before(() => {
   cy.fixture("superadmin").then((superadmin) => {
-    //
     cy.request({
       method: "POST",
       url: "/login",
@@ -71,17 +53,7 @@ describe("Collect", () => {
       scan_mode: "INTERVAL",
       scan_interval: 1000,
 
-      fingerprints: [
-        {
-          wifis: wifis,
-        },
-        {
-          wifis: wifis,
-        },
-        {
-          wifis: wifis,
-        },
-      ],
+      fingerprints: genFingerprints(10),
     };
 
     cy.request({

@@ -192,10 +192,6 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
-      fingerprints:
-        items:
-          $ref: '#/definitions/models.Fingerprint'
-        type: array
       id:
         type: string
       name:
@@ -204,6 +200,11 @@ definitions:
         $ref: '#/definitions/models.Organization'
       organization_id:
         type: string
+      predictions:
+        description: Zone predictions (polymorphic relationship)
+        items:
+          $ref: '#/definitions/models.Prediction'
+        type: array
       type:
         type: string
       updated_at:
@@ -212,7 +213,9 @@ definitions:
   models.Fingerprint:
     properties:
       collect_device:
-        $ref: '#/definitions/models.CollectDevice'
+        allOf:
+        - $ref: '#/definitions/models.CollectDevice'
+        description: Collect device information
       collect_device_id:
         type: string
       created_at:
@@ -239,9 +242,7 @@ definitions:
       organization_id:
         type: string
       point_label:
-        allOf:
-        - $ref: '#/definitions/models.Point'
-        description: Nullable
+        $ref: '#/definitions/models.Point'
       point_label_id:
         type: string
       predictions:
@@ -252,14 +253,12 @@ definitions:
         $ref: '#/definitions/models.Site'
       site_id:
         type: string
-      tracked_entity:
-        type: string
-      tracked_entity_type:
-        type: string
       updated_at:
         type: string
       upload:
-        $ref: '#/definitions/models.Upload'
+        allOf:
+        - $ref: '#/definitions/models.Upload'
+        description: Upload information
       upload_id:
         type: string
       wifis:
@@ -292,6 +291,33 @@ definitions:
       points:
         items:
           $ref: '#/definitions/models.Point'
+        type: array
+      site:
+        $ref: '#/definitions/models.Site'
+      site_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Model:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/models.Organization'
+      organization_id:
+        type: string
+      path:
+        type: string
+      predictions:
+        items:
+          $ref: '#/definitions/models.Prediction'
         type: array
       site:
         $ref: '#/definitions/models.Site'
@@ -355,15 +381,15 @@ definitions:
         $ref: '#/definitions/gorm.DeletedAt'
       external_name:
         type: string
-      floor:
-        $ref: '#/definitions/models.Floor'
-      floor_id:
-        type: string
-      fp_label:
+      fingerprints:
         description: Fingerprint Reference
         items:
           $ref: '#/definitions/models.Fingerprint'
         type: array
+      floor:
+        $ref: '#/definitions/models.Floor'
+      floor_id:
+        type: string
       group_id:
         description: 'Self-referential: Grouping'
         type: string
@@ -410,12 +436,22 @@ definitions:
         type: string
       id:
         type: string
+      model:
+        $ref: '#/definitions/models.Model'
+      model_id:
+        type: string
       point:
         $ref: '#/definitions/models.Point'
       point_id:
         type: string
       probability:
         type: number
+      tracked_entity:
+        description: Tracked entities can be internal or external users that the system
+          is tracking locations
+        type: string
+      tracked_entity_type:
+        type: string
       updated_at:
         type: string
     type: object
@@ -481,10 +517,6 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
-      fingerprints:
-        items:
-          $ref: '#/definitions/models.Fingerprint'
-        type: array
       id:
         type: string
       organization:
@@ -493,6 +525,11 @@ definitions:
         type: string
       password:
         type: string
+      predictions:
+        description: Zone predictions (polymorphic relationship)
+        items:
+          $ref: '#/definitions/models.Prediction'
+        type: array
       role:
         type: string
       updated_at:

@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/fingerprint/constants"
 	"github.com/fingerprint/dto"
@@ -129,6 +130,7 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 			if err != nil {
 				return err
 			}
+			wifi.BSSID = strings.ToLower(wifi.BSSID)
 			wifis = append(wifis, *wifi)
 		}
 		fingerprint := &models.Fingerprint{
@@ -139,6 +141,7 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 			UploadID:        uploadID,
 			Wifis:           wifis,
 			PointLabelID:    pointLabelID,
+			IsCurrent:       true,
 		}
 		fingerprints = append(fingerprints, fingerprint)
 	}

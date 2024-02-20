@@ -843,12 +843,6 @@ const docTemplate = `{
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "fingerprints": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Fingerprint"
-                    }
-                },
                 "id": {
                     "type": "string"
                 },
@@ -860,6 +854,13 @@ const docTemplate = `{
                 },
                 "organization_id": {
                     "type": "string"
+                },
+                "predictions": {
+                    "description": "Zone predictions (polymorphic relationship)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Prediction"
+                    }
                 },
                 "type": {
                     "type": "string"
@@ -873,7 +874,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "collect_device": {
-                    "$ref": "#/definitions/models.CollectDevice"
+                    "description": "Collect device information",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.CollectDevice"
+                        }
+                    ]
                 },
                 "collect_device_id": {
                     "type": "string"
@@ -913,12 +919,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "point_label": {
-                    "description": "Nullable",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.Point"
-                        }
-                    ]
+                    "$ref": "#/definitions/models.Point"
                 },
                 "point_label_id": {
                     "type": "string"
@@ -935,17 +936,16 @@ const docTemplate = `{
                 "site_id": {
                     "type": "string"
                 },
-                "tracked_entity": {
-                    "type": "string"
-                },
-                "tracked_entity_type": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 },
                 "upload": {
-                    "$ref": "#/definitions/models.Upload"
+                    "description": "Upload information",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Upload"
+                        }
+                    ]
                 },
                 "upload_id": {
                     "type": "string"
@@ -993,6 +993,47 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Point"
+                    }
+                },
+                "site": {
+                    "$ref": "#/definitions/models.Site"
+                },
+                "site_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Model": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organization": {
+                    "$ref": "#/definitions/models.Organization"
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "predictions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Prediction"
                     }
                 },
                 "site": {
@@ -1089,18 +1130,18 @@ const docTemplate = `{
                 "external_name": {
                     "type": "string"
                 },
-                "floor": {
-                    "$ref": "#/definitions/models.Floor"
-                },
-                "floor_id": {
-                    "type": "string"
-                },
-                "fp_label": {
+                "fingerprints": {
                     "description": "Fingerprint Reference",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Fingerprint"
                     }
+                },
+                "floor": {
+                    "$ref": "#/definitions/models.Floor"
+                },
+                "floor_id": {
+                    "type": "string"
                 },
                 "group_id": {
                     "description": "Self-referential: Grouping",
@@ -1170,6 +1211,12 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "model": {
+                    "$ref": "#/definitions/models.Model"
+                },
+                "model_id": {
+                    "type": "string"
+                },
                 "point": {
                     "$ref": "#/definitions/models.Point"
                 },
@@ -1178,6 +1225,13 @@ const docTemplate = `{
                 },
                 "probability": {
                     "type": "number"
+                },
+                "tracked_entity": {
+                    "description": "Tracked entities can be internal or external users that the system is tracking locations",
+                    "type": "string"
+                },
+                "tracked_entity_type": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
@@ -1278,12 +1332,6 @@ const docTemplate = `{
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "fingerprints": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Fingerprint"
-                    }
-                },
                 "id": {
                     "type": "string"
                 },
@@ -1295,6 +1343,13 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "predictions": {
+                    "description": "Zone predictions (polymorphic relationship)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Prediction"
+                    }
                 },
                 "role": {
                     "type": "string"

@@ -61,7 +61,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	dispatcherService := services.NewDispatcherService(workerService)
 	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository, dispatcherService)
 	mlHandler := handlers.NewMLHandler(mlService)
-	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, buildingHandler, floorHandler, mlHandler)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, buildingHandler, floorHandler, mlHandler, dispatcherService)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

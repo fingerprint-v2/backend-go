@@ -1,16 +1,18 @@
 package services
 
 import (
+	"context"
 	"fmt"
-	"time"
 
 	"github.com/fingerprint/dto"
+	"github.com/fingerprint/ml"
 	"github.com/fingerprint/repositories"
+	"github.com/fingerprint/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 type MLService interface {
-	CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error
+	CreateTraining(c context.Context, req *dto.CreateTrainingReq) error
 }
 
 type mLServiceImpl struct {
@@ -34,70 +36,50 @@ func NewMLService(
 	}
 }
 
-func (s *mLServiceImpl) CreateTraining(c *fiber.Ctx, req *dto.CreateTrainingReq) error {
+func (s *mLServiceImpl) CreateTraining(c context.Context, req *dto.CreateTrainingReq) error {
 
 	// Get points within the site
-	// points, err := s.pointRepo.GetPointsWithFingerprints(req.SiteID)
-	// if err != nil {
-	// 	return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	// }
-	// fmt.Println(points)
+	points, err := s.pointRepo.GetPointsWithFingerprints(req.SiteID)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
-	// if err := s.objectStorageService.WriteJSON(c.Context(), "training", "training.json", points); err != nil {
-	// 	return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	// }
-
-	writeJSON := &Job{Function: func() error {
+	// Write file to cloud storage
+	queueWriteJSON := &Job{Function: func() error {
 		fmt.Println("Write JSON Started")
-		time.Sleep(3 * time.Second)
-		// if err := s.objectStorageService.WriteJSON(c.Context(), "training", "training.json", points); err != nil {
-		// 	return err
-		// }
+		// time.Sleep(3 * time.Second)
+		if err := s.objectStorageService.WriteJSON(c, "training", "training.json", points); err != nil {
+			return err
+		}
 		fmt.Println("Write JSON Finished")
 		return nil
 	}}
 
-	// grpcReq := &ml.TrainReq{
-	// 	Name:   "Model1",
-	// 	Points: []*ml.Point{},
-	// }
+	// Train model
+	grpcReq, err := utils.TypeConverter[[]*ml.Point](points)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
-	// grpcReq, err := utils.TypeConverter[[]*ml.Point](points)
-	// if err != nil {
-	// 	return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	// }
-
-	// r, err := s.gRPCService.Train(&ml.TrainReq{
-	// 	Name:   req.TrainingName,
-	// 	Points: *grpcReq,
-	// })
-
-	// if err != nil {
-	// 	return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	// }
-
-	// var r *ml.TrainRes
-	train := &Job{Function: func() error {
+	queueTrain := &Job{Function: func() error {
 		fmt.Println("Train Started")
-		// _, err := s.gRPCService.Train(&ml.TrainReq{
-		// 	Name:   req.TrainingName,
-		// 	Points: *grpcReq,
-		// })
+		_, err := s.gRPCService.Train(&ml.TrainReq{
+			Name:   req.TrainingName,
+			Points: *grpcReq,
+		})
 
-		// if err != nil {
-		// 	return err
-		// }
+		if err != nil {
+			return err
+		}
 
-		// r = result
-		time.Sleep(3 * time.Second)
-		// fmt.Println(r)
+		// time.Sleep(10 * time.Second)
 		fmt.Println("Train Finished")
 		return nil
 	}}
 
-	s.dispatcherService.Add(writeJSON)
-	s.dispatcherService.Add(train)
-	s.dispatcherService.Wait()
+	s.dispatcherService.Add(queueWriteJSON)
+	s.dispatcherService.Add(queueTrain)
+	// s.dispatcherService.Wait()
 
 	return nil
 }

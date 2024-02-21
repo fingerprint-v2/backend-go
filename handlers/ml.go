@@ -29,7 +29,7 @@ func (h *mLHandlerImpl) CreateTraining(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	err := h.trainingService.CreateTraining(c, req)
+	err := h.trainingService.CreateTraining(c.Context(), req)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

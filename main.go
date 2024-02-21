@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -34,6 +35,7 @@ func NewApp(
 	buildingHandler handlers.BuildingHandler,
 	floorHandler handlers.FloorHandler,
 	trainingHandler handlers.MLHandler,
+	dispatcherService services.DispatcherService,
 ) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.HandleError,
@@ -63,7 +65,11 @@ func NewApp(
 		middleware,
 	)
 
+	// Create default buckets
 	objectStorageService.Initialize()
+
+	// Start Queue
+	dispatcherService.Start(context.Background())
 
 	return app, nil
 }

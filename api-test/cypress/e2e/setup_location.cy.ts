@@ -97,16 +97,18 @@ describe("Site", () => {
     const floorID = (this as any).floorID as string;
     cy.log(floorID);
 
-    cy.request({
-      method: "PUT",
-      url: "/points",
-      body: {
-        name: `point_${faker.number.int({ min: 1000, max: 9999 })}`,
-        external_name: `point_${faker.person.firstName()}`,
-        floor_id: floorID,
-      },
-    }).then((response) => {
-      cy.wrap(response.body.data.id).as("pointID");
-    });
+    for (let i = 0; i < 20; i++) {
+      cy.request({
+        method: "PUT",
+        url: "/points",
+        body: {
+          name: `point_${faker.number.int({ min: 1000, max: 9999 })}`,
+          external_name: `point_${faker.person.firstName()}`,
+          floor_id: floorID,
+        },
+      }).then((response) => {
+        cy.wrap(response.body.data.id).as("pointID");
+      });
+    }
   });
 });

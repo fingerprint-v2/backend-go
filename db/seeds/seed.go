@@ -40,10 +40,10 @@ func (s *seederImpl) seed() {
 	s.resetDB()
 	orgs := s.seedOrganization()
 	s.seedUser(orgs)
-	// sites := s.seedSite(orgs)
-	// buildings := s.seedBuilding(sites)
-	// floors := s.seedFloor(buildings)
-	// s.seedPoint(floors)
+	sites := s.seedSite(orgs)
+	buildings := s.seedBuilding(sites)
+	floors := s.seedFloor(buildings)
+	s.seedPoint(floors)
 }
 
 func (s *seederImpl) seedOrganization() []models.Organization {
@@ -144,7 +144,7 @@ func (s *seederImpl) seedSite(orgs []models.Organization) []models.Site {
 
 	var sites []models.Site
 	for _, org := range orgs[1:] {
-		for siteIdx := 0; siteIdx < 2; siteIdx++ {
+		for siteIdx := 0; siteIdx < 1; siteIdx++ {
 			site := models.Site{
 				Name:           "site_" + s.faker.Word(),
 				OrganizationID: org.ID.String(),

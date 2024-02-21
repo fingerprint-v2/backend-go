@@ -1,6 +1,6 @@
 import { genFingerprints } from "../../src/fake";
 
-before(() => {
+before(function () {
   cy.fixture("superadmin").then((superadmin) => {
     cy.request({
       method: "POST",
@@ -17,23 +17,25 @@ before(() => {
 
   cy.request({
     method: "POST",
-    url: "/points/search",
-    body: {
-      name: "point1",
-    },
-  }).then((response) => {
-    cy.wrap(response.body.data[0].id).as("pointID");
-  });
-
-  cy.request({
-    method: "POST",
     url: "/sites/search",
     body: {
       name: "site1",
       with_organization: true,
     },
   }).then((response) => {
-    cy.wrap(response.body.data[0].id).as("siteID");
+    const siteID = response.body.data[0].id;
+    cy.wrap(siteID).as("siteID");
+
+    cy.request({
+      method: "POST",
+      url: "/points/search",
+      body: {
+        site_id: siteID,
+      },
+    }).then((response) => {
+      const points = response.body.data;
+      cy.wrap(points).as("points");
+    });
   });
 });
 
@@ -45,26 +47,29 @@ describe("perform surveys", () => {
   });
 
   it("surveys supervisedly", function () {
-    const pointID = (this as any).pointID as string;
-    cy.log(pointID);
-    const payload = {
-      point_label_id: pointID,
-      mode: "SUPERVISED",
-      collect_device: {
-        device_uid: "device3",
-        device_id: "device_id3",
-      },
-      scan_mode: "INTERVAL",
-      scan_interval: 1000,
+    const points = (this as any).points as any[];
+    cy.log(JSON.stringify(points));
 
-      fingerprints: genFingerprints(10),
-    };
+    for (const point of points) {
+      const payload = {
+        point_label_id: point.id,
+        mode: "SUPERVISED",
+        collect_device: {
+          device_uid: "device3",
+          device_id: "device_id3",
+        },
+        scan_mode: "INTERVAL",
+        scan_interval: 1000,
 
-    cy.request({
-      method: "PUT",
-      url: "/collect",
-      body: payload,
-    });
+        fingerprints: genFingerprints(10),
+      };
+
+      cy.request({
+        method: "PUT",
+        url: "/collect",
+        body: payload,
+      });
+    }
   });
 
   it("surveys unsupervisedly", function () {

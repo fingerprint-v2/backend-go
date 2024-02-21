@@ -47,7 +47,6 @@ function genWifis(n: number) {
     wifis.push(wifi);
   }
 
-  console.log(wifis);
   return wifis;
 }
 

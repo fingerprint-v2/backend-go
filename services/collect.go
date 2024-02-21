@@ -51,6 +51,7 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 		return err
 	}
 
+	// Check Valid Collect Device
 	var collectDeviceID string
 	collectDevices, err := s.collectDeviceRepo.Find(&models.CollectDeviceFind{DeviceUID: collectDeviceReq.DeviceUID})
 	if err != nil {
@@ -110,8 +111,8 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 	}
 	organizationID := site.OrganizationID
 
-	// Determine PointID
-	pointLabelID := new(string)
+	// Determine PointID (if SUPERVISED)
+	var pointLabelID *string
 	if mode == constants.SUPERVISED.String() {
 		point, err := s.pointRepo.Get(req.PointLabelID)
 		if err != nil {
@@ -119,6 +120,9 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 		}
 		tempStr := point.ID.String()
 		pointLabelID = &tempStr
+	} else if mode == constants.UNSUPERVISED.String() {
+		pointLabelID = nil
+
 	}
 
 	// Create Fingerprint

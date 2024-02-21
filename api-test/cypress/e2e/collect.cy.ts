@@ -11,7 +11,7 @@ before(() => {
       },
     }).then((response) => {
       const accessToken = response.body.data.access_token;
-      cy.setCookie("access_token", accessToken);
+      cy.wrap(accessToken).as("accessToken");
     });
   });
 
@@ -37,12 +37,16 @@ before(() => {
   });
 });
 
-describe("Collect", () => {
-  it("collects", function () {
+describe("perform surveys", () => {
+  // Need to set cookie here or else cookie won't persist through all tests.
+  beforeEach(function () {
+    const accessToken = (this as any).accessToken as string;
+    cy.setCookie("access_token", accessToken);
+  });
+
+  it("surveys supervisedly", function () {
     const pointId = (this as any).pointId as string;
-
     cy.log(pointId);
-
     const payload = {
       point_label_id: pointId,
       mode: "SUPERVISED",
@@ -53,6 +57,30 @@ describe("Collect", () => {
       scan_mode: "INTERVAL",
       scan_interval: 1000,
 
+      fingerprints: genFingerprints(10),
+    };
+
+    cy.request({
+      method: "PUT",
+      url: "/collect",
+      body: payload,
+    });
+  });
+
+  it("surveys unsupervisedly", function () {
+    const siteID = (this as any).siteId as string;
+
+    cy.log(siteID);
+
+    const payload = {
+      mode: "UNSUPERVISED",
+      site_id: siteID,
+      collect_device: {
+        device_uid: "device3",
+        device_id: "device_id3",
+      },
+      scan_mode: "INTERVAL",
+      scan_interval: 1000,
       fingerprints: genFingerprints(10),
     };
 

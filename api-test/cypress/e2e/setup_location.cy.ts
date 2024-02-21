@@ -74,4 +74,39 @@ describe("Site", () => {
       cy.wrap(response.body.data.id).as("buildingID");
     });
   });
+
+  it("creates floor", function () {
+    const buildingID = (this as any).buildingID as string;
+    cy.log(buildingID);
+
+    const floorNumber = faker.number.int({ min: 1, max: 15 });
+    cy.request({
+      method: "PUT",
+      url: "/floors",
+      body: {
+        name: `floor_${floorNumber}`,
+        number: floorNumber,
+        building_id: buildingID,
+      },
+    }).then((response) => {
+      cy.wrap(response.body.data.id).as("floorID");
+    });
+  });
+
+  it("creates point", function () {
+    const floorID = (this as any).floorID as string;
+    cy.log(floorID);
+
+    cy.request({
+      method: "PUT",
+      url: "/points",
+      body: {
+        name: `point_${faker.number.int({ min: 1000, max: 9999 })}`,
+        external_name: `point_${faker.person.firstName()}`,
+        floor_id: floorID,
+      },
+    }).then((response) => {
+      cy.wrap(response.body.data.id).as("pointID");
+    });
+  });
 });

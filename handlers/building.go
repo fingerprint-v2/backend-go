@@ -62,9 +62,7 @@ func (h *buildingHandlerImpl) CreateBuilding(ctx *fiber.Ctx) error {
 	building.OrganizationID = site.OrganizationID
 
 	// Check if the building already exists in the same site
-
 	buildings, err := h.buildingRepo.Find(&models.BuildingFind{Name: building.Name, SiteID: building.SiteID})
-
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -78,8 +76,9 @@ func (h *buildingHandlerImpl) CreateBuilding(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(utils.ResponseSuccess[*models.Building]{
-		Message: "Building created successfully",
-		Data:    building,
-	})
+	return ctx.Status(fiber.StatusCreated).JSON(
+		utils.ResponseSuccess[*models.Building]{
+			Message: "Building created successfully",
+			Data:    building,
+		})
 }

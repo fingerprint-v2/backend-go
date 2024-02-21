@@ -19,6 +19,7 @@ func SetupRoutes(
 	pointHandler handlers.PointHandler,
 	mLHandler handlers.MLHandler,
 	buildingHandler handlers.BuildingHandler,
+	floorHandler handlers.FloorHandler,
 	middleware *middleware.AuthMiddleware,
 ) {
 	router.Get("/hello-world", func(c *fiber.Ctx) error {
@@ -35,5 +36,6 @@ func SetupRoutes(
 	SetupCollectRouter(v1, validator, collectHandler, middleware)
 	SetupPointRouter(v1, validator, pointHandler, middleware)
 	SetupBuildingRouter(v1, validator, buildingHandler, middleware)
+	SetupFloorRouter(v1, validator, floorHandler, middleware)
 	SetupMLRouter(v1, validator, mLHandler, middleware)
 }

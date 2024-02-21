@@ -7,7 +7,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupPointRouter(router fiber.Router, validator dto.Validator, pointHandler handlers.PointHandler, middleware *middleware.AuthMiddleware) {
-	pointRouter := router.Group("/points")
-	pointRouter.Post("/search", pointHandler.SearchPoint)
+func SetupPointRouter(router fiber.Router, v dto.Validator, handler handlers.PointHandler, middleware *middleware.AuthMiddleware) {
+
+	vCreatePointReq := dto.ValidateRequest[dto.CreatePointReq](v)
+	vSearchPointReq := dto.ValidateRequest[dto.SearchPointReq](v)
+
+	point := router.Group("points")
+	point.Put("/", middleware.AdminGuard(), vCreatePointReq, middleware.OrganizationGuard(), handler.CreatePoint)
+	point.Post("/search", middleware.AdminGuard(), vSearchPointReq, middleware.OrganizationGuard(), handler.SearchPoint)
 }

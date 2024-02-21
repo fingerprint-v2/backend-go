@@ -69,7 +69,7 @@ func (h *siteHandlerImpl) CreateSite(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusOK).JSON(utils.ResponseSuccess[*models.Site]{
+	return c.Status(fiber.StatusCreated).JSON(utils.ResponseSuccess[*models.Site]{
 		Message: "Create site sucessfully",
 		Data:    site,
 	})

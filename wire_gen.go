@@ -55,7 +55,9 @@ func InitializeApp() (*fiber.App, func(), error) {
 	}
 	fingperintClient := configs.NewGRPCClient(clientConn)
 	grpcService := services.NewGRPCService(fingperintClient)
-	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository)
+	workerService := services.NewWokerService()
+	dispatcherService := services.NewDispatcherService(workerService)
+	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository, dispatcherService)
 	mlHandler := handlers.NewMLHandler(mlService)
 	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
 	if err != nil {
@@ -75,6 +77,6 @@ var AppSet = wire.NewSet(
 
 var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewMLHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewMLService, services.NewGRPCService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewWokerService, services.NewDispatcherService, services.NewObjectStorageService, services.NewCollectService, services.NewMLService, services.NewGRPCService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)

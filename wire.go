@@ -44,6 +44,8 @@ var HandlerSet = wire.NewSet(
 
 var ServiceSet = wire.NewSet(
 	services.NewAuthService,
+	services.NewWokerService,
+	services.NewDispatcherService,
 	services.NewObjectStorageService,
 	services.NewCollectService,
 	services.NewMLService,

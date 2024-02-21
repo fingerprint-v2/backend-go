@@ -22,7 +22,7 @@ before(() => {
       name: "point1",
     },
   }).then((response) => {
-    cy.wrap(response.body.data[0].id).as("pointId");
+    cy.wrap(response.body.data[0].id).as("pointID");
   });
 
   cy.request({
@@ -33,7 +33,7 @@ before(() => {
       with_organization: true,
     },
   }).then((response) => {
-    cy.wrap(response.body.data[0].id).as("siteId");
+    cy.wrap(response.body.data[0].id).as("siteID");
   });
 });
 
@@ -45,10 +45,10 @@ describe("perform surveys", () => {
   });
 
   it("surveys supervisedly", function () {
-    const pointId = (this as any).pointId as string;
-    cy.log(pointId);
+    const pointID = (this as any).pointID as string;
+    cy.log(pointID);
     const payload = {
-      point_label_id: pointId,
+      point_label_id: pointID,
       mode: "SUPERVISED",
       collect_device: {
         device_uid: "device3",
@@ -68,7 +68,7 @@ describe("perform surveys", () => {
   });
 
   it("surveys unsupervisedly", function () {
-    const siteID = (this as any).siteId as string;
+    const siteID = (this as any).siteID as string;
 
     cy.log(siteID);
 

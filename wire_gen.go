@@ -49,6 +49,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
+	buildingHandler := handlers.NewBuildingHandler(buildingRepository)
 	clientConn, cleanup, err := configs.NewGRPCConnection()
 	if err != nil {
 		return nil, nil, err
@@ -57,7 +58,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	grpcService := services.NewGRPCService(fingperintClient)
 	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository)
 	mlHandler := handlers.NewMLHandler(mlService)
-	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, mlHandler)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, buildingHandler, mlHandler)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -73,7 +74,7 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, configs.NewGRPCConnection, configs.NewGRPCClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewMLHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewMLHandler, handlers.NewBuildingHandler)
 
 var ServiceSet = wire.NewSet(services.NewAuthService, services.NewObjectStorageService, services.NewCollectService, services.NewMLService, services.NewGRPCService)
 

@@ -40,15 +40,15 @@ func (s *seederImpl) seed() {
 	s.resetDB()
 	orgs := s.seedOrganization()
 	s.seedUser(orgs)
-	sites := s.seedSite(orgs)
-	buildings := s.seedBuilding(sites)
-	floors := s.seedFloor(buildings)
-	s.seedPoint(floors)
+	// sites := s.seedSite(orgs)
+	// buildings := s.seedBuilding(sites)
+	// floors := s.seedFloor(buildings)
+	// s.seedPoint(floors)
 }
 
 func (s *seederImpl) seedOrganization() []models.Organization {
 	var orgs []models.Organization
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 2; i++ {
 		org := models.Organization{
 			Name: s.faker.Company(),
 		}
@@ -99,15 +99,17 @@ func (s *seederImpl) seedUser(orgs []models.Organization) []models.User {
 	users = append(users, user)
 
 	// Rest
-	for _, org := range orgs[2:] {
-		for i := 0; i < 2; i++ {
-			user := models.User{
-				Username:       s.faker.Username(),
-				Password:       "1234",
-				Role:           constants.USER.String(),
-				OrganizationID: org.ID.String(),
+	if len(orgs) > 2 {
+		for _, org := range orgs[2:] {
+			for i := 0; i < 2; i++ {
+				user := models.User{
+					Username:       s.faker.Username(),
+					Password:       "1234",
+					Role:           constants.USER.String(),
+					OrganizationID: org.ID.String(),
+				}
+				users = append(users, user)
 			}
-			users = append(users, user)
 		}
 	}
 

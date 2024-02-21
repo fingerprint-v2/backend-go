@@ -40,6 +40,7 @@ var HandlerSet = wire.NewSet(
 	handlers.NewCollectHandler,
 	handlers.NewPointHandler,
 	handlers.NewMLHandler,
+	handlers.NewBuildingHandler,
 )
 
 var ServiceSet = wire.NewSet(

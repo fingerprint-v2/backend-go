@@ -52,7 +52,7 @@ func (h *siteHandlerImpl) CreateSite(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	if len(*sites) > 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "This site name already existed within this organization")
+		return fiber.NewError(fiber.StatusConflict, "This site name already existed within this organization")
 	}
 
 	// Creating new site

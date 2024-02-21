@@ -14,12 +14,14 @@ type SiteHandler interface {
 }
 
 type siteHandlerImpl struct {
-	siteRepo repositories.SiteRepository
+	siteRepo         repositories.SiteRepository
+	organizationRepo repositories.OrganizationRepository
 }
 
-func NewSiteHandler(siteRepo repositories.SiteRepository) SiteHandler {
+func NewSiteHandler(siteRepo repositories.SiteRepository, organizationRepo repositories.OrganizationRepository) SiteHandler {
 	return &siteHandlerImpl{
-		siteRepo: siteRepo,
+		siteRepo:         siteRepo,
+		organizationRepo: organizationRepo,
 	}
 }
 
@@ -44,6 +46,12 @@ func (h *siteHandlerImpl) CreateSite(c *fiber.Ctx) error {
 	site := new(models.Site)
 	if err := c.BodyParser(site); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	// Check if organization existed
+	_, err := h.organizationRepo.Find(&models.OrganizationFind{ID: site.OrganizationID})
+	if err != nil {
+		return fiber.NewError(fiber.StatusNotFound, "Organization not found")
 	}
 
 	// Check if site already existed within same organization

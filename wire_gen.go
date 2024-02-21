@@ -41,7 +41,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	objectStorageHandler := handlers.NewObjectStorageHandler(objectStorageService)
 	organizationHandler := handlers.NewOrganizationHandler(organizationRepository)
 	userHandler := handlers.NewUserHandler(authService, userRepository, organizationRepository)
-	siteHandler := handlers.NewSiteHandler(siteRepository)
+	siteHandler := handlers.NewSiteHandler(siteRepository, organizationRepository)
 	collectDeviceRepository := repositories.NewCollectDeviceRepository(gormDB)
 	uploadRepository := repositories.NewUploadRepository(gormDB)
 	fingerprintRepository := repositories.NewFingerprintRepository(gormDB)
@@ -49,7 +49,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
 	collectHandler := handlers.NewCollectHandler(collectService)
 	pointHandler := handlers.NewPointHandler(pointRepository)
-	buildingHandler := handlers.NewBuildingHandler(buildingRepository)
+	buildingHandler := handlers.NewBuildingHandler(buildingRepository, siteRepository)
 	clientConn, cleanup, err := configs.NewGRPCConnection()
 	if err != nil {
 		return nil, nil, err

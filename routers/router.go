@@ -15,7 +15,7 @@ func SetupRoutes(
 	organizationHandler handlers.OrganizationHandler,
 	userHandler handlers.UserHandler,
 	siteHandler handlers.SiteHandler,
-	collectHandler handlers.CollectHandler,
+	collectHandler handlers.LocalizeHandler,
 	pointHandler handlers.PointHandler,
 	mLHandler handlers.MLHandler,
 	buildingHandler handlers.BuildingHandler,
@@ -33,7 +33,7 @@ func SetupRoutes(
 	SetupOrganizationRouter(v1, validator, organizationHandler, middleware)
 	SetupSiteRouter(v1, validator, siteHandler, middleware)
 	SetupUserRouter(v1, validator, userHandler, middleware)
-	SetupCollectRouter(v1, validator, collectHandler, middleware)
+	SetupLocalizeRouter(v1, validator, collectHandler, middleware)
 	SetupPointRouter(v1, validator, pointHandler, middleware)
 	SetupBuildingRouter(v1, validator, buildingHandler, middleware)
 	SetupFloorRouter(v1, validator, floorHandler, middleware)

@@ -37,7 +37,7 @@ var HandlerSet = wire.NewSet(
 	handlers.NewOrganizationHandler,
 	handlers.NewUserHandler,
 	handlers.NewSiteHandler,
-	handlers.NewCollectHandler,
+	handlers.NewLocalizeHandler,
 	handlers.NewPointHandler,
 	handlers.NewMLHandler,
 	handlers.NewBuildingHandler,
@@ -49,7 +49,7 @@ var ServiceSet = wire.NewSet(
 	services.NewWokerService,
 	services.NewDispatcherService,
 	services.NewObjectStorageService,
-	services.NewCollectService,
+	services.NewLocalizeService,
 	services.NewMLService,
 	services.NewGRPCService,
 )

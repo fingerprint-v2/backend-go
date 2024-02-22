@@ -9,7 +9,7 @@ import (
 
 type CollectDevice struct {
 	ID                 uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	DeviceUID          string    `json:"device_uid" gorm:"type:varchar(255);not null"` // Unique
+	DeviceUID          string    `json:"device_uid" gorm:"type:varchar(255);unique;not null"` // Unique
 	DeviceID           string    `json:"device_id" gorm:"type:varchar(255);not null"`
 	DeviceCarrier      string    `json:"device_carrier" gorm:"type:varchar(255);not null"`
 	DeviceManufacturer string    `json:"device_manufacturer" gorm:"type:varchar(255);not null"`

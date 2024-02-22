@@ -843,10 +843,16 @@ const docTemplate = `{
                 "deleted_at": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "id": {
+                "entity_type": {
                     "type": "string"
                 },
-                "name": {
+                "external_name": {
+                    "type": "string"
+                },
+                "external_unique_id": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "organization": {
@@ -861,9 +867,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Prediction"
                     }
-                },
-                "type": {
-                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
@@ -901,10 +904,6 @@ const docTemplate = `{
                 },
                 "is_outside_coverage": {
                     "type": "boolean"
-                },
-                "mode": {
-                    "description": "Mode: SUPERVISED, UNSUPERVISED, PREDICTION",
-                    "type": "string"
                 },
                 "near_points": {
                     "type": "array",

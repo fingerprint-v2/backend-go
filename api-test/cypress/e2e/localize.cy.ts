@@ -53,7 +53,6 @@ describe("perform surveys", () => {
     for (const point of points) {
       const payload = {
         point_label_id: point.id,
-        upload_mode: "SURVEY_SUPERVISED",
         collect_device: {
           device_uid: "device3",
           device_id: "device_id3",
@@ -66,7 +65,7 @@ describe("perform surveys", () => {
 
       cy.request({
         method: "PUT",
-        url: "/collect",
+        url: "/localize/supervised",
         body: payload,
       });
     }
@@ -78,7 +77,6 @@ describe("perform surveys", () => {
     cy.log(siteID);
 
     const payload = {
-      upload_mode: "SURVEY_UNSUPERVISED",
       site_id: siteID,
       collect_device: {
         device_uid: "device3",
@@ -91,7 +89,7 @@ describe("perform surveys", () => {
 
     cy.request({
       method: "PUT",
-      url: "/collect",
+      url: "/localize/unsupervised",
       body: payload,
     });
   });

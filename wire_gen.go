@@ -46,8 +46,8 @@ func InitializeApp() (*fiber.App, func(), error) {
 	uploadRepository := repositories.NewUploadRepository(gormDB)
 	fingerprintRepository := repositories.NewFingerprintRepository(gormDB)
 	wifiRepository := repositories.NewWifiRepository(gormDB)
-	collectService := services.NewCollectService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
-	collectHandler := handlers.NewCollectHandler(collectService)
+	localizeService := services.NewLocalizeService(collectDeviceRepository, uploadRepository, fingerprintRepository, wifiRepository, pointRepository, siteRepository)
+	localizeHandler := handlers.NewLocalizeHandler(localizeService)
 	pointHandler := handlers.NewPointHandler(pointRepository, floorRepository)
 	buildingHandler := handlers.NewBuildingHandler(buildingRepository, siteRepository)
 	floorHandler := handlers.NewFloorHandler(floorRepository, buildingRepository)
@@ -61,7 +61,7 @@ func InitializeApp() (*fiber.App, func(), error) {
 	dispatcherService := services.NewDispatcherService(workerService)
 	mlService := services.NewMLService(objectStorageService, grpcService, pointRepository, dispatcherService)
 	mlHandler := handlers.NewMLHandler(mlService)
-	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, collectHandler, pointHandler, buildingHandler, floorHandler, mlHandler, dispatcherService)
+	app, err := NewApp(authMiddleware, validator, authHandler, objectStorageHandler, objectStorageService, organizationHandler, userHandler, siteHandler, localizeHandler, pointHandler, buildingHandler, floorHandler, mlHandler, dispatcherService)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -77,8 +77,8 @@ var AppSet = wire.NewSet(
 	NewApp, configs.NewMinioClient, configs.NewGRPCConnection, configs.NewGRPCClient, db.NewPostgresDatabase, middleware.NewAuthMiddleware, dto.NewValidator,
 )
 
-var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewCollectHandler, handlers.NewPointHandler, handlers.NewMLHandler, handlers.NewBuildingHandler, handlers.NewFloorHandler)
+var HandlerSet = wire.NewSet(handlers.NewAuthHandler, handlers.NewObjectStorageHandler, handlers.NewOrganizationHandler, handlers.NewUserHandler, handlers.NewSiteHandler, handlers.NewLocalizeHandler, handlers.NewPointHandler, handlers.NewMLHandler, handlers.NewBuildingHandler, handlers.NewFloorHandler)
 
-var ServiceSet = wire.NewSet(services.NewAuthService, services.NewWokerService, services.NewDispatcherService, services.NewObjectStorageService, services.NewCollectService, services.NewMLService, services.NewGRPCService)
+var ServiceSet = wire.NewSet(services.NewAuthService, services.NewWokerService, services.NewDispatcherService, services.NewObjectStorageService, services.NewLocalizeService, services.NewMLService, services.NewGRPCService)
 
 var RepositorySet = wire.NewSet(repositories.NewOrganizationRepository, repositories.NewUserRepository, repositories.NewSiteRepository, repositories.NewBuildingRepository, repositories.NewFloorRepository, repositories.NewPointRepository, repositories.NewCollectDeviceRepository, repositories.NewUploadRepository, repositories.NewFingerprintRepository, repositories.NewWifiRepository)

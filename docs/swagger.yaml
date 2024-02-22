@@ -192,9 +192,13 @@ definitions:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
-      id:
+      entity_type:
         type: string
-      name:
+      external_name:
+        type: string
+      external_unique_id:
+        type: string
+      id:
         type: string
       organization:
         $ref: '#/definitions/models.Organization'
@@ -205,8 +209,6 @@ definitions:
         items:
           $ref: '#/definitions/models.Prediction'
         type: array
-      type:
-        type: string
       updated_at:
         type: string
     type: object
@@ -230,9 +232,6 @@ definitions:
         type: boolean
       is_outside_coverage:
         type: boolean
-      mode:
-        description: 'Mode: SUPERVISED, UNSUPERVISED, PREDICTION'
-        type: string
       near_points:
         items:
           $ref: '#/definitions/models.Point'

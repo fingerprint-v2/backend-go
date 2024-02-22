@@ -1315,6 +1315,10 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
+                "upload_mode": {
+                    "description": "Mode: SURVEY_SUPERVISED, SURVEY_UNSUPERVISED, PREDICTION_TRIAL, PREDICTION_TESTING, PREDICTION_TRACKING",
+                    "type": "string"
+                },
                 "user": {
                     "$ref": "#/definitions/models.User"
                 },

@@ -8,12 +8,10 @@ import (
 )
 
 type Fingerprint struct {
-	ID uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	// Mode: SUPERVISED, UNSUPERVISED, PREDICTION
-	Mode              string `json:"mode" gorm:"type:varchar(255);not null"`
-	IsOutsideCoverage bool   `json:"is_outside_coverage" gorm:"type:boolean;not null;default:false"`
-	IsBetweenPoints   bool   `json:"is_between_points" gorm:"type:boolean;not null;default:false"`
-	IsCurrent         bool   `json:"is_current" gorm:"type:boolean;not null;default:false"`
+	ID                uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	IsOutsideCoverage bool      `json:"is_outside_coverage" gorm:"type:boolean;not null;default:false"`
+	IsBetweenPoints   bool      `json:"is_between_points" gorm:"type:boolean;not null;default:false"`
+	IsCurrent         bool      `json:"is_current" gorm:"type:boolean;not null;default:false"`
 	// Collect device information
 	CollectDevice   *CollectDevice `json:"collect_device" gorm:"foreignKey:CollectDeviceID;references:ID"`
 	CollectDeviceID string         `json:"collect_device_id" gorm:"type:uuid;not null"`

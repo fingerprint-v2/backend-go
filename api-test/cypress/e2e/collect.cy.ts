@@ -53,7 +53,7 @@ describe("perform surveys", () => {
     for (const point of points) {
       const payload = {
         point_label_id: point.id,
-        mode: "SUPERVISED",
+        upload_mode: "SURVEY_SUPERVISED",
         collect_device: {
           device_uid: "device3",
           device_id: "device_id3",
@@ -78,7 +78,7 @@ describe("perform surveys", () => {
     cy.log(siteID);
 
     const payload = {
-      mode: "UNSUPERVISED",
+      upload_mode: "SURVEY_UNSUPERVISED",
       site_id: siteID,
       collect_device: {
         device_uid: "device3",

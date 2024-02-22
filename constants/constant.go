@@ -3,7 +3,7 @@ package constants
 import "time"
 
 type UserRole int
-type CollectMode int
+type UploadMode int
 type ScanMode int
 
 const (
@@ -18,10 +18,13 @@ const (
 	USER
 )
 
+// Mode: SURVEY_SUPERVISED, SURVEY_UNSUPERVISED, PREDICTION_TRIAL, PREDICTION_TESTING, PREDICTION_TRACKING
 const (
-	SUPERVISED CollectMode = iota + 1
-	UNSUPERVISED
-	PREDICTION
+	SURVEY_SUPERVISED UploadMode = iota + 1
+	SURVEY_UNSUPERVISED
+	PREDICTION_TRIAL
+	PREDICTION_TESTING
+	PREDICTION_TRACKING
 )
 
 const (
@@ -29,4 +32,4 @@ const (
 	SINGLE
 )
 
-//go:generate stringer -type=UserRole,CollectMode,ScanMode
+//go:generate stringer -type=UserRole,UploadMode,ScanMode

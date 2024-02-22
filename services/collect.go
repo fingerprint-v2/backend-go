@@ -75,6 +75,7 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 	// Upload
 	upload := &models.Upload{
 		UserID:       user.ID.String(),
+		UploadMode:   req.UploadMode,
 		ScanMode:     req.ScanMode,
 		ScanInterval: req.ScanInterval,
 	}
@@ -84,20 +85,20 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 	uploadID := upload.ID.String()
 
 	// Check Valid Collect Mode (just to make sure)
-	if err := s.CheckValidCollectMode(req.Mode); err != nil {
+	if err := s.CheckValidUploadMode(req.UploadMode); err != nil {
 		return err
 	}
-	mode := req.Mode
+	mode := req.UploadMode
 
 	// Determine SiteID
 	var siteID string
-	if mode == constants.SUPERVISED.String() {
+	if mode == constants.SURVEY_SUPERVISED.String() {
 		point, err := s.pointRepo.Get(req.PointLabelID)
 		if err != nil {
 			return err
 		}
 		siteID = point.SiteID
-	} else if (mode == constants.UNSUPERVISED.String()) || (mode == constants.PREDICTION.String()) {
+	} else if mode == constants.SURVEY_UNSUPERVISED.String() {
 		if req.SiteID == "" {
 			return errors.New("site_id is required")
 		}
@@ -113,14 +114,14 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 
 	// Determine PointID (if SUPERVISED)
 	var pointLabelID *string
-	if mode == constants.SUPERVISED.String() {
+	if mode == constants.SURVEY_SUPERVISED.String() {
 		point, err := s.pointRepo.Get(req.PointLabelID)
 		if err != nil {
 			return err
 		}
 		tempStr := point.ID.String()
 		pointLabelID = &tempStr
-	} else if mode == constants.UNSUPERVISED.String() {
+	} else if mode == constants.SURVEY_UNSUPERVISED.String() {
 		pointLabelID = nil
 
 	}
@@ -138,7 +139,6 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 			wifis = append(wifis, *wifi)
 		}
 		fingerprint := &models.Fingerprint{
-			Mode:            req.Mode,
 			CollectDeviceID: collectDeviceID,
 			SiteID:          siteID,
 			OrganizationID:  organizationID,
@@ -164,9 +164,9 @@ func (s *collectServiceImpl) CreateSurvey(req *dto.CreateSurveyReq, user *models
 
 }
 
-func (s *collectServiceImpl) CheckValidCollectMode(mode string) error {
+func (s *collectServiceImpl) CheckValidUploadMode(mode string) error {
 
-	modes := []constants.CollectMode{constants.PREDICTION, constants.SUPERVISED, constants.UNSUPERVISED}
+	modes := []constants.UploadMode{constants.SURVEY_SUPERVISED, constants.SURVEY_UNSUPERVISED}
 	for _, value := range modes {
 		if mode == value.String() {
 			return nil

@@ -24,7 +24,7 @@ func NewLocalizeHandler(localizeService services.LocalizeService) LocalizeHandle
 }
 
 func (h *localizeHandlerImpl) CreateSupervisedSurvey(c *fiber.Ctx) error {
-	req := new(dto.CreateSurpervisedSurveyReq)
+	req := new(dto.CreateSupervisedSurveyReq)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -43,7 +43,7 @@ func (h *localizeHandlerImpl) CreateSupervisedSurvey(c *fiber.Ctx) error {
 }
 
 func (h *localizeHandlerImpl) CreateUnsupervisedSurvey(c *fiber.Ctx) error {
-	req := new(dto.CreateUnsurpervisedSurveyReq)
+	req := new(dto.CreateUnsupervisedSurveyReq)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())

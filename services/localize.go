@@ -11,8 +11,8 @@ import (
 )
 
 type LocalizeService interface {
-	CreateSupervisedSurvey(req *dto.CreateSurpervisedSurveyReq, user *models.User) error
-	CreateUnsupervisedSurvey(req *dto.CreateUnsurpervisedSurveyReq, user *models.User) error
+	CreateSupervisedSurvey(req *dto.CreateSupervisedSurveyReq, user *models.User) error
+	CreateUnsupervisedSurvey(req *dto.CreateUnsupervisedSurveyReq, user *models.User) error
 }
 
 type localizeServiceImpl struct {
@@ -42,7 +42,7 @@ func NewLocalizeService(
 	}
 }
 
-func (s *localizeServiceImpl) CreateSupervisedSurvey(req *dto.CreateSurpervisedSurveyReq, user *models.User) error {
+func (s *localizeServiceImpl) CreateSupervisedSurvey(req *dto.CreateSupervisedSurveyReq, user *models.User) error {
 
 	// Collect Device
 	collectDeviceReq, err := utils.TypeConverter[dto.CreateCollectDeviceReq](req.CollectDevice)
@@ -105,7 +105,7 @@ func (s *localizeServiceImpl) CreateSupervisedSurvey(req *dto.CreateSurpervisedS
 
 }
 
-func (s *localizeServiceImpl) CreateUnsupervisedSurvey(req *dto.CreateUnsurpervisedSurveyReq, user *models.User) error {
+func (s *localizeServiceImpl) CreateUnsupervisedSurvey(req *dto.CreateUnsupervisedSurveyReq, user *models.User) error {
 
 	// Collect Device
 	collectDeviceReq, err := utils.TypeConverter[dto.CreateCollectDeviceReq](req.CollectDevice)

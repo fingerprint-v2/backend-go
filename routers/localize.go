@@ -9,8 +9,8 @@ import (
 
 func SetupLocalizeRouter(router fiber.Router, v dto.Validator, handler handlers.LocalizeHandler, middleware *middleware.AuthMiddleware) {
 
-	vCreateSupervisedSurveyReq := dto.ValidateRequest[dto.CreateSurpervisedSurveyReq](v)
-	vCreateUnsupervisedSurveyReq := dto.ValidateRequest[dto.CreateUnsurpervisedSurveyReq](v)
+	vCreateSupervisedSurveyReq := dto.ValidateRequest[dto.CreateSupervisedSurveyReq](v)
+	vCreateUnsupervisedSurveyReq := dto.ValidateRequest[dto.CreateUnsupervisedSurveyReq](v)
 
 	localize := router.Group("localize")
 	localize.Put("/supervised", vCreateSupervisedSurveyReq, handler.CreateSupervisedSurvey)

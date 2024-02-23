@@ -1,6 +1,6 @@
 package dto
 
-type CreateSurpervisedSurveyReq struct {
+type CreateSupervisedSurveyReq struct {
 	PointLabelID  string                 `json:"point_label_id" validate:"required,uuid4"`
 	CollectDevice CreateCollectDeviceReq `json:"collect_device"`
 	ScanMode      string                 `json:"scan_mode" validate:"required,oneof=INTERVAL SINGLE"`
@@ -12,7 +12,7 @@ type CreateSurpervisedSurveyReq struct {
 	Fingerprints []CreateFingerprintReq `json:"fingerprints" validate:"required,min=1,dive"`
 }
 
-type CreateUnsurpervisedSurveyReq struct {
+type CreateUnsupervisedSurveyReq struct {
 	CollectDevice CreateCollectDeviceReq `json:"collect_device"`
 	SiteID        string                 `json:"site_id" validate:"required,uuid4"`
 	ScanMode      string                 `json:"scan_mode" validate:"required,oneof=INTERVAL SINGLE"`

@@ -1,5 +1,7 @@
 # Dependencies
 
+- `go install github.com/swaggo/swag/cmd/swag@latest`
+- `go install github.com/cosmtrek/air@latest`
 - `go install golang.org/x/tools/cmd/stringer@latest`
 - `go install github.com/google/wire/cmd/wire@latest`
 
@@ -14,7 +16,7 @@
 # Running
 
 - `air`
-- `air -c .air.nobuild.toml` (Faster reload)
+- `air -c .air.nogen.toml` (Faster reload)
 
 # Issues
 
@@ -24,6 +26,9 @@
 # Makefile
 
 - Windows `choco install make` https://stackoverflow.com/a/54086635
+
+# Seed
+- `make seed`
 
 # GRPC
 
